@@ -1,0 +1,86 @@
+# 02 数据
+
+## 1. 数据来源
+
+**MAESTRO v3.0.0**（MIDI and Audio Edited for Synchronized and Transcribed Orchestral / piano performances）：
+
+| 项目 | 数值 |
+|---|---|
+| 曲目数 | 1276 首（train 962 / validation 137 / test 177） |
+| 总时长 | 约 199 小时（train 159.24 小时） |
+| 格式 | 每首一个 wav（16 kHz 以上）+ 一个对齐的 MIDI |
+| 许可证 | CC BY-NC-SA 4.0，**仅限非商业用途** |
+
+这是钢琴转录领域最常用的公开数据集，音频与 MIDI 对齐质量高，适合做标签监督训练。
+
+## 2. 数据 v2 的设计
+
+数据 v2 在 M1 重建，目录 `/Docker/maestro_processed_v2`（约 33 GB），每首曲目三个文件：
+
+| 文件 | 形状 | dtype | 内容 |
+|---|---|---|---|
+| `*.cqt.npy` | (T, 264) | float32 | log-CQT，dB 值 [-80, 0] |
+| `*.lab.npy` | (T, 6, 88) | uint8 | 6 个标签通道（见下表） |
+| `*.pedal.npy` | (T, 2) | uint8 | 踏板状态 + 踩下瞬间 |
+
+标签通道：
+
+| 序号 | 通道 | 含义 |
+|---|---|---|
+| 0 | frame | 该音正在发声（**含踏板延音**） |
+| 1 | onset1 | 起音（1 帧变体，对照用） |
+| 2 | **onset2** | 起音（2 帧变体，**默认**） |
+| 3 | onset3 | 起音（3 帧变体，旧实现，对照用） |
+| 4 | velocity | 力度（0–127） |
+| 5 | pedal | 踏板状态（0/1，广播到 88 键） |
+
+### 2.1 为什么 onset 是 2 帧
+
+每帧 32 ms。旧实现把起音标在 `start-1, start, start+1` 三帧上，其中一帧在真实起音**之前**，
+模型会学成提前 32 ms；且 3 帧平台太宽，同键快速重复时会粘连。
+
+![onset 标签](figs/01_onset_label.png)
+
+新实现标 `[start, start+2)` 两帧：最坏时间误差 +32 ms，仍在评测容差 50 ms 内。
+数据里同时保留 1 帧和 3 帧变体，A/B 实验用（见 `03_model_training.md` 第 4 节）。
+
+### 2.2 分段与索引
+
+- 每段 10 秒 = 313 帧；训练用段索引（`segments.json`）随机采样，**不重复解压整首歌**；
+- CQT 用 `.npy` 存储，训练时 `np.load(..., mmap_mode="r")` 随机切片；
+- 段统计：train 56,922 / validation 6,935 / test 7,128；
+- 验证集用**固定段**（不随机），保证 val F1 跨步可比。
+
+### 2.3 输入归一化
+
+训练/推理都把 dB 值映射到 [0, 1]：
+
+```text
+x_norm = (clip(x_db, -80, 0) + 80) / 80
+```
+
+这条约定写在 `constants.py` 与 `inference.normalize_input` 里，两边必须一致（M0.6 的 G3 检查过）。
+
+## 3. 重建数据
+
+```bash
+# 全量重建（8 进程，约 2 分钟）
+python scripts/build_data.py --workers 8
+
+# 标签自检：onset2 是否 2 帧、onset3 是否比 onset2 多一帧
+python scripts/check_labels.py
+```
+
+产物：
+
+- `PIANO2_DATA_ROOT`（默认 `/Docker/maestro_processed_v2`）：数据本身；
+- `outputs/M1/data_manifest.json`：配置、拆分统计、标签正样本率、脚本指纹。
+
+manifest 的作用是**追溯**：改了标签口径后，靠它区分「这份分数是用哪版数据训出来的」。
+
+## 4. 数据纪律
+
+1. **训练/验证/测试按曲目划分**，同一作品跨 split 的只有 5 个（0.6%，MAESTRO 固有现象），看 test 分数时留意；
+2. **留出集只评一次**：调参用开发集（Haydn / Mozart / Beethoven），留出集（`2015/...06_R1`）只在最终汇报时用；
+3. **数据与仓库分离**：33 GB 数据不进 git，靠环境变量定位；
+4. 数据版本变了就重建 manifest，并在实验登记表（`experiments/registry/`）里记一笔。
