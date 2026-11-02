@@ -1,0 +1,26 @@
+# 数据与权重不进仓库
+data/
+*.wav
+*.mp3
+*.flac
+*.midi
+*.mid
+*.npz
+*.npy
+outputs/
+checkpoints/
+*.pt
+*.pth
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

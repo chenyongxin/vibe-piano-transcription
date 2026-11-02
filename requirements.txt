@@ -1,0 +1,15 @@
+# 运行依赖（容器里已预装大部分；这里用于重建环境）
+torch>=2.0
+numpy
+scipy
+pandas
+librosa
+soundfile
+pretty_midi
+music21
+mir_eval
+matplotlib
+verovio
+pymupdf
+lxml
+pytest
