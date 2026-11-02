@@ -1,0 +1,84 @@
+{
+  "experiment_id": "EXP-000_baseline",
+  "date": "2026-11-02 12:52:28",
+  "kind": "baseline before retraining",
+  "checkpoint": {
+    "path": "/Docker/git/piano_practice/trained_data/checkpoints/model_best.pth",
+    "sha256": "4f43ca733f6ed9e19c876d85e5901cd28d5d30ca8b00c6f936173cb0d0d6e034",
+    "size_bytes": 78626869
+  },
+  "decode_config": {
+    "method": "peak_frame",
+    "harmonic_mode": "conditional",
+    "harmonic_strength": 0.5,
+    "harmonic_window_frames": 5,
+    "harmonic_frame_max": 0.6,
+    "frame_gate": 0.15,
+    "onset_threshold": 0.6,
+    "onset_prominence": 0.005,
+    "peak_distance": 5,
+    "frame_off_threshold": 0.18,
+    "release_frames": 3
+  },
+  "test_set": [
+    "haydn",
+    "mozart",
+    "beethoven",
+    "holdout2"
+  ],
+  "metrics": {
+    "haydn": {
+      "onset": {
+        "P": 0.951310861423221,
+        "R": 0.9519050593379138,
+        "F1": 0.9516078676241024
+      },
+      "note_with_offset": {
+        "P": 0.17790262172284643,
+        "R": 0.17801374141161774,
+        "F1": 0.17795816422104277
+      },
+      "n_pred": 1602
+    },
+    "mozart": {
+      "onset": {
+        "P": 0.9586806814063066,
+        "R": 0.9280701754385965,
+        "F1": 0.9431271171331788
+      },
+      "note_with_offset": {
+        "P": 0.25987676694454515,
+        "R": 0.25157894736842107,
+        "F1": 0.25566054555179174
+      },
+      "n_pred": 2759
+    },
+    "beethoven": {
+      "onset": {
+        "P": 0.8577260665441927,
+        "R": 0.7455642299503193,
+        "F1": 0.7977218794494543
+      },
+      "note_with_offset": {
+        "P": 0.249642784241682,
+        "R": 0.21699787083037617,
+        "F1": 0.23217845277645943
+      },
+      "n_pred": 4899
+    },
+    "holdout2": {
+      "onset": {
+        "P": 0.8352023403217943,
+        "R": 0.806497175141243,
+        "F1": 0.8205988023952098
+      },
+      "note_with_offset": {
+        "P": 0.05899561189663579,
+        "R": 0.05696798493408663,
+        "F1": 0.05796407185628743
+      },
+      "n_pred": 2051
+    }
+  },
+  "notes": "onset 容差 50 ms、pitch 50 cents；note_with_offset 用 offset_ratio=0.2"
+}

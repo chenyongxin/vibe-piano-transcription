@@ -1,0 +1,27 @@
+{
+  "steps": 1000,
+  "best_val_f1": 0.5388331002923604,
+  "final_val": {
+    "P": 0.410437645236251,
+    "R": 0.7841287458379578,
+    "F1": 0.5388331002923604,
+    "tp": 8478,
+    "fp": 12178,
+    "fn": 2334
+  },
+  "config": {
+    "max_steps": 1000,
+    "batch": 16,
+    "lr": 0.0003,
+    "warmup": 300,
+    "val_every": 250,
+    "val_segments": 120,
+    "num_workers": 4,
+    "label_channel": "onset2",
+    "run_name": "pilot_onset2",
+    "dry_run": false,
+    "resume": "",
+    "seed": 0
+  },
+  "elapsed_s": 85.0
+}

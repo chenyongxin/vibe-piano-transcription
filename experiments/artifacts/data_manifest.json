@@ -1,0 +1,55 @@
+{
+  "version": "data_v2",
+  "date": "2026-11-02 14:00:14",
+  "config": {
+    "sr": 16000,
+    "hop": 512,
+    "fps": 31.25,
+    "seg_frames": 313,
+    "seg_seconds": 10.016,
+    "channels": [
+      "frame",
+      "onset1",
+      "onset2",
+      "onset3",
+      "velocity",
+      "pedal"
+    ],
+    "onset_default": "onset2 ([start, start+2))",
+    "frame_contains_pedal": true,
+    "input_norm": "(x + 80) / 80，把 dB 范围 [-80,0] 映射到 [0,1]"
+  },
+  "splits": {
+    "train": {
+      "n_files": 962,
+      "n_segments": 56922
+    },
+    "validation": {
+      "n_files": 137,
+      "n_segments": 6935
+    },
+    "test": {
+      "n_files": 177,
+      "n_segments": 7128
+    }
+  },
+  "label_positive_rates": {
+    "frame": 0.05947730732915587,
+    "onset1": 0.003488024071853329,
+    "onset2": 0.0069751192947231175,
+    "onset3": 0.010455239577447891,
+    "velocity": 0.4539071667074778,
+    "pedal": 0.6045189640654878
+  },
+  "build": {
+    "script_sha256": "99161f5a1cc3345b4d3d474435e2a756c73e784a870269838e390f4801e1086c",
+    "source_root": "/Docker/maestro_processed",
+    "dest_root": "/Docker/maestro_processed_v2",
+    "counts": {
+      "test_ok": 177,
+      "validation_ok": 137,
+      "train_ok": 962
+    }
+  },
+  "fingerprint": "e1206d697390d723be66b41cb1e722fdc279361858cb8828e39a666636441899"
+}

@@ -1,0 +1,10 @@
+{
+  "model": "/Docker/git/piano_practice/trained_data/checkpoints/model_best.pth",
+  "val_segments": 120,
+  "P": 0.705332322466515,
+  "R": 0.7744173140954494,
+  "F1": 0.7382621346382753,
+  "tp": 8373,
+  "fp": 3498,
+  "fn": 2439
+}

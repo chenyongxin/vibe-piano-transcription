@@ -1,0 +1,20 @@
+{
+  "sampled_files": 12,
+  "onset2_width_mean": 2.0072267076986914,
+  "onset2_width_mode_fraction_2": 0.9961618920834702,
+  "onset3_width_mean": 3.0356725248259133,
+  "onset3_width_mode_fraction_3": 0.9869980278887939,
+  "onset3_only_frames": 57841,
+  "onset2_positive_frames": 116100,
+  "onset3_extra_ratio": 0.49819982773471144,
+  "frame_positive_rate": 0.07413216691878673,
+  "pedal_positive_rate": 0.8334947109056371,
+  "manifest_label_rates": {
+    "frame": 0.05947730732915587,
+    "onset1": 0.003488024071853329,
+    "onset2": 0.0069751192947231175,
+    "onset3": 0.010455239577447891,
+    "velocity": 0.4539071667074778,
+    "pedal": 0.6045189640654878
+  }
+}

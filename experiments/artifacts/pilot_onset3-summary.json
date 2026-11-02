@@ -1,0 +1,27 @@
+{
+  "steps": 1000,
+  "best_val_f1": 0.3997916895077294,
+  "final_val": {
+    "P": 0.2822477650063857,
+    "R": 0.68511038046031,
+    "F1": 0.3997916895077294,
+    "tp": 7293,
+    "fp": 18546,
+    "fn": 3352
+  },
+  "config": {
+    "max_steps": 1000,
+    "batch": 16,
+    "lr": 0.0003,
+    "warmup": 300,
+    "val_every": 250,
+    "val_segments": 120,
+    "num_workers": 4,
+    "label_channel": "onset3",
+    "run_name": "pilot_onset3",
+    "dry_run": false,
+    "resume": "",
+    "seed": 0
+  },
+  "elapsed_s": 86.1
+}
