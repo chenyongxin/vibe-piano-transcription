@@ -15,7 +15,7 @@ import os
 
 import numpy as np
 
-from piano2.constants import EVAL_TRACKS, MAESTRO_ROOT, OUTPUT_ROOT
+from piano2.constants import DECODE_DEFAULTS, EVAL_TRACKS, MAESTRO_ROOT, OUTPUT_ROOT
 from piano2.decode import DecodeConfig, decode
 from piano2.eval.metrics import note_metrics, to_arrays
 from piano2.inference import compute_cqt, infer_sliding_window, load_model
@@ -30,7 +30,7 @@ def main():
     args = ap.parse_args()
 
     model = load_model(args.model, args.device)
-    cfg = DecodeConfig()
+    cfg = DecodeConfig(**DECODE_DEFAULTS)
     rows = {}
     for name, stem in EVAL_TRACKS.items():
         wav = os.path.join(MAESTRO_ROOT, stem + ".wav")
