@@ -1,0 +1,58 @@
+{
+    "experiment_id":  "EXP-001_4060_36k",
+    "date":  "2026-11-03 22:49:52",
+    "kind":  "first full-schedule run on RTX 4060 (data v2, 5-head model)",
+    "hardware":  "RTX 4060 8GB",
+    "config":  {
+                   "steps":  36000,
+                   "batch":  16,
+                   "seg_frames":  313,
+                   "lr":  0.0003,
+                   "warmup":  300,
+                   "label_channel":  "onset2",
+                   "val_segments":  120,
+                   "val_every":  500,
+                   "elapsed_s":  2834,
+                   "sec_per_step":  0.0787
+               },
+    "checkpoint":  {
+                       "path":  "outputs/M1/m3_first_4060/checkpoints/best.pt",
+                       "sha256":  "39e69b9511d55c55fad3e3d3c89faff875ecfedee92a8444ee46cafe16feff65",
+                       "best_step":  25000,
+                       "best_val_f1":  0.7611
+                   },
+    "validation":  {
+                       "best_f1":  0.7611,
+                       "final_f1":  0.7393,
+                       "final_P":  0.643,
+                       "final_R":  0.869,
+                       "old_model_baseline_f1":  0.738
+                   },
+    "eval_dev_tracks_final_decoder":  {
+                                          "haydn":  {
+                                                        "note_F1":  0.1675,
+                                                        "onset_F1":  0.9656
+                                                    },
+                                          "mozart":  {
+                                                         "note_F1":  0.376,
+                                                         "onset_F1":  0.9633
+                                                     },
+                                          "beethoven":  {
+                                                            "note_F1":  0.2607,
+                                                            "onset_F1":  0.8089
+                                                        },
+                                          "old_model":  {
+                                                            "beethoven":  0.798,
+                                                            "mozart":  0.943,
+                                                            "haydn":  0.952
+                                                        }
+                                      },
+    "eval_holdout":  {
+                         "onset_P":  0.8779,
+                         "onset_R":  0.8696,
+                         "onset_F1":  0.8737,
+                         "note_F1":  0.0553,
+                         "prereg_targets_met":  true
+                     },
+    "notes":  "首版 4060 训练验证路线正确：验证 F1 与三首开发曲目均超过旧模型；留出集精确率 0.878 达到 \u003e=0.85 的硬约束；时值（note-with-offset）仍是主要短板。"
+}
