@@ -1,8 +1,7 @@
-"""画一张「我们的数据长什么样」的图：同一段 10 秒音频的四种表示 + 切片与张量形状。
+"""画一张「我们的数据长什么样」的图：一段 10 秒音频的特征与全部 6 类标签。
 
-图分两部分：
-    上半：波形、CQT、frame 标签、onset+力度，共用同一条时间轴；
-    下半：一首曲目怎么切成 313 帧的段，一个样本与一个 batch 的张量形状。
+上半：波形、CQT、frame、onset2、velocity、pedal（共用同一条时间轴）；
+下半：一首曲目怎么切成 313 帧的段，一个样本与一个 batch 的张量形状。
 
 输出：docs/figs/16_data_types.png
 
@@ -69,13 +68,19 @@ def main():
     cqt = np.asarray(cqt_full[start_frame:start_frame + n])
     lab = np.asarray(np.load(DATA_ROOT / "train" / (base + ".lab.npy"), mmap_mode="r")
                      [start_frame:start_frame + n])
+    pedal_raw = np.asarray(np.load(DATA_ROOT / "train" / (base + ".pedal.npy"), mmap_mode="r")
+                           [start_frame:start_frame + n])
     frame = lab[:, 0, :]
     onset2 = lab[:, 2, :]
     velocity = lab[:, 4, :] / 127.0
+    pedal_state = pedal_raw[:, 0].astype(float)
+    pedal_on = pedal_raw[:, 1].astype(bool)
     t = np.arange(len(y)) / 16000.0
+    tf = np.arange(n) / FPS
 
-    fig = plt.figure(figsize=(14.5, 10.5))
-    gs = fig.add_gridspec(3, 2, height_ratios=[1.0, 1.3, 1.3], hspace=0.45, wspace=0.22)
+    fig = plt.figure(figsize=(14.5, 13.2))
+    gs = fig.add_gridspec(4, 2, height_ratios=[1.0, 1.2, 1.05, 1.45],
+                          hspace=0.55, wspace=0.22)
 
     ax_wav = fig.add_subplot(gs[0, 0])
     ax_wav.plot(t, y, color=plot_style.COLOR_BLUE, linewidth=0.4)
@@ -95,29 +100,57 @@ def main():
     ax_frame = fig.add_subplot(gs[1, 0])
     ax_frame.imshow(frame.T, aspect="auto", origin="lower", cmap="Greys",
                     extent=[0, dur, 21, 109], vmin=0, vmax=1)
-    ax_frame.set_title("③ frame 标签（正在发声，含踏板延音）", fontsize=11)
+    ax_frame.set_title("③ frame 标签：正在发声（含踏板延音）", fontsize=11)
     ax_frame.set_xlabel("时间（秒）", fontsize=9)
     ax_frame.set_ylabel("MIDI 音高", fontsize=9)
 
     ax_onset = fig.add_subplot(gs[1, 1])
-    onset_vel = np.where(onset2 > 0, velocity, 0.0)
-    im2 = ax_onset.imshow(onset_vel.T, aspect="auto", origin="lower", cmap="inferno",
-                          extent=[0, dur, 21, 109], vmin=0, vmax=1)
-    ax_onset.set_title("④ onset2 标签（每音 2 帧）＋力度", fontsize=11)
+    ax_onset.imshow(onset2.T, aspect="auto", origin="lower", cmap="Blues",
+                    extent=[0, dur, 21, 109], vmin=0, vmax=1)
+    ax_onset.set_title("④ onset2 标签：起音（每音 2 帧）", fontsize=11)
     ax_onset.set_xlabel("时间（秒）", fontsize=9)
     ax_onset.set_ylabel("MIDI 音高", fontsize=9)
-    fig.colorbar(im2, ax=ax_onset, fraction=0.025, pad=0.01, label="力度（0–1）")
+    ax_onset.text(0.02, 0.94, f"正样本率 {onset2.mean():.2%}（很稀疏）",
+                  transform=ax_onset.transAxes, fontsize=8.5, va="top",
+                  bbox={"facecolor": "white", "edgecolor": "#bbb",
+                        "boxstyle": "round,pad=0.3"})
+
+    ax_vel = fig.add_subplot(gs[2, 0])
+    vel_ma = np.ma.masked_where(onset2 == 0, velocity)
+    cmap = plt.get_cmap("inferno").copy()
+    cmap.set_bad("white")
+    im2 = ax_vel.imshow(vel_ma.T, aspect="auto", origin="lower", cmap=cmap,
+                        extent=[0, dur, 21, 109], vmin=0, vmax=1)
+    ax_vel.set_title("⑤ velocity 标签：只在起音帧有值", fontsize=11)
+    ax_vel.set_xlabel("时间（秒）", fontsize=9)
+    ax_vel.set_ylabel("MIDI 音高", fontsize=9)
+    fig.colorbar(im2, ax=ax_vel, fraction=0.025, pad=0.01, label="力度（0–1）")
+
+    ax_ped = fig.add_subplot(gs[2, 1])
+    down = pedal_state > 0.5
+    ax_ped.fill_between(tf, 0, pedal_state, step="post",
+                        color=plot_style.COLOR_LIGHT_ORANGE,
+                        edgecolor=plot_style.COLOR_ORANGE, linewidth=1.0)
+    on_times = tf[pedal_on]
+    ax_ped.vlines(on_times, 0, 1.05, color=plot_style.COLOR_RED,
+                  linestyle="--", linewidth=1.0)
+    ax_ped.set_ylim(-0.05, 1.15)
+    ax_ped.set_title(f"⑥ pedal 标签：踏板状态（踩下 {down.mean():.0%}；虚线 = 踩下瞬间）",
+                     fontsize=11)
+    ax_ped.set_xlabel("时间（秒）", fontsize=9)
+    ax_ped.set_ylabel("踏板（0/1）", fontsize=9)
+    ax_ped.set_yticks([0, 1])
 
     # ── 下半：切片与张量形状示意 ──
-    ax = fig.add_subplot(gs[2, :])
+    ax = fig.add_subplot(gs[3, :])
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
-    ax.text(0.02, 0.93, "⑤ 一首曲目怎么切成样本、又怎么拼成 batch", fontsize=11)
+    ax.text(0.02, 0.93, "⑦ 一首曲目怎么切成样本、又怎么拼成 batch", fontsize=11)
     ax.add_patch(Rectangle((0.03, 0.58), 0.30, 0.14, facecolor=plot_style.COLOR_BG_BLUE,
                            edgecolor=plot_style.COLOR_BLUE, linewidth=1.2))
-    ax.text(0.18, 0.65, f"一首曲目：T = {full_t:,} 帧（≈{full_t / FPS:.0f} 秒）", ha="center", va="center",
-            fontsize=9)
+    ax.text(0.18, 0.65, f"一首曲目：T = {full_t:,} 帧（≈{full_t / FPS:.0f} 秒）",
+            ha="center", va="center", fontsize=9)
     for i in range(7):
         x = 0.03 + 0.30 * i / 7
         ax.plot([x, x], [0.58, 0.72], color=plot_style.COLOR_BLUE, linewidth=0.6, alpha=0.7)
@@ -126,10 +159,8 @@ def main():
                            edgecolor=plot_style.COLOR_ORANGE, linewidth=1.4))
     ax.text(0.09, 0.52, "切出 313 帧（10 秒）的段", ha="left", va="center",
             fontsize=9, color=plot_style.COLOR_ORANGE)
-
-    arrow1 = FancyArrowPatch((0.34, 0.65), (0.43, 0.65), arrowstyle="-|>",
-                             mutation_scale=14, color=plot_style.COLOR_DARK)
-    ax.add_patch(arrow1)
+    ax.add_patch(FancyArrowPatch((0.34, 0.65), (0.43, 0.65), arrowstyle="-|>",
+                                 mutation_scale=14, color=plot_style.COLOR_DARK))
 
     boxes = [
         ("CQT 样本\n(313, 264) float32\n≈ 326 KB", 0.44, 0.52, plot_style.COLOR_BG_BLUE,
@@ -139,10 +170,10 @@ def main():
         ("踏板样本\n(313, 2) uint8", 0.44, 0.10, plot_style.COLOR_BG_ORANGE,
          plot_style.COLOR_ORANGE),
     ]
-    for text, x, y, fill, edge in boxes:
-        ax.add_patch(Rectangle((x, y), 0.16, 0.18, facecolor=fill, edgecolor=edge,
+    for text, x_, y_, fill, edge in boxes:
+        ax.add_patch(Rectangle((x_, y_), 0.16, 0.18, facecolor=fill, edgecolor=edge,
                                linewidth=1.2))
-        ax.text(x + 0.08, y + 0.09, text, ha="center", va="center", fontsize=8.5)
+        ax.text(x_ + 0.08, y_ + 0.09, text, ha="center", va="center", fontsize=8.5)
 
     ax.text(0.64, 0.75, "batch（B = 16）后送进模型：", fontsize=9.5)
     ax.text(0.64, 0.62, "x       (16, 313, 264) float32   → 模型输入\n"
