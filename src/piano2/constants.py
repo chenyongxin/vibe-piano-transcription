@@ -24,14 +24,12 @@ SEG_FRAMES = 313        # 10 秒一段
 FRAME_MS = 1000.0 / FPS
 
 # ── 路径（均可用环境变量覆盖） ──
+REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC_ROOT = Path(os.environ.get("PIANO2_SRC_ROOT", "/Docker/maestro_processed"))
 DATA_ROOT = Path(os.environ.get("PIANO2_DATA_ROOT", "/Docker/maestro_processed_v2"))
 MAESTRO_ROOT = Path(os.environ.get("PIANO2_MAESTRO_ROOT", "/Docker/maestro-v3.0.0"))
-OUTPUT_ROOT = Path(os.environ.get("PIANO2_OUTPUT_ROOT", "/Docker/git/piano2/outputs"))
-CKPT = Path(os.environ.get(
-    "PIANO2_CKPT",
-    "/Docker/git/piano_practice/trained_data/checkpoints/model_best.pth",
-))
+OUTPUT_ROOT = Path(os.environ.get("PIANO2_OUTPUT_ROOT", str(REPO_ROOT / "outputs")))
+CKPT = Path(os.environ.get("PIANO2_CKPT", str(REPO_ROOT / "models" / "best.pt")))
 
 # ── 解码默认参数（M0.5 步骤 3 选定） ──
 DECODE_DEFAULTS = {

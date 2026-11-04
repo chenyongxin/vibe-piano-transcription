@@ -6,12 +6,50 @@
 
 from __future__ import annotations
 
+import os
+
 import librosa
 import numpy as np
 import torch
 
 from piano2.constants import BINS_PER_OCTAVE, FMIN, HOP, N_BINS, SR
 from piano2.model import PianoModelV2
+
+
+def pick_device(preferred=None):
+    """选择推理设备：环境变量 PIANO2_DEVICE 优先，否则按 CUDA → MPS → CPU 自动检测。
+
+    参数:
+        preferred (str | None): 显式指定 "auto" / "cuda" / "mps" / "cpu"；
+            None 时读环境变量 PIANO2_DEVICE（默认 "auto"）。
+
+    返回:
+        str: 实际可用的设备名（"cuda" / "mps" / "cpu"）。
+
+    异常:
+        ValueError: 设备名不在允许集合内。
+        RuntimeError: 显式请求了不可用的设备。
+    """
+    request = (preferred or os.environ.get("PIANO2_DEVICE", "auto")).lower()
+    if request not in ("auto", "cuda", "mps", "cpu"):
+        raise ValueError(f"未知设备: {request}（可选 auto/cuda/mps/cpu）")
+    cuda_ok = torch.cuda.is_available()
+    mps_ok = bool(getattr(torch.backends, "mps", None) and torch.backends.mps.is_available())
+    if request == "cuda":
+        if not cuda_ok:
+            raise RuntimeError("请求 cuda，但当前环境不可用")
+        return "cuda"
+    if request == "mps":
+        if not mps_ok:
+            raise RuntimeError("请求 mps，但当前环境不可用（容器内通常不可用）")
+        return "mps"
+    if request == "cpu":
+        return "cpu"
+    if cuda_ok:
+        return "cuda"
+    if mps_ok:
+        return "mps"
+    return "cpu"
 
 
 def compute_cqt(audio_path):
@@ -36,12 +74,12 @@ def normalize_input(cqt):
     return (np.clip(cqt, -80.0, 0.0) + 80.0) / 80.0
 
 
-def load_model(checkpoint, device="cuda"):
+def load_model(checkpoint, device="auto"):
     """加载五头模型权重。
 
     参数:
         checkpoint (str): 检查点路径；支持纯 state_dict（旧格式）或 train.py 保存的字典。
-        device (str): "cuda" 或 "cpu"。
+        device (str): "auto" / "cuda" / "cpu" / "mps"；auto 时自动检测（见 pick_device）。
 
     返回:
         piano2.model.PianoModelV2: eval 模式的模型。
@@ -62,19 +100,20 @@ def load_model(checkpoint, device="cuda"):
 
 
 @torch.no_grad()
-def infer_sliding_window(model, cqt, device="cuda", window=2048, stride=1024):
+def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024):
     """滑窗推理并做重叠平均。
 
     参数:
         model (PianoModelV2): 模型。
         cqt (numpy.ndarray): (T, 264) log-CQT（未归一化，函数内部会归一化）。
-        device (str): 设备。
+        device (str): 设备，默认 "auto"（自动检测）。
         window (int): 窗口帧数。
         stride (int): 步长帧数。
 
     返回:
         tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]: onset/frame/velocity 概率，形状 (T, 88)。
     """
+    device = pick_device(device)
     x = torch.tensor(normalize_input(cqt), dtype=torch.float32).unsqueeze(0).to(device)
     total = x.shape[1]
     out_o = torch.zeros((1, total, 88))
@@ -86,11 +125,15 @@ def infer_sliding_window(model, cqt, device="cuda", window=2048, stride=1024):
         chunk = x[:, start:end, :]
         if chunk.shape[1] == 0:
             continue
-        o, f, v, _p, _po = model(chunk)  # 模型 v2 有 5 个头，这里只用前 3 个
+        with torch.autocast(device_type="cuda", enabled=(device == "cuda")):
+            o, f, v, _p, _po = model(chunk)  # 模型 v2 有 5 个头，这里只用前 3 个
+            o = torch.sigmoid(o.float())
+            f = torch.sigmoid(f.float())
+            v = torch.sigmoid(v.float())
         n = end - start
-        out_o[:, start:end, :] += torch.sigmoid(o[:, :n, :]).cpu()
-        out_f[:, start:end, :] += torch.sigmoid(f[:, :n, :]).cpu()
-        out_v[:, start:end, :] += torch.sigmoid(v[:, :n, :]).cpu()
+        out_o[:, start:end, :] += o[:, :n, :].cpu()
+        out_f[:, start:end, :] += f[:, :n, :].cpu()
+        out_v[:, start:end, :] += v[:, :n, :].cpu()
         count[:, start:end, :] += 1.0
     count[count == 0] = 1.0
     return ((out_o / count).squeeze(0).numpy(),

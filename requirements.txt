@@ -12,4 +12,7 @@ matplotlib
 verovio
 pymupdf
 lxml
+fastapi
+uvicorn
+python-multipart
 pytest

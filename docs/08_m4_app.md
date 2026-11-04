@@ -1,7 +1,8 @@
 # 08 M4 浏览器应用：Docker 本地交付方案
 
-> 状态：设计阶段（M4 未开始）。本文是产品与技术设计文档；面向使用者的傻瓜教程见
-> `../tutorial/07_running_app.md`（M4 完成后补全）。
+> 状态：**M4.1 MVP 已实现（2026-11-04）**，本地可跑通「上传 → 出谱 → 下载 / 回放」；
+> M4.2（Docker 镜像与分发）待做。本文是产品与技术设计文档；面向使用者的傻瓜教程见
+> `../tutorial/07_running_app.md`。
 
 ## 1. 目标与形态
 
@@ -148,3 +149,50 @@ PIANO2_DEVICE 环境变量优先（cuda / mps / cpu）
 
 M4 把推理管线封装好之后，M3.5（时值修复）只需要替换「解码/记谱」这一段，
 应用层不用改。所以先做 M4 不会白费工。
+
+## 10. M4.1 实现记录（MVP，2026-11-04）
+
+### 10.1 文件
+
+| 文件 | 作用 |
+|---|---|
+| `app/main.py` | FastAPI：`/` 页面、`/api/health`、`/api/transcribe`、`/api/jobs/{id}`、`/media/*` 产物 |
+| `app/jobs.py` | 内存任务表 + 单 worker 线程池（串行推理）+ 过期清理 |
+| `app/pipeline.py` | 音频 → 全部产物：MusicXML、PNG 分页、PDF、MIDI、回放 WAV |
+| `app/render_service.py` | verovio 渲染封装（必须主线程初始化 toolkit，见 10.3） |
+| `app/static/` | 单页前端：拖拽上传、进度轮询、乐谱分页、下载按钮、回放 |
+
+### 10.2 本地运行
+
+```bash
+# 需要先装依赖：fastapi uvicorn python-multipart（已在 requirements.txt）
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+# 浏览器打开 http://127.0.0.1:8000
+```
+
+模型默认从 `models/best.pt` 读取（可用 `PIANO2_CKPT` 覆盖）；设备自动检测（CUDA → MPS → CPU）。
+
+### 10.3 实现中踩的三个坑
+
+1. **verovio 不能在非主线程创建 toolkit**：FastAPI 的任务跑在工作线程，直接 `verovio.toolkit()`
+   会报「Bravura font could not be loaded」，`loadFile` 返回 False。解决：模块导入时（主线程）
+   创建全局 toolkit，之后加锁串行复用。
+2. **页数随页面选项变化**：默认选项下 3 页，换成 `pageWidth=2200, scale=48` 后是 2 页。
+   必须先 `setOptions` 再 `loadFile`，否则 `getPageCount()` 返回旧值，渲染会越界。
+3. **PDF 体积**：直接把 300 KB 的 PNG 塞进 PDF 会得到 28 MB 文件。改为缩小到 ≤1600 px、
+   JPEG 质量 82 后再嵌入，PDF 降到 **105 KB**。
+
+### 10.4 实测（RTX 4060）
+
+| 项目 | 结果 |
+|---|---|
+| 65 秒音频 | 首次任务 15.5 秒（含模型加载），后续任务 **5.2 秒** |
+| 音符事件 | 816 个 |
+| 页数 | 2 页 |
+| 产物 | MusicXML 245 KB / MIDI 5 KB / PDF 105 KB / WAV 2.9 MB |
+| 网页 | 乐谱分页显示、三个下载按钮、浏览器内回放 |
+
+### 10.5 待做（M4.2）
+
+Docker 镜像构建与分发（GPU / CPU 两个镜像）、`docker save` / `docker load` 验证、
+接收方操作文档（tutorial/07 补全）。

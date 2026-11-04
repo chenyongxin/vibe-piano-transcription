@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>piano2 · 钢琴录音转乐谱</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">piano2</div>
+    <div class="sub">钢琴录音 → 可读乐谱（本地浏览器应用）</div>
+    <div class="device" id="device">设备检测中…</div>
+  </header>
+
+  <main class="wrap">
+    <section class="card" id="upload-card">
+      <div class="dropzone" id="dropzone">
+        <div class="dz-icon">🎹</div>
+        <div class="dz-title">把钢琴录音拖到这里</div>
+        <div class="dz-hint">支持 wav / mp3 / m4a / flac，≤ 100 MB；只支持独奏钢琴</div>
+        <button class="btn ghost" id="pick-btn">选择文件</button>
+        <input type="file" id="file-input" accept="audio/*" hidden />
+      </div>
+      <div class="row" id="file-info" hidden>
+        <span id="file-name"></span>
+        <button class="btn primary" id="start-btn">开始转录</button>
+      </div>
+    </section>
+
+    <section class="card" id="status-card" hidden>
+      <div class="status-line">
+        <span class="dot" id="dot"></span>
+        <span id="stage">排队中…</span>
+        <span class="muted" id="elapsed"></span>
+      </div>
+      <div class="progress"><div class="progress-inner" id="progress-bar"></div></div>
+      <div class="error" id="error" hidden></div>
+    </section>
+
+    <section class="card" id="result-card" hidden>
+      <div class="result-head">
+        <div>
+          <div class="result-title">转录结果</div>
+          <div class="muted" id="stats"></div>
+        </div>
+        <div class="actions">
+          <a class="btn ghost" id="dl-xml" download>下载 MusicXML</a>
+          <a class="btn ghost" id="dl-pdf" download>下载 PDF</a>
+          <a class="btn ghost" id="dl-mid" download>下载 MIDI</a>
+        </div>
+      </div>
+      <audio id="player" controls preload="metadata"></audio>
+      <div class="pages" id="pages"></div>
+    </section>
+
+    <footer class="foot">
+      <span>M4.1 MVP</span>
+      <span>·</span>
+      <span>独奏钢琴，建议 ≤ 5 分钟</span>
+      <span>·</span>
+      <span>乐谱时值仍可能有误差（M3.5 会修）</span>
+    </footer>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

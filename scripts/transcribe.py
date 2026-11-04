@@ -26,7 +26,7 @@ def main():
     ap.add_argument("--wav", required=True, help="输入音频路径")
     ap.add_argument("--model", default=str(CKPT), help="模型检查点路径")
     ap.add_argument("--out-dir", default=str(OUTPUT_ROOT / "transcribe"), help="输出目录")
-    ap.add_argument("--device", default="cuda", help="cuda 或 cpu")
+    ap.add_argument("--device", default="auto", help="auto / cuda / mps / cpu")
     ap.add_argument("--title", default="piano2 transcription", help="乐谱标题")
     ap.add_argument("--no-png", action="store_true", help="不渲染 PNG 预览")
     args = ap.parse_args()
@@ -39,6 +39,8 @@ def main():
     cqt = compute_cqt(args.wav)
     print("[-] 加载模型 ...")
     model = load_model(args.model, args.device)
+    from piano2.inference import pick_device
+    print(f"[+] 推理设备: {pick_device(args.device)}")
     print("[-] 滑窗推理 ...")
     onset, frame, vel = infer_sliding_window(model, cqt, args.device)
     print("[-] 解码 ...")

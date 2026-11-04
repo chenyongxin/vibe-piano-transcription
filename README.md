@@ -11,10 +11,10 @@
 |---|---|
 | 解码器（概率图 → 音符事件） | 定型：onset F1 0.952 / 0.943 / 0.798（稀疏/中等/密集），留出集 0.821 |
 | 记谱（事件 → MusicXML） | v1.1：黑音符占比 0.724、左右手小节一致、时长误差 -2.83% |
-| 模型与训练 | 五头模型 + 训练脚本 + 本地 pilot 通过（1000 步 F1 0.539，仍在上升） |
+| 模型与训练 | 五头模型 + 训练脚本；4060 首版 36k 步：留出集 onset F1 0.874、精确率 0.878（判据达标） |
 | 评测 | oracle 自检 + 固定评测集 + 实验登记表 |
-| 全量训练（4090） | **待做（M3）** |
-| 浏览器应用 | 待做（M4） |
+| 全量训练（71k 步） | **待做（M3 第二版）** |
+| 浏览器应用 | **M4.1 MVP 可用**（本机运行：上传 → 看谱 → 下载 PDF/MIDI → 回放）；Docker 分发待做 |
 
 ## 快速开始
 
@@ -25,11 +25,15 @@ pip install -e .
 # 单元测试（10 个测试；无数据/无 GPU 时自动跳过依赖项）
 python -m pytest -q
 
-# 音频 → 乐谱
+# 启动浏览器应用（M4.1 MVP）
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+# 浏览器打开 http://127.0.0.1:8000 ，拖入一段钢琴录音
+
+# 音频 → 乐谱（命令行）
 python scripts/transcribe.py --wav /path/to/audio.wav --out-dir outputs/transcribe
 
 # 固定评测集评测
-python scripts/evaluate.py --model /path/to/checkpoint.pt
+python scripts/evaluate.py --model models/best.pt
 ```
 
 数据与模型权重不随仓库分发，路径用环境变量指定（见 `src/piano2/constants.py`）。
