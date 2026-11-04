@@ -79,6 +79,45 @@ docker run --gpus all -p 8000:8000 piano2-app:0.1
 - 镜像体积大（PyTorch CUDA runtime 数 GB），考虑 CPU 版镜像作为轻量替代；
 - macOS 没有 NVIDIA：镜像自动降级为 CPU 模式（慢但可用）。
 
+## 5.1 设备兼容性与实测性能（M4 设计验证）
+
+推理在容器内运行，PyTorch 通过 Docker 的 GPU 直通使用宿主机显卡（Windows 需 WSL2 + NVIDIA 驱动；
+Linux 需 nvidia-container-toolkit；macOS 无法直通 NVIDIA，容器内 `mps` 也不可用，只能 CPU）。
+
+实测（同一模型，65 秒与 305.8 秒两段音频，只算推理到 MusicXML，不含 PNG 渲染）：
+
+| 音频长度 | CPU（10 线程） | GPU（RTX 4060） | CPU / GPU |
+|---|---|---|---|
+| 65 秒 | 约 3.7 秒 | 约 2–4 秒 | 约 1–2 倍 |
+| 305.8 秒（5 分钟） | **8.8 秒** | **6.3 秒** | **约 1.4 倍** |
+
+结论：**这个模型只有 1145 万参数，CPU 推理已经够用**（5 分钟音频 9 秒）。瓶颈不只是模型，
+CQT 计算与 Python 侧的记谱也占相当比例。所以「没有 GPU」不是 M4 的阻断项，只是慢一些。
+
+### 设备选择策略
+
+```text
+PIANO2_DEVICE 环境变量优先（cuda / mps / cpu）
+否则自动检测：CUDA 可用 → cuda；MPS 可用（仅 macOS 原生运行，不在 Docker 内）→ mps；否则 cpu
+```
+
+不同设备的配套设置：
+
+| 设备 | 精度 | 说明 |
+|---|---|---|
+| CUDA | fp16 autocast | 最快；显存占用低 |
+| MPS | float32 | 仅 macOS 原生运行（不在容器内）；部分算子可能回退 CPU |
+| CPU | float32 | 设置线程数；模型小，无需量化 |
+
+### 镜像策略
+
+| 镜像 | 基底 | 体积 | 给谁 |
+|---|---|---|---|
+| `piano2-app:gpu` | PyTorch CUDA runtime | 大（tar 约数 GB） | Windows/Linux + NVIDIA |
+| `piano2-app:cpu` | PyTorch CPU wheel | 小（tar 约 1 GB） | macOS、无显卡机器 |
+
+两个镜像用同一个 Dockerfile + `ARG BASE_IMAGE` 构建，代码与权重相同。
+
 ## 6. 范围与限制
 
 | 项目 | MVP 范围 | 暂不做 |
