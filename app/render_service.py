@@ -108,3 +108,137 @@ def _png_size(png_path):
     width = int.from_bytes(head[16:20], "big")
     height = int.from_bytes(head[20:24], "big")
     return width, height
+
+
+def render_svg_with_timing(xml_path, n_pages, times_ms, page_width=2200, scale=48):
+    """一次加载内同时渲染全部 SVG 页并采样时间轴，保证元素 id 一致。
+
+    关键点：verovio 每次 loadFile 会重新生成元素 id，所以「渲染 SVG」和
+    「查询某时刻的元素」必须在同一次加载里完成，否则 id 对不上。
+
+    参数:
+        xml_path (str): MusicXML 路径。
+        n_pages (int): 页数。
+        times_ms (list[float]): 采样时间点（毫秒）。
+        page_width (int): 页面宽度。
+        scale (int): 缩放。
+
+    返回:
+        tuple[list[str], list[dict]]: (SVG 文本列表, 时间轴采样)。
+    """
+    import re
+
+    tk = _get_toolkit()
+    svgs = []
+    samples = []
+    with _lock:
+        _apply_options(tk, page_width=page_width, scale=scale)
+        if not tk.loadFile(str(xml_path)):
+            raise RuntimeError(f"verovio 无法加载: {xml_path}")
+        for pg in range(1, n_pages + 1):
+            svgs.append(tk.renderToSVG(pg))
+        id_page = {}
+        for page, svg in enumerate(svgs, 1):
+            for match in re.finditer(r'id="([^"]+)"', svg):
+                id_page.setdefault(match.group(1), page)
+        for ms in times_ms:
+            data = tk.getElementsAtTime(int(ms))
+            ids = [i for i in data.get("notes", []) if i in id_page]
+            if ids:
+                samples.append({"t": round(ms / 1000.0, 2),
+                                "page": id_page[ids[0]], "ids": ids})
+    return svgs, samples
+
+
+def render_svg(xml_path, page=1, page_width=2200, scale=48):
+    """返回指定页的 SVG 文本（**不剥离 PUA 文本**，浏览器能加载内嵌字体）。
+
+    参数:
+        xml_path (str): MusicXML 路径。
+        page (int): 页码（从 1 开始）。
+        page_width (int): verovio 页面宽度。
+        scale (int): verovio 缩放。
+
+    返回:
+        str: SVG 文本，元素带稳定 id（供前端高亮用）。
+    """
+    tk = _get_toolkit()
+    with _lock:
+        _apply_options(tk, page_width=page_width, scale=scale)
+        if not tk.loadFile(str(xml_path)):
+            raise RuntimeError(f"verovio 无法加载: {xml_path}")
+        return tk.renderToSVG(page)
+
+
+def elements_at_time(xml_path, time_ms, page_width=2200, scale=48):
+    """返回某个时刻正在演奏的谱面元素 id。
+
+    参数:
+        xml_path (str): MusicXML 路径。
+        time_ms (float): 时间（毫秒），基于乐谱速度（verovio 内部时间轴）。
+        page_width (int): 与渲染一致的页面宽度。
+        scale (int): 与渲染一致的缩放。
+
+    返回:
+        dict: {"notes": [...], "rests": [...], "measures": [...]}。
+    """
+    tk = _get_toolkit()
+    with _lock:
+        _apply_options(tk, page_width=page_width, scale=scale)
+        if not tk.loadFile(str(xml_path)):
+            raise RuntimeError(f"verovio 无法加载: {xml_path}")
+        data = tk.getElementsAtTime(int(time_ms))
+    result = {}
+    for key in ("notes", "rests", "measures"):
+        value = data.get(key, [])
+        result[key] = list(value) if isinstance(value, (list, tuple)) else [value]
+    return result
+
+
+def elements_at_times(xml_path, times_ms, page_width=2200, scale=48):
+    """批量查询多个时刻的谱面元素（只加载一次 MusicXML，速度快）。
+
+    参数:
+        xml_path (str): MusicXML 路径。
+        times_ms (list[float]): 时间点（毫秒）。
+        page_width (int): 与渲染一致的页面宽度。
+        scale (int): 与渲染一致的缩放。
+
+    返回:
+        list[dict]: 每个时刻的 {"notes", "rests", "measures"}。
+    """
+    tk = _get_toolkit()
+    result = []
+    with _lock:
+        _apply_options(tk, page_width=page_width, scale=scale)
+        if not tk.loadFile(str(xml_path)):
+            raise RuntimeError(f"verovio 无法加载: {xml_path}")
+        for t in times_ms:
+            data = tk.getElementsAtTime(int(t))
+            item = {}
+            for key in ("notes", "rests", "measures"):
+                value = data.get(key, [])
+                item[key] = list(value) if isinstance(value, (list, tuple)) else [value]
+            result.append(item)
+    return result
+
+
+def export_midi(xml_path, page_width=2200, scale=48):
+    """把乐谱导出成标准 MIDI 字节（带速度信息，与谱面时间轴一致）。
+
+    参数:
+        xml_path (str): MusicXML 路径。
+        page_width (int): 与渲染一致的页面宽度。
+        scale (int): 与渲染一致的缩放。
+
+    返回:
+        bytes: MIDI 文件内容。
+    """
+    import base64
+
+    tk = _get_toolkit()
+    with _lock:
+        _apply_options(tk, page_width=page_width, scale=scale)
+        if not tk.loadFile(str(xml_path)):
+            raise RuntimeError(f"verovio 无法加载: {xml_path}")
+        return base64.b64decode(tk.renderToMIDI())

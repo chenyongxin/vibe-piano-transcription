@@ -131,3 +131,41 @@ audio { width: 100%; margin: 16px 0; }
   gap: 8px;
   flex-wrap: wrap;
 }
+
+/* ── 播放跟随高亮与拖动定位（M4.1b） ── */
+.seek-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 6px;
+}
+.seek-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.seek-row .time {
+  width: 44px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.hint {
+  margin-bottom: 10px;
+}
+.score-page {
+  margin-bottom: 14px;
+  cursor: crosshair;
+  user-select: none;
+}
+.score-page svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+.score-page .note-active,
+.score-page .note-active * {
+  fill: #c0392b !important;
+}

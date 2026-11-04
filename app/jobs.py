@@ -105,7 +105,10 @@ class JobStore:
                 "n_events": job.result["n_events"],
                 "n_pages": job.result["n_pages"],
                 "device": job.result["device"],
+                "duration_s": job.result.get("duration_s", 0),
                 "pages": [f"{media}/{name}" for name in job.result["pages"]],
+                "svg_pages": [f"{media}/{name}" for name in job.result.get("svg_pages", [])],
+                "timing": f"{media}/{job.result['timing']}" if job.result.get("timing") else None,
                 "files": {
                     "musicxml": f"{media}/{job.result['musicxml']}",
                     "midi": f"{media}/{job.result['midi']}",
