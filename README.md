@@ -41,8 +41,9 @@ python scripts/evaluate.py --model /path/to/checkpoint.pt
 | `src/piano2/` | 产品代码：特征、模型、训练、解码、记谱、渲染、评测 |
 | `scripts/` | 命令行入口：`build_data.py`、`transcribe.py`、`evaluate.py`、`check_labels.py` |
 | `tests/` | pytest 测试 |
-| `docs/` | 总览、数据、模型训练、解码、记谱评测、阶段程序、路线图；`docs/history/` 是 M0–M1 历史文档 |
-| `experiments/` | M0/M0.5/M0.6/M1 的阶段程序、报告、产物与实验登记表 |
+| `docs/` | 产品与技术参考：总览、数据、模型训练、解码、记谱评测、阶段程序、路线图、M4 应用设计；`docs/history/` 是历史文档 |
+| `tutorial/` | **教学与入门**：从声音到乐谱的每一步、图解、常见问题、应用使用教程 |
+| `experiments/` | 各里程碑的阶段程序、报告、产物与实验登记表 |
 
 ## 文档
 
@@ -53,7 +54,16 @@ python scripts/evaluate.py --model /path/to/checkpoint.pt
 - [`docs/05_notation_eval.md`](docs/05_notation_eval.md)：记谱、渲染与评测口径
 - [`docs/06_stage_programs.md`](docs/06_stage_programs.md)：M0/M0.5/M0.6/M1 程序说明
 - [`docs/07_roadmap.md`](docs/07_roadmap.md)：M3 训练与 M4 应用计划
+- [`docs/08_m4_app.md`](docs/08_m4_app.md)：M4 浏览器应用（Docker 本地交付）设计
 - [`docs/00_glossary.md`](docs/00_glossary.md)：术语表
+
+## 教程
+
+- [`tutorial/README.md`](tutorial/README.md)：教程目录与阅读路径
+- [`tutorial/02_features_cqt_hop_frames.md`](tutorial/02_features_cqt_hop_frames.md)：CQT、hop、帧、T
+- [`tutorial/03_labels_from_midi.md`](tutorial/03_labels_from_midi.md)：6 个标签通道与踏板
+- [`tutorial/06_faq.md`](tutorial/06_faq.md)：常见问题（黑音符、holdout、PUA、训练成本）
+- [`tutorial/07_running_app.md`](tutorial/07_running_app.md)：浏览器应用使用教程（M4 完成后补全）
 
 ## 重要说明
 

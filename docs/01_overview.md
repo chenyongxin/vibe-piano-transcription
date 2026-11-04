@@ -91,7 +91,10 @@ python scripts/evaluate.py --model outputs/M1/pilot_onset2/checkpoints/best.pt
 | `05_notation_eval.md` | 记谱流程、渲染、评测口径与 oracle |
 | `06_stage_programs.md` | M0/M0.5/M0.6/M1 阶段程序说明（保留原因与用法） |
 | `07_roadmap.md` | M3 训练计划、M4 应用计划、风险清单 |
-| `history/` | M0–M1 的历史报告与调试日志（原样保留） |
+| `08_m4_app.md` | M4 浏览器应用（Docker 本地交付）的设计、API、镜像分发与验收标准 |
+| `history/` | M0–M3 的历史报告与调试日志（原样保留） |
+
+教学向的内容放在仓库根的 `tutorial/`：从声音到乐谱的每一步、图解、常见问题、应用使用教程。
 
 ## 6. 一个必须知道的约定
 
