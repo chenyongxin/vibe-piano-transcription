@@ -172,3 +172,30 @@ G7 实测（合成数据）为 0.082 秒/步、1.63 GB，与 pilot 实测一致�
 | 长音/踏板边界学不好 | pedal 头 + frame 标签含踏板，M3 单独评估踏板指标 |
 | 模型选择只看 F1 会忽略时值 | M3 同时记录 note-with-offset F1，选模型以 onset F1 为主、报告两者 |
 | 训练中断 | 检查点含 optimizer，`--resume` 继续 |
+
+## 7. 全量训练与断点续训（M3 第二版，进行中）
+
+启动脚本：`scripts/full_train.sh`（容器内），详细操作见 `scripts/full_training.md`。
+
+```bash
+# 全新开始
+bash scripts/full_train.sh
+
+# 关机/中断后第二天续训
+RESUME=1 bash scripts/full_train.sh
+```
+
+**断点机制**：
+
+- 每 200 步保存 `outputs/M1/m3_full_4060/checkpoints/latest.pt`
+  （模型 + AdamW 优化器状态 + 已完成步数 + best F1）；
+- 每 500 步做验证，若验证 F1 刷新最佳则另存 `best.pt`；
+- 每 200 步同时更新 `progress.json`（步数、best F1、学习率、更新时间）；
+- 续训用 `--resume auto` 读 latest.pt：恢复权重/优化器/步数，学习率按同一 cosine 计划继续，
+  训练日志追加而不是覆盖；最多丢失 200 步（约 16 秒）。
+
+**已验证**：临时跑到 160 步后强制中断，续训从 step=160 恢复、学习率与 best F1 正确，
+跑到 300 步时 lr=3e-4（warmup 结束点）符合预期。
+
+正式运行（2026-11-04 晚）：`m3_full_4060`，71,160 步，RTX 4060，约 0.084 秒/步，
+预计 100 分钟左右。产物与评测完成后补进 `experiments/registry/`。

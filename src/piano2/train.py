@@ -157,12 +157,15 @@ def main():
     ap.add_argument("--lr", type=float, default=3e-4)
     ap.add_argument("--warmup", type=int, default=300)
     ap.add_argument("--val-every", type=int, default=200)
+    ap.add_argument("--save-every", type=int, default=500,
+                    help="每多少步保存一次 latest.pt（断点续训用）")
     ap.add_argument("--val-segments", type=int, default=120)
     ap.add_argument("--num-workers", type=int, default=4)
     ap.add_argument("--label-channel", type=str, default="onset2")
     ap.add_argument("--run-name", type=str, default="pilot")
     ap.add_argument("--dry-run", action="store_true", help="只跑几十步检查链路")
-    ap.add_argument("--resume", type=str, default="")
+    ap.add_argument("--resume", type=str, default="",
+                    help="检查点路径；写 auto 表示自动读 run 目录下的 latest.pt")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
@@ -202,22 +205,43 @@ def main():
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
     scaler = torch.amp.GradScaler(device="cuda", enabled=(device == "cuda"))
 
+    # 续训时用追加模式，避免把之前的训练日志覆盖掉
     log_path = os.path.join(run_dir, "train_log.csv")
-    log_fh = open(log_path, "w", newline="", encoding="utf-8")
-    writer = csv.writer(log_fh)
-    writer.writerow(["step", "loss", "loss_onset", "loss_frame", "loss_vel",
-                     "loss_pedal", "loss_pedal_on", "lr", "elapsed_s"])
+    resume_path = args.resume
+    if resume_path == "auto":
+        resume_path = os.path.join(run_dir, "checkpoints", "latest.pt")
+    resuming = bool(resume_path) and os.path.exists(resume_path)
+    if resuming:
+        log_fh = open(log_path, "a", newline="", encoding="utf-8")
+        writer = csv.writer(log_fh)
+        if os.path.getsize(log_path) == 0:
+            writer.writerow(["step", "loss", "loss_onset", "loss_frame", "loss_vel",
+                             "loss_pedal", "loss_pedal_on", "lr", "elapsed_s"])
+    else:
+        log_fh = open(log_path, "w", newline="", encoding="utf-8")
+        writer = csv.writer(log_fh)
+        writer.writerow(["step", "loss", "loss_onset", "loss_frame", "loss_vel",
+                         "loss_pedal", "loss_pedal_on", "lr", "elapsed_s"])
 
     best_f1 = -1.0
     t0 = time.time()
     step = 0
-    if args.resume and os.path.exists(args.resume):
-        ckpt = torch.load(args.resume, map_location=device)
+    if resuming:
+        ckpt = torch.load(resume_path, map_location=device)
         model.load_state_dict(ckpt["model"])
         optimizer.load_state_dict(ckpt["optimizer"])
-        step = ckpt["step"]
-        best_f1 = ckpt.get("best_f1", -1.0)
-        print(f"从 {args.resume} 续训，step={step}")
+        step = int(ckpt["step"])
+        best_f1 = float(ckpt.get("best_f1", -1.0))
+        old_max = ckpt.get("config", {}).get("max_steps")
+        if old_max and int(old_max) != args.max_steps:
+            print(f"[!] 注意：检查点记录的 max_steps={old_max}，本次传的是 {args.max_steps}；"
+                  f"学习率调度会按新值计算，建议保持一致")
+        print(f"从 {resume_path} 续训：step={step}，best_f1={best_f1:.4f}，"
+              f"剩余 {args.max_steps - step} 步（约 {args.max_steps - step} × 0.08 秒）")
+    if step >= args.max_steps:
+        print("检查点已达到目标步数，无需继续训练")
+        log_fh.close()
+        return
 
     model.train()
     while step < args.max_steps:
@@ -261,6 +285,17 @@ def main():
                       f"onset={float(loss_o):.4f} frame={float(loss_f):.4f} "
                       f"lr={lr:.2e} 用时 {time.time() - t0:.0f}s", flush=True)
 
+            # 定期保存断点（与验证解耦），保证意外关机最多丢 save_every 步
+            if args.save_every > 0 and step % args.save_every == 0:
+                ckpt = {"model": model.state_dict(), "optimizer": optimizer.state_dict(),
+                        "step": step, "best_f1": best_f1, "config": vars(args), "val": {}}
+                torch.save(ckpt, os.path.join(run_dir, "checkpoints", "latest.pt"))
+                with open(os.path.join(run_dir, "progress.json"), "w", encoding="utf-8") as fh:
+                    json.dump({"step": step, "max_steps": args.max_steps,
+                               "best_f1": best_f1, "lr": lr,
+                               "updated": time.strftime("%Y-%m-%d %H:%M:%S")},
+                              fh, ensure_ascii=False)
+
             if step % args.val_every == 0:
                 val = evaluate(model, val_loader, device)
                 print(f"  [val] step {step}: P={val['P']:.3f} R={val['R']:.3f} F1={val['F1']:.3f}")
@@ -269,6 +304,11 @@ def main():
                         "step": step, "best_f1": max(best_f1, val["F1"]),
                         "config": vars(args), "val": val}
                 torch.save(ckpt, os.path.join(run_dir, "checkpoints", "latest.pt"))
+                with open(os.path.join(run_dir, "progress.json"), "w", encoding="utf-8") as fh:
+                    json.dump({"step": step, "max_steps": args.max_steps,
+                               "best_f1": max(best_f1, val["F1"]), "val_f1": val["F1"],
+                               "lr": lr, "updated": time.strftime("%Y-%m-%d %H:%M:%S")},
+                              fh, ensure_ascii=False)
                 if val["F1"] > best_f1:
                     best_f1 = val["F1"]
                     torch.save({**ckpt, "best_f1": best_f1},
