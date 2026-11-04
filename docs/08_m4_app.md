@@ -192,6 +192,10 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 | 产物 | MusicXML 245 KB / MIDI 5 KB / PDF 105 KB / WAV 2.9 MB |
 | 网页 | 乐谱分页显示、三个下载按钮、浏览器内回放 |
 
+真实界面（第一次上传测试音频、后台完成后的结果页）：
+
+![M4.1 界面](figs/18_app_ui.png)
+
 ### 10.5 待做（M4.2）
 
 Docker 镜像构建与分发（GPU / CPU 两个镜像）、`docker save` / `docker load` 验证、
