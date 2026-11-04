@@ -1,7 +1,17 @@
+:root {
+  --bg: #f6f3ec;
+  --card: #ffffff;
+  --ink: #2c3e50;
+  --muted: #7f8c8d;
+  --line: #e3ddd2;
+  --accent: #c0392b;
+  --accent-2: #8e44ad;
+  --band: rgba(255, 232, 120, 0.55);
+}
+
 * { box-sizing: border-box; }
 
 [hidden] { display: none !important; }
-* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -32,18 +42,21 @@ body {
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .dropzone {
-  border: 2px dashed var(--line);
+  border: 2px dashed #d9cdb8;
   border-radius: 12px;
-  padding: 40px 16px;
+  padding: 34px 16px;
   text-align: center;
+  background: #fffdf8;
   transition: border-color 0.15s ease, background 0.15s ease;
+  cursor: pointer;
 }
-.dropzone.over { border-color: var(--accent); background: #fdf6f4; }
-.dz-icon { font-size: 34px; }
-.dz-title { font-size: 17px; font-weight: 600; margin: 8px 0 4px; }
+.dropzone.over { border-color: var(--accent); background: #fdf3ef; }
+.dz-icon { font-size: 36px; }
+.dz-title { font-size: 18px; font-weight: 700; margin: 8px 0 4px; }
 .dz-hint { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
 
 .btn {
@@ -52,15 +65,16 @@ body {
   background: #fff;
   color: var(--ink);
   border-radius: 8px;
-  padding: 8px 14px;
+  padding: 9px 16px;
   font-size: 14px;
   cursor: pointer;
   text-decoration: none;
 }
 .btn:hover { border-color: var(--accent); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.btn.primary:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.btn.primary:hover { background: #a93226; }
 .btn.ghost { background: #fff; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .row {
   display: flex;
@@ -72,18 +86,18 @@ body {
 }
 
 .status-line { display: flex; align-items: center; gap: 10px; font-size: 15px; }
-.muted { color: var(--muted); font-size: 12px; }
+.muted { color: var(--muted); font-size: 12.5px; }
 .dot {
   width: 10px; height: 10px; border-radius: 50%;
   background: var(--accent-2);
   animation: pulse 1.2s infinite ease-in-out;
 }
-@keyframes pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 1; } }
+@keyframes pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
 
 .progress {
   margin-top: 12px;
   height: 8px;
-  background: #eee9e0;
+  background: #eee9df;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -113,14 +127,40 @@ body {
 .result-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-audio { width: 100%; margin: 16px 0; }
+audio { width: 100%; margin: 16px 0 6px; }
+
+.hint { margin: 2px 0 10px; }
 
 .pages { display: flex; flex-direction: column; gap: 14px; }
-.pages img {
-  width: 100%;
+
+.score-page {
+  position: relative;
+  margin-bottom: 14px;
+  cursor: crosshair;
+  user-select: none;
+  background: #fff;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+}
+.score-page svg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  display: block;
+  background: transparent;
+}
+.score-page .band {
+  position: absolute;
+  z-index: 0;
+  background: var(--band);
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+}
+.score-page .note-active,
+.score-page .note-active * {
+  fill: #c0392b !important;
 }
 
 .foot {
@@ -130,42 +170,4 @@ audio { width: 100%; margin: 16px 0; }
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-}
-
-/* ── 播放跟随高亮与拖动定位（M4.1b） ── */
-.seek-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 4px 0 6px;
-}
-.seek-row input[type="range"] {
-  flex: 1;
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-.seek-row .time {
-  width: 44px;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-.hint {
-  margin-bottom: 10px;
-}
-.score-page {
-  margin-bottom: 14px;
-  cursor: crosshair;
-  user-select: none;
-}
-.score-page svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fff;
-}
-.score-page .note-active,
-.score-page .note-active * {
-  fill: #c0392b !important;
 }

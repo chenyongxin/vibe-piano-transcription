@@ -205,14 +205,16 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 1. 服务端把每页渲染成 **SVG**（不剥离 PUA 文本，浏览器能加载内嵌音乐字体）并内联到页面；
 2. 用 verovio 的 `getElementsAtTime(ms)` 每 100 ms 采样一次，生成
-   `timing.json`：`{t, page, ids}`——某个时刻正在演奏的谱面元素 id；
-3. 前端用 `requestAnimationFrame` 跟随 `audio.currentTime`，给对应 id 的元素加 `.note-active`
-   类（红色），并自动滚动到可见区域；
+   `timing.json`：`{t, page, ids, measures}`——某个时刻正在演奏的音符 id 与所在小节 id；
+3. 前端用 `requestAnimationFrame` 跟随 `audio.currentTime`：
+   - 给当前音符加 `.note-active` 类（**红色**）；
+   - 按小节 id 取 bbox，在页面里放一个**淡黄色半透明块**（当前小节所在系统行），像卡拉 OK 的行高亮；
+   - 自动滚动到可见区域；
 4. **拖动**：在乐谱上按下时记录「原来是否在播放」并暂停；拖动中实时预览高亮位置；
    松手设置 `audio.currentTime`，若之前在播放则恢复播放，否则保持暂停；
-5. 另有一条独立的进度滑条，行为与拖动一致（浏览器原生音频元素本身也支持拖动进度）。
+5. 进度用浏览器**自带的音频播放器进度条**，不再额外做一条重复的滑条（M4.1 初版做过，已删）。
 
-真实效果（定位到第 20 秒，红色为当前音符）：
+真实效果（定位到第 20 秒：淡黄色块 + 红色音符）：
 
 ![播放跟随高亮](figs/19_playing_highlight.png)
 
@@ -223,9 +225,13 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 - **回放与谱面共用时间轴**：MIDI 改用 verovio 从乐谱导出（带速度信息），回放音频也从这份
   MIDI 合成，高亮时间轴与声音严格一致（不再用原始事件时间近似）。
 
-**踩的坑**：verovio 每次 `loadFile` 都会重新生成元素 id，所以「渲染 SVG」和「采样时间轴」
-必须在**同一次加载**里完成，否则 id 对不上、高亮永远找不到元素；另外 `getElementsAtTime`
-只接受整数毫秒。
+**踩的坑**：
+
+1. verovio 每次 `loadFile` 都会重新生成元素 id，所以「渲染 SVG」和「采样时间轴」
+   必须在**同一次加载**里完成，否则 id 对不上、高亮永远找不到元素；
+2. `getElementsAtTime` 只接受整数毫秒，且返回的字段是单数 `measure`（不是 `measures`）；
+3. 初版改 CSS 时误把文件开头的 `:root` 变量块删掉，导致所有 `var(--...)` 失效——
+   卡片边框、按钮颜色全部消失（用户看到「界面没有框了」），恢复变量块后正常。
 
 ### 10.6 待做（M4.2）
 

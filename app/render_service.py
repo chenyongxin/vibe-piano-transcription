@@ -144,9 +144,14 @@ def render_svg_with_timing(xml_path, n_pages, times_ms, page_width=2200, scale=4
         for ms in times_ms:
             data = tk.getElementsAtTime(int(ms))
             ids = [i for i in data.get("notes", []) if i in id_page]
-            if ids:
-                samples.append({"t": round(ms / 1000.0, 2),
-                                "page": id_page[ids[0]], "ids": ids})
+            if not ids:
+                continue
+            # verovio 返回的字段名是单数 measure，同时直接给出 page
+            measure = data.get("measure")
+            page = data.get("page") or id_page[ids[0]]
+            measures = [measure] if measure in id_page else []
+            samples.append({"t": round(ms / 1000.0, 2),
+                            "page": int(page), "ids": ids, "measures": measures})
     return svgs, samples
 
 
