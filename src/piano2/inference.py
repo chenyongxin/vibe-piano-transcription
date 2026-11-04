@@ -89,6 +89,7 @@ def load_model(checkpoint, device="auto"):
     """
     import os
 
+    device = pick_device(device)
     if not os.path.exists(checkpoint):
         raise FileNotFoundError(f"找不到模型检查点: {checkpoint}")
     model = PianoModelV2().to(device)
