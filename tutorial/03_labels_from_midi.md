@@ -70,10 +70,29 @@ A/B 实验（各 1000 步）：3 帧 F1=0.400、2 帧 0.539、1 帧 0.582。旧�
 
 **现状**：数据 v2 里只有 frame（含踏板），没有 offset 通道。所以模型只能从 frame 概率的下降去猜结束时间——既受踏板影响，也不够准。这就是 note-with-offset F1 只有 0.19–0.38 的原因。
 
-**下一步计划**：数据 v3a 会从 MIDI note-off 生成 offset 标签（和 onset 一样，不需要人工标注），并把 frame 拆成两个口径：
+**看得见、听得到的对比**（同一段 10 秒 Haydn 演奏）：
 
-- frame_key（按键时长，不含踏板）——用于音符时值；
-- pedal 通道——保留给踏板相关的延音/记谱判断。
+![frame 与 offset 的区别](../docs/figs/21_frame_vs_offset.png)
+
+- ① 黑线 = GT 按键区间，红点 = offset 事件（键释放）；
+- ② 灰线 = 训练用 frame 标签（含踏板）——同一个音在 **offset=0.8 秒** 键就松了，frame 却延续到 **2.2 秒**；
+- ③ 同一批预测：onset-only F1 0.970，note-with-offset F1 只有 0.186，把结束时间换成 GT 后回到 0.969——差距全部来自结束时间；
+- ④ 预测时长 / GT 按键时长中位数 **3.23 倍**。
+
+可以对比试听（`E:\Docker\piano2_demo\`）：
+
+| 文件 | 内容 | 听感 |
+|---|---|---|
+| `correct_ref.wav` | 用 MIDI note-off（正确时值）合成 | 干净、该停就停 |
+| `app_output.wav` | 当前模型输出（结束时间从 frame 推） | 拖长、和弦互相压住、发闷 |
+| `original.wav` | 原始录音 | 真实演奏参照 |
+
+**已实施的数据与模型改动**：
+
+- **数据 v3a**：frame 改为 `frame_key`（按键时长，不含踏板），CQT/pedal 硬链接复用 v2；
+- **数据 v3b**：在 v3a 上增加第 7 通道 `offset`（note-off 帧起 2 帧），作为 offset 头的监督；
+- **模型**：增加第 6 个头（offset），解码时优先用 offset 峰确定结束时间，找不到再退回 frame；
+- 训练时用 `--offset-loss` 控制 offset 损失权重（只对 v3b 数据打开）。
 
 ## 为什么标签用 uint8
 

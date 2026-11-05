@@ -69,6 +69,10 @@ class DecodeConfig:
     harmonic_window_frames: int = 5
     harmonic_frame_max: float = 1.0
     frame_gate: float = 0.0
+    use_offset_end: bool = False
+    offset_threshold: float = 0.5
+    offset_min_frames: int = 2
+    offset_max_frames: int = 160
 
     def with_(self, **kwargs):
         """返回替换了若干字段的新配置（dataclass 不可变，避免调参时相互污染）。"""
@@ -245,7 +249,46 @@ def _decode_without_harmonic(onset, frame, vel, cfg):
     return _merge_same_pitch(all_events, cfg.merge_gap)
 
 
-def decode(onset, frame, vel, cfg):
+def apply_offset_ends(events, offset_probs, cfg):
+    """用 offset 头（键释放事件）修正每个音符的结束时间。
+
+    规则：从起点后 offset_min_frames 帧开始，在 offset_max_frames 帧内找第一个
+    概率超过 offset_threshold 的 offset 峰；找到就把结束时间设为该峰，否则保留
+    原来由 frame 推断的结束时间。
+
+    参数:
+        events (list[NoteEvent]): 已解码的音符事件。
+        offset_probs (numpy.ndarray | None): (T, 88) offset 概率；None 或未启用时原样返回。
+        cfg (DecodeConfig): 需要 use_offset_end / offset_threshold /
+            offset_min_frames / offset_max_frames。
+
+    返回:
+        list[NoteEvent]: 修正结束时间后的事件。
+    """
+    if offset_probs is None or not cfg.use_offset_end:
+        return events
+    from scipy.signal import find_peaks
+
+    fps = SR / HOP_LENGTH
+    total = offset_probs.shape[0]
+    fixed = []
+    for event in events:
+        key = event.pitch - 21
+        start = int(round(event.start * fps))
+        lo = start + cfg.offset_min_frames
+        hi = min(total, start + cfg.offset_max_frames)
+        end = event.end
+        if 0 <= key < 88 and hi - lo >= 2:
+            peaks, _ = find_peaks(offset_probs[lo:hi, key], height=cfg.offset_threshold)
+            if len(peaks):
+                end = (lo + int(peaks[0])) / fps
+        end = max(end, event.start + cfg.offset_min_frames / fps)
+        fixed.append(NoteEvent(pitch=event.pitch, start=event.start,
+                               end=float(end), velocity=event.velocity))
+    return fixed
+
+
+def decode(onset, frame, vel, cfg, offset_probs=None):
     """把概率矩阵解码成音符事件。
 
     参数:
@@ -253,6 +296,8 @@ def decode(onset, frame, vel, cfg):
         frame (numpy.ndarray): (T, 88) frame 概率。
         vel (numpy.ndarray): (T, 88) 力度预测（0~1）。
         cfg (DecodeConfig): 解码参数。
+        offset_probs (numpy.ndarray | None): (T, 88) offset 概率；提供且
+            cfg.use_offset_end=True 时，用它来定每个音的结束时间。
 
     返回:
         list[NoteEvent]: 按开始时间排序的音符事件。
@@ -270,10 +315,12 @@ def decode(onset, frame, vel, cfg):
     elif cfg.harmonic_mode != "off":
         raise ValueError(f"未知谐波抑制模式: {cfg.harmonic_mode}")
     if cfg.method == "peak_frame":
-        return decode_peak_frame(working_onset, frame, vel, cfg)
-    if cfg.method != "state_machine":
+        events = decode_peak_frame(working_onset, frame, vel, cfg)
+    elif cfg.method == "state_machine":
+        events = _decode_without_harmonic(working_onset, frame, vel, cfg)
+    else:
         raise ValueError(f"未知解码方法: {cfg.method}")
-    return _decode_without_harmonic(working_onset, frame, vel, cfg)
+    return apply_offset_ends(events, offset_probs, cfg)
 
 
 def conditional_suppress(onset, frame, cfg):

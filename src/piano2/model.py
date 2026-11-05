@@ -74,9 +74,12 @@ class PianoModelV2(nn.Module):
         self.fc_velocity = nn.Linear(hidden_size, output_features)
         self.fc_pedal = nn.Linear(hidden_size, 1)
         self.fc_pedal_on = nn.Linear(hidden_size, 1)
+        # 第六个头：offset（键释放事件）。旧 5 头检查点没有这一层，
+        # 加载时用 strict=False 兼容（见 inference.load_model）。
+        self.fc_offset = nn.Linear(hidden_size, output_features)
 
     def forward(self, x):
-        """前向：x (B, T, 264) → 五个头的 logits。"""
+        """前向：x (B, T, 264) → 六个头的 logits。"""
         x = x.unsqueeze(1)          # (B, 1, T, F)
         x = self.cnn(x)             # (B, 64, T, 88)
         b, c, t, f = x.size()
@@ -85,7 +88,7 @@ class PianoModelV2(nn.Module):
         x = self.pos_encoder(x)
         x = self.transformer_encoder(x)
         return (self.fc_onset(x), self.fc_frame(x), self.fc_velocity(x),
-                self.fc_pedal(x), self.fc_pedal_on(x))
+                self.fc_pedal(x), self.fc_pedal_on(x), self.fc_offset(x))
 
 
 if __name__ == "__main__":

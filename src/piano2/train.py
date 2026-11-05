@@ -134,7 +134,7 @@ def evaluate(model, loader, device, threshold=0.5):
     for batch in loader:
         x = batch["x"].to(device)
         with torch.autocast(device_type="cuda", enabled=(device == "cuda")):
-            onset_logits, frame_logits, _, _, _ = model(x)
+            onset_logits, frame_logits, _, _, _, _ = model(x)
         prob = torch.sigmoid(onset_logits.float()).cpu().numpy()
         gt = batch["onset"].numpy()
         for i in range(prob.shape[0]):
@@ -166,6 +166,11 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="只跑几十步检查链路")
     ap.add_argument("--resume", type=str, default="",
                     help="检查点路径；写 auto 表示自动读 run 目录下的 latest.pt")
+    ap.add_argument("--aug-gain", type=float, default=3.0, help="增益抖动幅度（dB）")
+    ap.add_argument("--aug-freq-mask", type=int, default=0, help="频率遮蔽条数")
+    ap.add_argument("--aug-time-mask", type=int, default=0, help="时间遮蔽条数")
+    ap.add_argument("--offset-loss", type=float, default=0.0,
+                    help="offset 头损失权重；>0 需要数据里有 offset 通道（数据 v3b）")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
@@ -178,7 +183,9 @@ def main():
     set_seed(args.seed)
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    train_ds = SegmentDataset("train", label_channel=args.label_channel, augment=True)
+    train_ds = SegmentDataset("train", label_channel=args.label_channel, augment=True,
+                              aug_gain=args.aug_gain, aug_freq_mask=args.aug_freq_mask,
+                              aug_time_mask=args.aug_time_mask)
     val_ds = SegmentDataset("validation", label_channel=args.label_channel,
                             augment=False, limit=args.val_segments)
     train_loader = DataLoader(train_ds, batch_size=args.batch, shuffle=True,
@@ -200,6 +207,7 @@ def main():
     bce_frame = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(pos_weight["frame"]).to(device))
     bce_pedal = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(pos_weight["pedal"]).to(device))
     bce_pedal_on = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(pos_weight["pedal_on"]).to(device))
+    bce_offset = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(20.0).to(device))
     mse = nn.MSELoss()
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
@@ -216,20 +224,27 @@ def main():
         writer = csv.writer(log_fh)
         if os.path.getsize(log_path) == 0:
             writer.writerow(["step", "loss", "loss_onset", "loss_frame", "loss_vel",
-                             "loss_pedal", "loss_pedal_on", "lr", "elapsed_s"])
+                             "loss_pedal", "loss_pedal_on", "loss_offset", "lr", "elapsed_s"])
     else:
         log_fh = open(log_path, "w", newline="", encoding="utf-8")
         writer = csv.writer(log_fh)
         writer.writerow(["step", "loss", "loss_onset", "loss_frame", "loss_vel",
-                         "loss_pedal", "loss_pedal_on", "lr", "elapsed_s"])
+                         "loss_pedal", "loss_pedal_on", "loss_offset", "lr", "elapsed_s"])
 
     best_f1 = -1.0
     t0 = time.time()
     step = 0
     if resuming:
         ckpt = torch.load(resume_path, map_location=device)
-        model.load_state_dict(ckpt["model"])
-        optimizer.load_state_dict(ckpt["optimizer"])
+        try:
+            model.load_state_dict(ckpt["model"])
+        except RuntimeError:
+            model.load_state_dict(ckpt["model"], strict=False)
+            print("[!] 检查点为旧 5 头格式，offset 头将从头学习")
+        try:
+            optimizer.load_state_dict(ckpt["optimizer"])
+        except Exception:
+            print("[!] 优化器状态与当前模型不匹配，改为重新初始化优化器")
         step = int(ckpt["step"])
         best_f1 = float(ckpt.get("best_f1", -1.0))
         old_max = ckpt.get("config", {}).get("max_steps")
@@ -260,14 +275,20 @@ def main():
 
             optimizer.zero_grad(set_to_none=True)
             with torch.autocast(device_type="cuda", enabled=(device == "cuda")):
-                po, pf, pv, pp, ppo = model(x)
+                po, pf, pv, pp, ppo, pof = model(x)
                 loss_o = bce_onset(po, yo)
                 loss_f = bce_frame(pf, yf)
                 mask = yo > 0.5
                 loss_v = mse(torch.sigmoid(pv)[mask], yv[mask]) if mask.any() else torch.zeros((), device=device)
                 loss_p = bce_pedal(pp, yp)
                 loss_po = bce_pedal_on(ppo, ypo)
-                total = loss_o + loss_f + loss_v + 0.5 * loss_p + 0.5 * loss_po
+                if args.offset_loss > 0:
+                    yof = batch["offset"].to(device)
+                    loss_of = bce_offset(pof, yof)
+                else:
+                    loss_of = torch.zeros((), device=device)
+                total = (loss_o + loss_f + loss_v + 0.5 * loss_p + 0.5 * loss_po
+                         + args.offset_loss * loss_of)
             scaler.scale(total).backward()
             scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -277,7 +298,8 @@ def main():
             step += 1
             writer.writerow([step, float(total.detach()), float(loss_o.detach()),
                              float(loss_f.detach()), float(loss_v.detach()),
-                             float(loss_p.detach()), float(loss_po.detach()), lr,
+                             float(loss_p.detach()), float(loss_po.detach()),
+                             float(loss_of.detach()), lr,
                              round(time.time() - t0, 2)])
             if step % 50 == 0:
                 log_fh.flush()

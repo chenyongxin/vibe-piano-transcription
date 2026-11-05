@@ -27,18 +27,22 @@ def main():
     ap.add_argument("--model", required=True)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--out", default=str(OUTPUT_ROOT / "eval" / "eval_report.json"))
+    ap.add_argument("--offset-end", action="store_true",
+                    help="用 offset 头定结束时间（需要 6 头模型）")
     args = ap.parse_args()
 
     model = load_model(args.model, args.device)
-    cfg = DecodeConfig(**DECODE_DEFAULTS)
+    cfg = DecodeConfig(**DECODE_DEFAULTS, use_offset_end=args.offset_end)
     rows = {}
     for name, stem in EVAL_TRACKS.items():
         wav = os.path.join(MAESTRO_ROOT, stem + ".wav")
         midi = os.path.join(MAESTRO_ROOT, stem + ".midi")
         gt = events_from_midi(midi)
         cqt = compute_cqt(wav)
-        onset, frame, vel = infer_sliding_window(model, cqt, args.device)
-        est = decode(onset, frame, vel, cfg)
+        probs = infer_sliding_window(model, cqt, args.device,
+                                     with_offset=args.offset_end)
+        est = decode(probs[0], probs[1], probs[2], cfg,
+                     offset_probs=probs[3] if args.offset_end else None)
         m = note_metrics(*to_arrays_obj(gt), *to_arrays(est))
         rows[name] = m
         print(f"{name:10s} onset F1={m['onset_F1']:.4f}  note F1={m['note_F1']:.4f}  "

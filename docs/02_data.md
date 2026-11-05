@@ -91,15 +91,16 @@ x_norm = (clip(x_db, -80, 0) + 80) / 80
 而音符的**时值**应该由 MIDI 的 note-off（键释放，即 offset 事件）决定。
 两者在踩踏板时会差很远（实测：预测时长 / 按键时长中位数约 3 倍）。
 
-数据 v3a 计划（M3.5）：
+数据 v3a / v3b（M3.5，已构建）：
 
 | 通道 | 定义 | 来源 | 用途 |
 |---|---|---|---|
 | `frame_key` | 按键按住期间为 1（**不含踏板**） | MIDI note-on / note-off 直接生成 | 音符时值 / 结束时间 |
-| `offset` | 结束帧置 1（与 onset 同样的窗口方式） | MIDI note-off | 可选的 offset 头监督 |
+| `offset` | note-off 帧起 2 帧置 1（v3b 新增） | MIDI note-off | offset 头监督（用 offset 峰定结束） |
 | `pedal` / `pedal_on` | 不变 | CC64 | 踏板预测、延音线/踏板记号 |
 
-只重建标签、复用已有 CQT（约 2 分钟），不需要重算特征。
+只重建标签、复用已有 CQT（硬链接，约 45 秒），不需要重算特征。
+v3a 的正样本率：frame_key 约 2.3%（v2 含踏板的 frame 约 6%）、offset 约 0.69%。
 
 ## 3. 重建数据
 

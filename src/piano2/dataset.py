@@ -37,7 +37,19 @@ class SegmentDataset(Dataset):
     LABEL_INDEX = {"onset1": 1, "onset2": 2, "onset3": 3}
 
     def __init__(self, split, label_channel="onset2", augment=False, limit=None,
-                 data_root=DATA_ROOT):
+                 data_root=DATA_ROOT, aug_gain=3.0, aug_freq_mask=0, aug_time_mask=0):
+        """初始化。
+
+        参数:
+            split (str): "train" / "validation" / "test"。
+            label_channel (str): onset 标签变体，可选 "onset1" / "onset2" / "onset3"。
+            augment (bool): 是否做数据增强（增益抖动 + 可选频率/时间遮蔽）。
+            limit (int | None): 只取前 N 个段（调试或固定验证集用）。
+            data_root (str): 数据根目录。
+            aug_gain (float): 增益抖动的最大幅度（dB，±aug_gain）。
+            aug_freq_mask (int): 频率遮蔽的条数（每条随机宽 4–16 bins）。
+            aug_time_mask (int): 时间遮蔽的条数（每条随机宽 4–16 帧）。
+        """
         with open(os.path.join(data_root, split, "segments.json"), encoding="utf-8") as fh:
             self.segments = json.load(fh)
         if limit:
@@ -45,6 +57,9 @@ class SegmentDataset(Dataset):
         self.root = os.path.join(data_root, split)
         self.augment = augment
         self.label_idx = self.LABEL_INDEX[label_channel]
+        self.aug_gain = float(aug_gain)
+        self.aug_freq_mask = int(aug_freq_mask)
+        self.aug_time_mask = int(aug_time_mask)
 
     def __len__(self):
         return len(self.segments)
@@ -65,12 +80,21 @@ class SegmentDataset(Dataset):
         lab = self._load(base + ".lab.npy", start, n)
         pedal = self._load(base + ".pedal.npy", start, n)
 
-        # 数据增强：在 dB 域整体平移（模拟录音电平差异）
+        # 数据增强：增益抖动（模拟录音电平差异）+ 可选的频率/时间遮蔽（SpecAugment 风格）
         if self.augment:
-            cqt = cqt + np.float32(np.random.uniform(-3.0, 3.0))
+            cqt = cqt + np.float32(np.random.uniform(-self.aug_gain, self.aug_gain))
         cqt = np.clip(cqt, -80.0, 0.0)
         # 输入归一化：把 dB 范围 [-80, 0] 映射到 [0, 1]
         x = (cqt + 80.0) / 80.0
+        if self.augment:
+            for _ in range(self.aug_freq_mask):
+                width = int(np.random.randint(4, 17))
+                start = int(np.random.randint(0, max(1, x.shape[1] - width)))
+                x[:, start:start + width] = 0.0
+            for _ in range(self.aug_time_mask):
+                width = int(np.random.randint(4, 17))
+                start = int(np.random.randint(0, max(1, x.shape[0] - width)))
+                x[start:start + width, :] = 0.0
 
         pad = SEG_FRAMES - n
         if pad > 0:
@@ -81,6 +105,8 @@ class SegmentDataset(Dataset):
         onset = lab[:, self.label_idx, :].astype(np.float32)
         frame = lab[:, 0, :].astype(np.float32)
         velocity = lab[:, 4, :].astype(np.float32) / 127.0
+        offset = (lab[:, 6, :] if lab.shape[1] >= 7
+                  else np.zeros_like(lab[:, 0, :])).astype(np.float32)
         pedal_frame = pedal[:, 0:1].astype(np.float32)
         pedal_on = pedal[:, 1:2].astype(np.float32)
 
@@ -89,6 +115,7 @@ class SegmentDataset(Dataset):
             "onset": torch.from_numpy(onset),
             "frame": torch.from_numpy(frame),
             "velocity": torch.from_numpy(velocity),
+            "offset": torch.from_numpy(offset),
             "pedal": torch.from_numpy(pedal_frame),
             "pedal_on": torch.from_numpy(pedal_on),
             "n_frames": n,

@@ -95,13 +95,21 @@ def load_model(checkpoint, device="auto"):
     model = PianoModelV2().to(device)
     payload = torch.load(checkpoint, map_location=device)
     state = payload.get("model", payload) if isinstance(payload, dict) else payload
-    model.load_state_dict(state)
+    try:
+        model.load_state_dict(state)
+    except RuntimeError:
+        # 兼容旧 5 头检查点：offset 头随机初始化，不影响已有推理路径
+        missing, unexpected = model.load_state_dict(state, strict=False)
+        if missing:
+            print(f"[!] 检查点缺少 {len(missing)} 个参数（可能是旧 5 头模型），offset 头将未训练")
     model.eval()
+    model.has_offset = "fc_offset.weight" in state
     return model
 
 
 @torch.no_grad()
-def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024):
+def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
+                         with_offset=False):
     """滑窗推理并做重叠平均。
 
     参数:
@@ -110,9 +118,11 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024):
         device (str): 设备，默认 "auto"（自动检测）。
         window (int): 窗口帧数。
         stride (int): 步长帧数。
+        with_offset (bool): 是否同时返回 offset 头概率（新 6 头模型才有效）。
 
     返回:
-        tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]: onset/frame/velocity 概率，形状 (T, 88)。
+        tuple: 默认 (onset, frame, velocity) 三个 (T,88) 概率；
+            当 with_offset=True 时返回四个 (onset, frame, velocity, offset)。
     """
     device = pick_device(device)
     x = torch.tensor(normalize_input(cqt), dtype=torch.float32).unsqueeze(0).to(device)
@@ -120,6 +130,7 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024):
     out_o = torch.zeros((1, total, 88))
     out_f = torch.zeros((1, total, 88))
     out_v = torch.zeros((1, total, 88))
+    out_of = torch.zeros((1, total, 88))
     count = torch.zeros((1, total, 1))
     for start in range(0, total, stride):
         end = min(start + window, total)
@@ -127,16 +138,21 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024):
         if chunk.shape[1] == 0:
             continue
         with torch.autocast(device_type="cuda", enabled=(device == "cuda")):
-            o, f, v, _p, _po = model(chunk)  # 模型 v2 有 5 个头，这里只用前 3 个
+            o, f, v, _p, _po, of = model(chunk)
             o = torch.sigmoid(o.float())
             f = torch.sigmoid(f.float())
             v = torch.sigmoid(v.float())
+            of = torch.sigmoid(of.float())
         n = end - start
         out_o[:, start:end, :] += o[:, :n, :].cpu()
         out_f[:, start:end, :] += f[:, :n, :].cpu()
         out_v[:, start:end, :] += v[:, :n, :].cpu()
+        out_of[:, start:end, :] += of[:, :n, :].cpu()
         count[:, start:end, :] += 1.0
     count[count == 0] = 1.0
-    return ((out_o / count).squeeze(0).numpy(),
-            (out_f / count).squeeze(0).numpy(),
-            (out_v / count).squeeze(0).numpy())
+    result = ((out_o / count).squeeze(0).numpy(),
+              (out_f / count).squeeze(0).numpy(),
+              (out_v / count).squeeze(0).numpy())
+    if with_offset:
+        return result + ((out_of / count).squeeze(0).numpy(),)
+    return result
