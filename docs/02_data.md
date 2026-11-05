@@ -83,6 +83,24 @@ x_norm = (clip(x_db, -80, 0) + 80) / 80
 | 音乐格式 | wav / MIDI / MusicXML | wav 是输入；MIDI 是标签来源（note on/off、velocity、CC64 踏板）；MusicXML 是最终输出 |
 | 训练数组 | float32 / uint8 | CQT 需要浮点精度用 float32；标签只有 0/1 和 0–127 的力度，用 uint8 省内存（1 字节/元素） |
 
+### 2.5 标签口径：frame 与 offset（M3.5 的数据改动）
+
+数据 v2 的 `frame` 通道是**发声状态**：按键按住 + 踏板延音（构建时用 pretty_midi 的默认踏板处理，
+`pedal_threshold=64`）。它描述的是「这个键现在响不响」，**不是**「键什么时候松开」。
+
+而音符的**时值**应该由 MIDI 的 note-off（键释放，即 offset 事件）决定。
+两者在踩踏板时会差很远（实测：预测时长 / 按键时长中位数约 3 倍）。
+
+数据 v3a 计划（M3.5）：
+
+| 通道 | 定义 | 来源 | 用途 |
+|---|---|---|---|
+| `frame_key` | 按键按住期间为 1（**不含踏板**） | MIDI note-on / note-off 直接生成 | 音符时值 / 结束时间 |
+| `offset` | 结束帧置 1（与 onset 同样的窗口方式） | MIDI note-off | 可选的 offset 头监督 |
+| `pedal` / `pedal_on` | 不变 | CC64 | 踏板预测、延音线/踏板记号 |
+
+只重建标签、复用已有 CQT（约 2 分钟），不需要重算特征。
+
 ## 3. 重建数据
 
 ```bash
