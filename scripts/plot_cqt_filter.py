@@ -100,7 +100,7 @@ def panel_response(ax):
                 label="Hann 窗（本项目使用）")
     ax.semilogy(freqs[mask], spec_rect[mask], color=C.COLOR_RED, linewidth=1.0,
                 alpha=0.75, label="矩形窗（不压两侧）")
-    ax.set_ylim(1e-4, 1.3)
+    ax.set_ylim(1e-8, 1.5)
     ax.set_xlabel("频率（Hz）", fontsize=9)
     ax.set_ylabel("幅度（归一化，对数轴）", fontsize=9)
     ax.set_title("③ 压住两侧 → 旁瓣低很多 → 漏到隔壁 bin 的能量更少", fontsize=10)
@@ -140,6 +140,13 @@ def main():
     panel_short(axes[1, 1])
     fig.suptitle("CQT 的滤波器 h：小波 → 内积 → 一个 bin 的能量", fontsize=13)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
+
+    from fig_utils import check_clipping
+
+    problems = check_clipping(fig)
+    if problems:
+        raise SystemExit("图形越界（会被裁掉）：\n" + "\n".join(problems))
+
     out = "/Docker/git/piano2/docs/figs/23_cqt_filter.png"
     plot_style.save(fig, out)
     plt.close(fig)

@@ -59,34 +59,37 @@ def panel_wavelets(ax):
         win = Q / freq                            # 窗长（秒）
         u = (t - 0.5) / win
         env = np.where(np.abs(u) <= 0.5, 0.5 * (1 + np.cos(2 * np.pi * u)), 0.0)
-        y = 2.2 - i * 0.95
-        ax.plot(t, env * 0.7 + y, color=color, linewidth=1.6,
+        y = 2.35 - i * 0.95
+        ax.plot(t, env * 0.6 + y, color=color, linewidth=1.6,
                 label=f"{freq:.0f} Hz：窗长 {win * 1000:.0f} ms（约 51 个周期）")
         ax.axhline(y, color="#dddddd", linewidth=0.6, zorder=0)
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1,
               fontsize=8, frameon=False)
     ax.set_xlim(0, 1.0)
-    ax.set_ylim(-0.2, 2.85)
+    # 上限要容纳 55 Hz 的峰（2.35 + 0.6 = 2.95），否则峰顶会被裁剪
+    ax.set_ylim(-0.1, 3.1)
     ax.set_yticks([])
     ax.set_xlabel("时间（秒）", fontsize=9)
     ax.set_title("② 每个 bin 的滤波器窗长：频率越低，窗越长", fontsize=11)
 
 
 def panel_frames(ax):
-    """③ 帧移 hop：不同窗长下的相邻帧重叠。"""
-    ax.set_xlim(0, 1.0)
+    """③ 帧移 hop：不同窗长下的相邻帧重叠（所有窗都完整画在坐标内）。"""
+    ax.set_xlim(0, 1.9)
     ax.set_ylim(0, 3.1)
-    rows = [(2.35, Q / 55.0, "低频：窗 1.87 s（重叠严重）", C.COLOR_BLUE),
-            (1.35, Q / 440.0, "中频：窗 0.12 s（部分重叠）", C.COLOR_ORANGE),
-            (0.35, Q / 1760.0, "高频：窗 0.03 s（几乎不重叠）", C.COLOR_GREEN)]
-    for y, width, label, color in rows:
-        centers = np.arange(0.16, 1.0, HOP / SR)
-        for c0 in centers[:8]:
+    rows = [(2.35, Q / 55.0, "低频：窗 1.87 s（几乎完全重叠）", C.COLOR_BLUE,
+             np.array([0.95, 0.982])),
+            (1.35, Q / 440.0, "中频：窗 0.12 s（部分重叠）", C.COLOR_ORANGE,
+             np.arange(0.79, 1.14, HOP / SR)),
+            (0.35, Q / 1760.0, "高频：窗 0.03 s（几乎不重叠）", C.COLOR_GREEN,
+             np.arange(0.72, 1.21, HOP / SR))]
+    for y, width, label, color, centers in rows:
+        for c0 in centers:
             ax.add_patch(plt.Rectangle((c0 - width / 2, y - 0.16), width, 0.32,
                                        facecolor=color, alpha=0.30,
                                        edgecolor=color, linewidth=0.8))
-        ax.text(0.015, y + 0.25, label, fontsize=8.5, color=C.COLOR_DARK)
-    ax.text(0.5, 2.95, "每帧中心间隔 = hop = 512 采样 = 32 ms", ha="center",
+        ax.text(0.02, y + 0.25, label, fontsize=8.5, color=C.COLOR_DARK)
+    ax.text(0.95, 2.95, "每帧中心间隔 = hop = 512 采样 = 32 ms", ha="center",
             fontsize=9, color=C.COLOR_GRAY)
     ax.set_yticks([])
     ax.set_xlabel("时间（秒）", fontsize=9)
@@ -124,6 +127,13 @@ def main():
     fig.suptitle("CQT 解剖：bin 是等比间隔的频率；每个 bin 有自己的窗长（常数 Q）",
                  fontsize=13)
     fig.tight_layout()
+
+    from fig_utils import check_clipping
+
+    problems = check_clipping(fig)
+    if problems:
+        raise SystemExit("图形越界（会被裁掉）：\n" + "\n".join(problems))
+
     out = "/Docker/git/piano2/docs/figs/22_cqt_explained.png"
     plot_style.save(fig, out)
     plt.close(fig)
