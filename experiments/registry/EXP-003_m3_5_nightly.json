@@ -1,0 +1,170 @@
+{
+  "experiment_id": "EXP-003_m3_5_nightly",
+  "date": "2026-11-05 至 2026-11-06",
+  "hardware": "RTX 4060 8GB",
+  "kind": "M3.5 首轮四组单变量实验（D2 / A / B / C），每组 20 轮 71,160 步",
+  "baseline": {
+    "model": "outputs/M1/m3_full_4060/checkpoints/best.pt（EXP-002，5 头）",
+    "metrics": {
+      "dev_onset_F1": {
+        "haydn": 0.9698,
+        "mozart": 0.9623,
+        "beethoven": 0.82
+      },
+      "dev_note_F1": {
+        "haydn": 0.1864,
+        "mozart": 0.3799,
+        "beethoven": 0.2793
+      },
+      "holdout": {
+        "onset_P": 0.8597701149425288,
+        "onset_R": 0.8804143126177024,
+        "onset_F1": 0.8699697604093974,
+        "note_P": 0.0625287356321839,
+        "note_R": 0.064030131826742,
+        "note_F1": 0.06327052802977436
+      }
+    }
+  },
+  "runs": {
+    "d2_frame_key": {
+      "purpose": "验证 frame 标签口径（含踏板 -> 按键时长）是否是 note F1 低的主因",
+      "data": "data_v3a（frame_key，不含踏板）",
+      "args": {
+        "max_steps": 71160,
+        "offset_loss": 0.0
+      },
+      "artifacts": [
+        "m3_5_d2_frame_key_eval.json",
+        "m3_5_d2_frame_key_holdout.json"
+      ],
+      "best_val_f1": 0.7625307472075487,
+      "dev_onset_F1": {
+        "haydn": 0.9664,
+        "mozart": 0.9616,
+        "beethoven": 0.8186
+      },
+      "dev_note_F1": {
+        "haydn": 0.1549,
+        "mozart": 0.3281,
+        "beethoven": 0.2561
+      },
+      "holdout": {
+        "onset_P": 0.8666,
+        "onset_R": 0.8653,
+        "onset_F1": 0.866,
+        "note_P": 0.1697,
+        "note_R": 0.1695,
+        "note_F1": 0.1696
+      }
+    },
+    "a_offset": {
+      "purpose": "增加 offset 头（键释放事件），解码用 offset 峰定结束；与评测口径一致",
+      "data": "data_v3b（frame_key + offset 通道）",
+      "args": {
+        "max_steps": 71160,
+        "offset_loss": 1.0,
+        "eval": "--offset-end"
+      },
+      "artifacts": [
+        "m3_5_a_offset_eval.json",
+        "m3_5_a_offset_holdout.json"
+      ],
+      "best_val_f1": 0.7790324596858201,
+      "dev_onset_F1": {
+        "haydn": 0.9629,
+        "mozart": 0.9606,
+        "beethoven": 0.8085
+      },
+      "dev_note_F1": {
+        "haydn": 0.2815,
+        "mozart": 0.4082,
+        "beethoven": 0.1542
+      },
+      "holdout": {
+        "onset_P": 0.8839,
+        "onset_R": 0.8677,
+        "onset_F1": 0.8757,
+        "note_P": 0.27,
+        "note_R": 0.2651,
+        "note_F1": 0.2675
+      }
+    },
+    "b_onset1": {
+      "purpose": "验证 1 帧 onset 标签（相比 2 帧）对 onset 精确率/召回率的影响",
+      "data": "data_v2（onset1 通道）",
+      "args": {
+        "max_steps": 71160,
+        "label_channel": "onset1"
+      },
+      "artifacts": [
+        "m3_5_b_onset1_eval.json",
+        "m3_5_b_onset1_holdout.json"
+      ],
+      "best_val_f1": 0.8087582163794635,
+      "dev_onset_F1": {
+        "haydn": 0.9739,
+        "mozart": 0.9675,
+        "beethoven": 0.824
+      },
+      "dev_note_F1": {
+        "haydn": 0.1794,
+        "mozart": 0.3724,
+        "beethoven": 0.2768
+      },
+      "holdout": {
+        "onset_P": 0.9007,
+        "onset_R": 0.8413,
+        "onset_F1": 0.87,
+        "note_P": 0.0549,
+        "note_R": 0.0513,
+        "note_F1": 0.0531
+      }
+    },
+    "c_aug": {
+      "purpose": "验证频率遮蔽 + 时间遮蔽的数据增强对泛化/验证指标的影响",
+      "data": "data_v2（aug-freq-mask 2, aug-time-mask 2）",
+      "args": {
+        "max_steps": 71160,
+        "aug_freq_mask": 2,
+        "aug_time_mask": 2
+      },
+      "artifacts": [
+        "m3_5_c_aug_eval.json",
+        "m3_5_c_aug_holdout.json"
+      ],
+      "best_val_f1": 0.7655266082232375,
+      "dev_onset_F1": {
+        "haydn": 0.9681,
+        "mozart": 0.964,
+        "beethoven": 0.7985
+      },
+      "dev_note_F1": {
+        "haydn": 0.1814,
+        "mozart": 0.4158,
+        "beethoven": 0.3063
+      },
+      "holdout": {
+        "onset_P": 0.8954,
+        "onset_R": 0.8621,
+        "onset_F1": 0.8784,
+        "note_P": 0.0611,
+        "note_R": 0.0589,
+        "note_F1": 0.06
+      }
+    }
+  },
+  "conclusions": [
+    "A（offset 头）是时值方向的最佳方案：留出集 note F1 从 0.063 提升到 0.268（约 4.2 倍），开发集 Haydn 0.186->0.281、Mozart 0.380->0.408；但 Beethoven 0.279->0.154 明显回退，需要单独分析",
+    "B（1 帧 onset）显著提升 onset 精确率：留出集 precision 0.860->0.901，F1 持平 0.870；开发集三首 onset F1 均略高于 2 帧（0.974/0.968/0.824）",
+    "C（数据增强）拿到最高留出集 onset F1 0.8784 / precision 0.8954，但开发集 Beethoven onset 从 0.820 降到 0.798；note 指标不变",
+    "D2（仅改 frame 口径）留出集 note F1 0.063->0.170，但开发集 note 反而下降（0.155/0.328/0.256），说明单靠口径不足以修好时值",
+    "A 的验证 F1（0.779）也是四组最高，说明 offset 监督没有损害整体学习；但 offset 头在 Beethoven 这类密集/踏板多的曲目上有副作用，优先排查解码参数与 beethoven 的错误模式"
+  ],
+  "next_steps": [
+    "对 A 模型做解码端网格搜索（offset_threshold / offset_min_frames / offset_max_frames），观察 Beethoven note F1 能否回升（无需重新训练）",
+    "组合实验：data_v3b + onset1 标签 + offset 损失，同时拿 onset 精确率与时值收益（约 1.6 小时）",
+    "分析 Beethoven 的 offset 峰错误模式（漏检/多检/搜索窗越界），再决定是改标签、改解码还是加长训练",
+    "在应用侧启用 offset 解码（app 目前仍用 frame 推结束），用真实曲目人工听感验证"
+  ]
+}

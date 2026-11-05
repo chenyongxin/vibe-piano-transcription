@@ -1,0 +1,110 @@
+{
+  "d2_frame_key": {
+    "train_best_val_f1": 0.7625307472075487,
+    "train_final_f1": 0.7491021036428938,
+    "dev_onset_F1": {
+      "haydn": 0.9664,
+      "mozart": 0.9616,
+      "beethoven": 0.8186
+    },
+    "dev_note_F1": {
+      "haydn": 0.1549,
+      "mozart": 0.3281,
+      "beethoven": 0.2561
+    },
+    "holdout": {
+      "onset_P": 0.8666,
+      "onset_R": 0.8653,
+      "onset_F1": 0.866,
+      "note_P": 0.1697,
+      "note_R": 0.1695,
+      "note_F1": 0.1696
+    }
+  },
+  "a_offset": {
+    "train_best_val_f1": 0.7790324596858201,
+    "train_final_f1": 0.7644351126544456,
+    "dev_onset_F1": {
+      "haydn": 0.9629,
+      "mozart": 0.9606,
+      "beethoven": 0.8085
+    },
+    "dev_note_F1": {
+      "haydn": 0.2815,
+      "mozart": 0.4082,
+      "beethoven": 0.1542
+    },
+    "holdout": {
+      "onset_P": 0.8839,
+      "onset_R": 0.8677,
+      "onset_F1": 0.8757,
+      "note_P": 0.27,
+      "note_R": 0.2651,
+      "note_F1": 0.2675
+    }
+  },
+  "b_onset1": {
+    "train_best_val_f1": 0.8087582163794635,
+    "train_final_f1": 0.7992416081354764,
+    "dev_onset_F1": {
+      "haydn": 0.9739,
+      "mozart": 0.9675,
+      "beethoven": 0.824
+    },
+    "dev_note_F1": {
+      "haydn": 0.1794,
+      "mozart": 0.3724,
+      "beethoven": 0.2768
+    },
+    "holdout": {
+      "onset_P": 0.9007,
+      "onset_R": 0.8413,
+      "onset_F1": 0.87,
+      "note_P": 0.0549,
+      "note_R": 0.0513,
+      "note_F1": 0.0531
+    }
+  },
+  "c_aug": {
+    "train_best_val_f1": 0.7655266082232375,
+    "train_final_f1": 0.7403441080357495,
+    "dev_onset_F1": {
+      "haydn": 0.9681,
+      "mozart": 0.964,
+      "beethoven": 0.7985
+    },
+    "dev_note_F1": {
+      "haydn": 0.1814,
+      "mozart": 0.4158,
+      "beethoven": 0.3063
+    },
+    "holdout": {
+      "onset_P": 0.8954,
+      "onset_R": 0.8621,
+      "onset_F1": 0.8784,
+      "note_P": 0.0611,
+      "note_R": 0.0589,
+      "note_F1": 0.06
+    }
+  },
+  "baseline_m3_full_4060": {
+    "dev_onset_F1": {
+      "haydn": 0.9698,
+      "mozart": 0.9623,
+      "beethoven": 0.82
+    },
+    "dev_note_F1": {
+      "haydn": 0.1864,
+      "mozart": 0.3799,
+      "beethoven": 0.2793
+    },
+    "holdout": {
+      "onset_P": 0.8597701149425288,
+      "onset_R": 0.8804143126177024,
+      "onset_F1": 0.8699697604093974,
+      "note_P": 0.0625287356321839,
+      "note_R": 0.064030131826742,
+      "note_F1": 0.06327052802977436
+    }
+  }
+}
