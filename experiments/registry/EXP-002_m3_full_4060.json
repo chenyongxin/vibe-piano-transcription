@@ -1,0 +1,58 @@
+{
+  "experiment_id": "EXP-002_m3_full_4060",
+  "date": "2026-11-05",
+  "kind": "full training 20 epochs on data v2 (5-head model, onset2 labels)",
+  "hardware": "RTX 4060 8GB",
+  "config": {
+    "steps": 71160,
+    "epochs": 20,
+    "batch": 16,
+    "seg_frames": 313,
+    "lr": 0.0003,
+    "warmup": 300,
+    "val_every": 500,
+    "val_segments": 120,
+    "label_channel": "onset2",
+    "save_every": 200,
+    "seed": 0,
+    "elapsed_total_s": 5898
+  },
+  "checkpoint": {
+    "path": "outputs/M1/m3_full_4060/checkpoints/best.pt",
+    "sha256": "812ff8aaeda0794b217eb400c8815e8f0715b5c681a7e3d8f3a06b0eb8f132d2",
+    "best_step": 50000,
+    "best_val_f1": 0.7656
+  },
+  "validation": {
+    "best_f1": 0.7656,
+    "best_step": 50000,
+    "final_f1": 0.7566,
+    "final_P": 0.6706,
+    "final_R": 0.8679
+  },
+  "eval_dev_tracks_final_decoder": {
+    "haydn": {"onset_F1": 0.9698, "note_F1": 0.1864},
+    "mozart": {"onset_F1": 0.9623, "note_F1": 0.3799},
+    "beethoven": {"onset_F1": 0.8200, "note_F1": 0.2793},
+    "old_model": {"haydn": 0.952, "mozart": 0.943, "beethoven": 0.798}
+  },
+  "eval_holdout": {
+    "onset_P": 0.8598,
+    "onset_R": 0.8804,
+    "onset_F1": 0.8700,
+    "note_F1": 0.0633,
+    "preregistered_targets": "onset F1 >= 0.85, precision >= 0.85",
+    "met": true
+  },
+  "conclusions": [
+    "onset 已达标：三首开发曲目全部超过旧模型，留出集 F1 0.870、精确率 0.860 达到预注册判据",
+    "20 轮后验证 F1 平台约 0.765（最佳出现在第 50000 步），后 21000 步没有再涨，继续加 epoch 收益很小",
+    "主要短板仍是时值：note-with-offset F1 为 0.19/0.38/0.28，留出集 0.063",
+    "下一步优先改配方（offset 头、1 帧 onset、数据增强），而不是继续加训练量"
+  ],
+  "artifacts": {
+    "train_curves": "experiments/artifacts/m3_full_train_curves.png",
+    "eval3": "experiments/artifacts/m3_full_eval3.json",
+    "holdout": "experiments/artifacts/m3_full_holdout.json"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "model": "/Docker/git/piano2/outputs/M1/m3_full_4060/checkpoints/best.pt",
+  "track": "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_06_R1_2015_wav--6.midi",
+  "onset_P": 0.8597701149425288,
+  "onset_R": 0.8804143126177024,
+  "onset_F1": 0.8699697604093974,
+  "note_P": 0.0625287356321839,
+  "note_R": 0.064030131826742,
+  "note_F1": 0.06327052802977436,
+  "n_ref": 2124,
+  "n_est": 2175
+}
