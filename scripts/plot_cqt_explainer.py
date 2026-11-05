@@ -60,10 +60,11 @@ def panel_wavelets(ax):
         u = (t - 0.5) / win
         env = np.where(np.abs(u) <= 0.5, 0.5 * (1 + np.cos(2 * np.pi * u)), 0.0)
         y = 2.2 - i * 0.95
-        ax.plot(t, env * 0.7 + y, color=color, linewidth=1.6)
-        ax.text(0.99, y + 0.12, f"{freq:6.0f} Hz：窗长 {win * 1000:7.0f} ms（约 51 个周期）",
-                fontsize=9, color=color, ha="right")
+        ax.plot(t, env * 0.7 + y, color=color, linewidth=1.6,
+                label=f"{freq:.0f} Hz：窗长 {win * 1000:.0f} ms（约 51 个周期）")
         ax.axhline(y, color="#dddddd", linewidth=0.6, zorder=0)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1,
+              fontsize=8, frameon=False)
     ax.set_xlim(0, 1.0)
     ax.set_ylim(-0.2, 2.85)
     ax.set_yticks([])
@@ -104,14 +105,13 @@ def panel_tone(ax):
     vals = energy[ks] / energy.max()
     colors = [C.COLOR_ORANGE if k == 117 else C.COLOR_LIGHT_ORANGE for k in ks]
     ax.bar(ks, vals, color=colors, edgecolor=C.COLOR_DARK, linewidth=0.5)
+    ax.bar([117], [vals[ks == 117][0]], color=C.COLOR_ORANGE,
+           edgecolor=C.COLOR_DARK, linewidth=0.5, label="bin 117 = C4（每半音 3 个 bin）")
     ax.set_xlabel("CQT bin 编号", fontsize=9)
     ax.set_ylabel("相对能量", fontsize=9)
     ax.set_title("④ 纯音 C4（261.63 Hz）→ 能量集中在 bin 117 附近 3 格", fontsize=11)
-    ax.annotate("bin 117 = C4\n每半音 3 个 bin", xy=(117.4, 0.99), xytext=(120.0, 0.82),
-                fontsize=8.5, ha="left",
-                bbox={"facecolor": "white", "edgecolor": C.COLOR_ORANGE,
-                      "boxstyle": "round,pad=0.3"},
-                arrowprops={"arrowstyle": "->", "color": C.COLOR_ORANGE})
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.20), ncol=1,
+              fontsize=8, frameon=False)
     ax.grid(axis="y", alpha=0.25, linestyle=":")
 
 
