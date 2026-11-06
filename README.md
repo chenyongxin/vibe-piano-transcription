@@ -69,6 +69,12 @@ python scripts/evaluate.py --model models/best.pt
 - [`tutorial/06_faq.md`](tutorial/06_faq.md)：常见问题（黑音符、holdout、PUA、训练成本）
 - [`tutorial/07_running_app.md`](tutorial/07_running_app.md)：浏览器应用使用教程（M4 完成后补全）
 
+## 训练报告
+
+- [	raining/README.md](training/README.md)：训练报告目录与写作约定（每次大跑：时间、目的、结果、下一步猜想）
+- [	raining/2026-11-05_m3_full_71k.md](training/2026-11-05_m3_full_71k.md)：M3 全量 20 轮（71,160 步）
+- [	raining/2026-11-06_m3_5_nightly.md](training/2026-11-06_m3_5_nightly.md)：M3.5 首轮四组对照实验（D2 / A / B / C）
+
 ## 重要说明
 
 - 训练数据 MAESTRO v3.0.0 采用 CC BY-NC-SA 4.0 许可，**本项目仅用于非商业用途**；
