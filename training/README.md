@@ -42,5 +42,6 @@ training/YYYY-MM-DD_<主题简写>.md
 | 2026-11-05 | [M3 全量训练](2026-11-05_m3_full_71k.md) | 20 轮 71,160 步；onset 达标，时值短板 |
 | 2026-11-06 | [M3.5 首轮四组](2026-11-06_m3_5_nightly.md) | D2 / A / B / C；offset 头方向正确，Beethoven 回退 |
 | 2026-11-07 | [Round 2 组合实验](2026-11-07_round2.md) | 6 组：combo_base / offset1 / aug / 对照 / seed / 40 轮 |
+| 2026-11-08 | [夜间损失权重实验](2026-11-08_overnight.md) | offset 损失 2.0 三 seed 确认；3.0/4.0 扫描 |
 
 新报告从 [`TEMPLATE.md`](TEMPLATE.md) 复制结构。

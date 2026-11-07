@@ -1,0 +1,79 @@
+{
+  "combo_offset_loss2": {
+    "dev_onset": {
+      "haydn": 0.9632,
+      "mozart": 0.9661,
+      "beethoven": 0.8239
+    },
+    "dev_note": {
+      "haydn": 0.3281,
+      "mozart": 0.5042,
+      "beethoven": 0.2153
+    },
+    "holdout_onset_P": 0.9131,
+    "holdout_onset_F1": 0.8675,
+    "holdout_note_F1": 0.4098
+  },
+  "combo_loss2_seed1": {
+    "dev_onset": {
+      "haydn": 0.972,
+      "mozart": 0.9642,
+      "beethoven": 0.831
+    },
+    "dev_note": {
+      "haydn": 0.3624,
+      "mozart": 0.5011,
+      "beethoven": 0.2208
+    },
+    "holdout_onset_P": 0.9257,
+    "holdout_onset_F1": 0.8768,
+    "holdout_note_F1": 0.3921
+  },
+  "combo_loss2_seed2": {
+    "dev_onset": {
+      "haydn": 0.9737,
+      "mozart": 0.9628,
+      "beethoven": 0.816
+    },
+    "dev_note": {
+      "haydn": 0.3538,
+      "mozart": 0.5005,
+      "beethoven": 0.2187
+    },
+    "holdout_onset_P": 0.9061,
+    "holdout_onset_F1": 0.8697,
+    "holdout_note_F1": 0.407
+  },
+  "combo_loss3": {
+    "dev_onset": {
+      "haydn": 0.9688,
+      "mozart": 0.9626,
+      "beethoven": 0.8298
+    },
+    "dev_note": {
+      "haydn": 0.3479,
+      "mozart": 0.4974,
+      "beethoven": 0.2223
+    },
+    "holdout_onset_P": 0.9081,
+    "holdout_onset_F1": 0.8689,
+    "holdout_note_F1": 0.4091
+  },
+  "combo_loss4": {
+    "dev_onset": {
+      "haydn": 0.9607,
+      "mozart": 0.962,
+      "beethoven": 0.8183
+    },
+    "dev_note": {
+      "haydn": 0.3579,
+      "mozart": 0.5121,
+      "beethoven": 0.2092
+    },
+    "holdout_onset_P": 0.9077,
+    "holdout_onset_F1": 0.8712,
+    "holdout_note_F1": 0.3908
+  },
+  "loss2_seed_mean": 0.403,
+  "loss2_seed_std": 0.0095
+}

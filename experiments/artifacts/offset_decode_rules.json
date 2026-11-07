@@ -1,0 +1,234 @@
+{
+  "A": {
+    "haydn": {
+      "first": {
+        "onset_F1": 0.9629,
+        "note_F1": 0.2815
+      },
+      "guard": {
+        "onset_F1": 0.9629,
+        "note_F1": 0.214
+      },
+      "closest_guard": {
+        "onset_F1": 0.9629,
+        "note_F1": 0.2073
+      }
+    },
+    "mozart": {
+      "first": {
+        "onset_F1": 0.9606,
+        "note_F1": 0.4082
+      },
+      "guard": {
+        "onset_F1": 0.9606,
+        "note_F1": 0.3716
+      },
+      "closest_guard": {
+        "onset_F1": 0.9606,
+        "note_F1": 0.3667
+      }
+    },
+    "beethoven": {
+      "first": {
+        "onset_F1": 0.8085,
+        "note_F1": 0.1542
+      },
+      "guard": {
+        "onset_F1": 0.8085,
+        "note_F1": 0.2083
+      },
+      "closest_guard": {
+        "onset_F1": 0.8085,
+        "note_F1": 0.2003
+      }
+    },
+    "holdout": {
+      "first": {
+        "onset_F1": 0.8757,
+        "note_F1": 0.2675
+      },
+      "guard": {
+        "onset_F1": 0.8757,
+        "note_F1": 0.1924
+      },
+      "closest_guard": {
+        "onset_F1": 0.8757,
+        "note_F1": 0.1777
+      }
+    }
+  },
+  "combo_base": {
+    "haydn": {
+      "first": {
+        "onset_F1": 0.9676,
+        "note_F1": 0.3502
+      },
+      "guard": {
+        "onset_F1": 0.9676,
+        "note_F1": 0.1794
+      },
+      "closest_guard": {
+        "onset_F1": 0.9676,
+        "note_F1": 0.1819
+      }
+    },
+    "mozart": {
+      "first": {
+        "onset_F1": 0.9639,
+        "note_F1": 0.5074
+      },
+      "guard": {
+        "onset_F1": 0.9639,
+        "note_F1": 0.3226
+      },
+      "closest_guard": {
+        "onset_F1": 0.9639,
+        "note_F1": 0.3031
+      }
+    },
+    "beethoven": {
+      "first": {
+        "onset_F1": 0.8264,
+        "note_F1": 0.2272
+      },
+      "guard": {
+        "onset_F1": 0.8264,
+        "note_F1": 0.2598
+      },
+      "closest_guard": {
+        "onset_F1": 0.8264,
+        "note_F1": 0.2478
+      }
+    },
+    "holdout": {
+      "first": {
+        "onset_F1": 0.8781,
+        "note_F1": 0.3718
+      },
+      "guard": {
+        "onset_F1": 0.8781,
+        "note_F1": 0.2433
+      },
+      "closest_guard": {
+        "onset_F1": 0.8781,
+        "note_F1": 0.2126
+      }
+    }
+  },
+  "loss2_seed0": {
+    "haydn": {
+      "first": {
+        "onset_F1": 0.9632,
+        "note_F1": 0.3281
+      },
+      "guard": {
+        "onset_F1": 0.9632,
+        "note_F1": 0.2334
+      },
+      "closest_guard": {
+        "onset_F1": 0.9632,
+        "note_F1": 0.2303
+      }
+    },
+    "mozart": {
+      "first": {
+        "onset_F1": 0.9661,
+        "note_F1": 0.5042
+      },
+      "guard": {
+        "onset_F1": 0.9661,
+        "note_F1": 0.4659
+      },
+      "closest_guard": {
+        "onset_F1": 0.9661,
+        "note_F1": 0.4541
+      }
+    },
+    "beethoven": {
+      "first": {
+        "onset_F1": 0.8239,
+        "note_F1": 0.2153
+      },
+      "guard": {
+        "onset_F1": 0.8239,
+        "note_F1": 0.3051
+      },
+      "closest_guard": {
+        "onset_F1": 0.8239,
+        "note_F1": 0.2929
+      }
+    },
+    "holdout": {
+      "first": {
+        "onset_F1": 0.8675,
+        "note_F1": 0.4098
+      },
+      "guard": {
+        "onset_F1": 0.8675,
+        "note_F1": 0.2847
+      },
+      "closest_guard": {
+        "onset_F1": 0.8675,
+        "note_F1": 0.2348
+      }
+    }
+  },
+  "loss3": {
+    "haydn": {
+      "first": {
+        "onset_F1": 0.9688,
+        "note_F1": 0.3479
+      },
+      "guard": {
+        "onset_F1": 0.9688,
+        "note_F1": 0.2586
+      },
+      "closest_guard": {
+        "onset_F1": 0.9688,
+        "note_F1": 0.2555
+      }
+    },
+    "mozart": {
+      "first": {
+        "onset_F1": 0.9626,
+        "note_F1": 0.4974
+      },
+      "guard": {
+        "onset_F1": 0.9626,
+        "note_F1": 0.4585
+      },
+      "closest_guard": {
+        "onset_F1": 0.9626,
+        "note_F1": 0.4482
+      }
+    },
+    "beethoven": {
+      "first": {
+        "onset_F1": 0.8298,
+        "note_F1": 0.2223
+      },
+      "guard": {
+        "onset_F1": 0.8298,
+        "note_F1": 0.2821
+      },
+      "closest_guard": {
+        "onset_F1": 0.8298,
+        "note_F1": 0.2738
+      }
+    },
+    "holdout": {
+      "first": {
+        "onset_F1": 0.8689,
+        "note_F1": 0.4091
+      },
+      "guard": {
+        "onset_F1": 0.8689,
+        "note_F1": 0.2613
+      },
+      "closest_guard": {
+        "onset_F1": 0.8689,
+        "note_F1": 0.222
+      }
+    }
+  }
+}

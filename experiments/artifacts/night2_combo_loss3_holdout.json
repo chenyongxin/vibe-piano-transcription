@@ -1,0 +1,13 @@
+{
+  "model": "outputs/M1/combo_loss3/checkpoints/best.pt",
+  "track": "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_06_R1_2015_wav--6.midi",
+  "n_pred": 1948,
+  "n_ref": 2124,
+  "onset_P": 0.9081,
+  "onset_R": 0.8329,
+  "onset_F1": 0.8689,
+  "note_P": 0.4276,
+  "note_R": 0.3922,
+  "note_F1": 0.4091,
+  "n_est": 1948
+}

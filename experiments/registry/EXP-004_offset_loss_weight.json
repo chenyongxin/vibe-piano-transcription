@@ -1,0 +1,91 @@
+{
+  "experiment_id": "EXP-004_offset_loss_weight",
+  "date": "2026-11-07/08",
+  "hardware": "RTX 4060 8GB",
+  "kind": "offset 损失权重确认与扫描（每组 20 轮）",
+  "baseline": {
+    "note": "Round 2 combo 配方，offset 损失 1.0",
+    "holdout_note_F1_seeds": [
+      0.3718,
+      0.344,
+      0.3794
+    ],
+    "mean": 0.3651,
+    "std": 0.0186
+  },
+  "runs": {
+    "combo_offset_loss2": {
+      "offset_loss": "2.0",
+      "seed": 0,
+      "dev_note_F1": {
+        "haydn": 0.3281,
+        "mozart": 0.5042,
+        "beethoven": 0.2153
+      },
+      "holdout_onset_P": 0.9131,
+      "holdout_note_F1": 0.4098
+    },
+    "combo_loss2_seed1": {
+      "offset_loss": "2.0",
+      "seed": 1,
+      "dev_note_F1": {
+        "haydn": 0.3624,
+        "mozart": 0.5011,
+        "beethoven": 0.2208
+      },
+      "holdout_onset_P": 0.9257,
+      "holdout_note_F1": 0.3921
+    },
+    "combo_loss2_seed2": {
+      "offset_loss": "2.0",
+      "seed": 2,
+      "dev_note_F1": {
+        "haydn": 0.3538,
+        "mozart": 0.5005,
+        "beethoven": 0.2187
+      },
+      "holdout_onset_P": 0.9061,
+      "holdout_note_F1": 0.407
+    },
+    "combo_loss3": {
+      "offset_loss": "3.0",
+      "seed": 0,
+      "dev_note_F1": {
+        "haydn": 0.3479,
+        "mozart": 0.4974,
+        "beethoven": 0.2223
+      },
+      "holdout_onset_P": 0.9081,
+      "holdout_note_F1": 0.4091
+    },
+    "combo_loss4": {
+      "offset_loss": "4.0",
+      "seed": 0,
+      "dev_note_F1": {
+        "haydn": 0.3579,
+        "mozart": 0.5121,
+        "beethoven": 0.2092
+      },
+      "holdout_onset_P": 0.9077,
+      "holdout_note_F1": 0.3908
+    }
+  },
+  "loss2_seed_stats": {
+    "holdout_note_F1": [
+      0.4098,
+      0.3921,
+      0.407
+    ],
+    "mean": 0.403,
+    "std": 0.0095
+  },
+  "conclusions": [
+    "offset 损失 2.0 三 seed 稳定，均值 0.403，比 1.0 高 0.038",
+    "3.0 单次 0.409 仍在种子噪声内，不能判定更优；4.0 回落到 0.391",
+    "20 轮训练量不变；下一步优先修 offset 解码、分析 Beethoven、应用验证"
+  ],
+  "artifacts": {
+    "summary": "experiments/artifacts/night2_loss_weight_results.json",
+    "note": "各组 eval/holdout JSON 见 experiments/artifacts/night2_*"
+  }
+}
