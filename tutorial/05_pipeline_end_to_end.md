@@ -1,17 +1,8 @@
 # 05 端到端流水线：从音频到乐谱
 
-## 结论
+## 摘要
 
-整条流水线分四段，每段的职责和输出都很明确：
-
-| 段 | 输入 | 输出 | 谁来做 |
-|---|---|---|---|
-| ① 音频 | wav（任意采样率） | 16 kHz 单声道 + CQT (T, 264) | librosa |
-| ② 概率图 | CQT | onset / frame / velocity / pedal 概率 | CNN + Transformer |
-| ③ 音符事件 | 概率图 | 音符列表（音高、起点、终点、力度） | 规则解码器 |
-| ④ 乐谱 | 音符事件 | MusicXML（+ PNG/PDF 预览） | 记谱 + verovio |
-
-![流水线](../docs/figs/00_pipeline.png)
+本文把整个系统串起来：从 wav 输入到 MusicXML 输出的四段流程，每段的输入、输出、使用的工具与常见失败模式。读者不需要读过前面教程；读完后能知道一个错误应该去哪个阶段排查，以及各部分之间的接口是什么。
 
 ## 每一段在做什么
 
@@ -50,3 +41,16 @@ Transformer 捕捉长程上下文（比如「这个音已经持续两拍」）�
 - 解码器原理与参数：`../docs/04_decoding.md`
 - 记谱与评测：`../docs/05_notation_eval.md`
 - 训练结果：`../docs/03_model_training.md`
+
+## 小结
+
+整条流水线分四段，每段的职责和输出都很明确：
+
+| 段 | 输入 | 输出 | 谁来做 |
+|---|---|---|---|
+| ① 音频 | wav（任意采样率） | 16 kHz 单声道 + CQT (T, 264) | librosa |
+| ② 概率图 | CQT | onset / frame / velocity / pedal 概率 | CNN + Transformer |
+| ③ 音符事件 | 概率图 | 音符列表（音高、起点、终点、力度） | 规则解码器 |
+| ④ 乐谱 | 音符事件 | MusicXML（+ PNG/PDF 预览） | 记谱 + verovio |
+
+![流水线](../docs/figs/00_pipeline.png)
