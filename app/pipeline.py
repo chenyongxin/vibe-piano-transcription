@@ -126,7 +126,16 @@ def pngs_to_pdf(png_paths, pdf_path, max_width=1600, quality=82):
 
     doc = pymupdf.open()
     for png in png_paths:
-        img = Image.open(png).convert("RGB")
+        img = Image.open(png)
+        # 乐谱 PNG 常带透明背景；直接 convert("RGB") 会把透明区域变成黑色。
+        # 先把 alpha 合成到白底，保证 PDF 是白纸黑谱。
+        if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
+            img = img.convert("RGBA")
+            bg = Image.new("RGB", img.size, "white")
+            bg.paste(img, mask=img.getchannel("A"))
+            img = bg
+        else:
+            img = img.convert("RGB")
         if img.width > max_width:
             ratio = max_width / float(img.width)
             img = img.resize((max_width, int(img.height * ratio)), Image.LANCZOS)
