@@ -171,7 +171,8 @@ def _build_timing(xml_path, page_svgs, end_seconds, step=0.1):
     return {"step": step, "duration": round(end_seconds, 2), "samples": samples}
 
 
-def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progress=None):
+def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progress=None,
+               use_offset_end=False):
     """音频 → 全部产物，返回结果字典。
 
     参数:
@@ -199,9 +200,15 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
     cqt = compute_cqt(audio_path)
     stage("模型推理")
     model = holder.get()
-    onset, frame, vel = infer_sliding_window(model, cqt, holder.device)
-    stage("解码成音符")
-    events = decode(onset, frame, vel, DecodeConfig(**DECODE_DEFAULTS))
+    if use_offset_end and getattr(model, "has_offset", False):
+        probs = infer_sliding_window(model, cqt, holder.device, with_offset=True)
+        stage("解码成音符")
+        cfg = DecodeConfig(**DECODE_DEFAULTS, use_offset_end=True)
+        events = decode(probs[0], probs[1], probs[2], cfg, offset_probs=probs[3])
+    else:
+        onset, frame, vel = infer_sliding_window(model, cqt, holder.device)
+        stage("解码成音符")
+        events = decode(onset, frame, vel, DecodeConfig(**DECODE_DEFAULTS))
     stage("生成乐谱")
     xml_path = os.path.join(out_dir, "score.musicxml")
     write_musicxml([(e.pitch, e.start, e.end, e.velocity) for e in events],
