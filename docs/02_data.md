@@ -100,6 +100,8 @@ x_norm = (clip(x_db, -80, 0) + 80) / 80
 | `pedal` / `pedal_on` | 不变 | CC64 | 踏板预测、延音线/踏板记号 |
 
 只重建标签、复用已有 CQT（硬链接，约 45 秒），不需要重算特征。
+
+offset 窗口宽度的实测（20 轮，留出集 note F1）：1 帧（v3c）0.251、2 帧（v3b）0.372、3 帧居中（v3d）0.285 → **选 2 帧**；之后 offset 损失权重 2.0 使三 seed 均值达到 0.403。原因与可视化见 	utorial/03_labels_from_midi.md 的「offset 标签宽度」一节。
 v3a 的正样本率：frame_key 约 2.3%（v2 含踏板的 frame 约 6%）、offset 约 0.69%。
 
 ## 3. 重建数据
