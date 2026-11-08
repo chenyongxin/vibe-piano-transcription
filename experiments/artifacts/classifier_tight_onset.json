@@ -1,0 +1,26 @@
+{
+  "haydn": {
+    "onset50_F1": 0.9632,
+    "onset30_F1": 0.9607,
+    "onset20_F1": 0.9006,
+    "onset10_F1": 0.5546
+  },
+  "mozart": {
+    "onset50_F1": 0.9661,
+    "onset30_F1": 0.9647,
+    "onset20_F1": 0.9243,
+    "onset10_F1": 0.5847
+  },
+  "beethoven": {
+    "onset50_F1": 0.8239,
+    "onset30_F1": 0.8091,
+    "onset20_F1": 0.7431,
+    "onset10_F1": 0.4694
+  },
+  "holdout": {
+    "onset50_F1": 0.8675,
+    "onset30_F1": 0.8591,
+    "onset20_F1": 0.8067,
+    "onset10_F1": 0.5161
+  }
+}

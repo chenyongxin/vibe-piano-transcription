@@ -107,6 +107,12 @@ class SegmentDataset(Dataset):
         velocity = lab[:, 4, :].astype(np.float32) / 127.0
         offset = (lab[:, 6, :] if lab.shape[1] >= 7
                   else np.zeros_like(lab[:, 0, :])).astype(np.float32)
+        if lab.shape[1] >= 9:
+            onset_reg = lab[:, 7, :].astype(np.float32) / 255.0
+            offset_reg = lab[:, 8, :].astype(np.float32) / 255.0
+        else:
+            onset_reg = np.zeros_like(lab[:, 0, :], dtype=np.float32)
+            offset_reg = np.zeros_like(lab[:, 0, :], dtype=np.float32)
         pedal_frame = pedal[:, 0:1].astype(np.float32)
         pedal_on = pedal[:, 1:2].astype(np.float32)
 
@@ -116,6 +122,8 @@ class SegmentDataset(Dataset):
             "frame": torch.from_numpy(frame),
             "velocity": torch.from_numpy(velocity),
             "offset": torch.from_numpy(offset),
+            "onset_reg": torch.from_numpy(onset_reg),
+            "offset_reg": torch.from_numpy(offset_reg),
             "pedal": torch.from_numpy(pedal_frame),
             "pedal_on": torch.from_numpy(pedal_on),
             "n_frames": n,

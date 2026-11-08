@@ -104,12 +104,13 @@ def load_model(checkpoint, device="auto"):
             print(f"[!] 检查点缺少 {len(missing)} 个参数（可能是旧 5 头模型），offset 头将未训练")
     model.eval()
     model.has_offset = "fc_offset.weight" in state
+    model.has_regression = "fc_onset_reg.weight" in state
     return model
 
 
 @torch.no_grad()
 def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
-                         with_offset=False):
+                         with_offset=False, with_regression=False):
     """滑窗推理并做重叠平均。
 
     参数:
@@ -118,11 +119,13 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
         device (str): 设备，默认 "auto"（自动检测）。
         window (int): 窗口帧数。
         stride (int): 步长帧数。
-        with_offset (bool): 是否同时返回 offset 头概率（新 6 头模型才有效）。
+        with_offset (bool): 是否同时返回 offset 头概率（6 头以上模型才有效）。
+        with_regression (bool): 是否返回 onset_reg / offset_reg 回归输出（8 头模型才有效）。
 
     返回:
-        tuple: 默认 (onset, frame, velocity) 三个 (T,88) 概率；
-            当 with_offset=True 时返回四个 (onset, frame, velocity, offset)。
+        tuple: 默认 (onset, frame, velocity)；
+            加 with_offset 时追加 offset；
+            加 with_regression 时再追加 onset_reg、offset_reg。
     """
     device = pick_device(device)
     x = torch.tensor(normalize_input(cqt), dtype=torch.float32).unsqueeze(0).to(device)
@@ -131,6 +134,8 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
     out_f = torch.zeros((1, total, 88))
     out_v = torch.zeros((1, total, 88))
     out_of = torch.zeros((1, total, 88))
+    out_onr = torch.zeros((1, total, 88))
+    out_offr = torch.zeros((1, total, 88))
     count = torch.zeros((1, total, 1))
     for start in range(0, total, stride):
         end = min(start + window, total)
@@ -138,21 +143,28 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
         if chunk.shape[1] == 0:
             continue
         with torch.autocast(device_type="cuda", enabled=(device == "cuda")):
-            o, f, v, _p, _po, of = model(chunk)
+            o, f, v, _p, _po, of, onr, offr = model(chunk)
             o = torch.sigmoid(o.float())
             f = torch.sigmoid(f.float())
             v = torch.sigmoid(v.float())
             of = torch.sigmoid(of.float())
+            onr = torch.sigmoid(onr.float())
+            offr = torch.sigmoid(offr.float())
         n = end - start
         out_o[:, start:end, :] += o[:, :n, :].cpu()
         out_f[:, start:end, :] += f[:, :n, :].cpu()
         out_v[:, start:end, :] += v[:, :n, :].cpu()
         out_of[:, start:end, :] += of[:, :n, :].cpu()
+        out_onr[:, start:end, :] += onr[:, :n, :].cpu()
+        out_offr[:, start:end, :] += offr[:, :n, :].cpu()
         count[:, start:end, :] += 1.0
     count[count == 0] = 1.0
     result = ((out_o / count).squeeze(0).numpy(),
               (out_f / count).squeeze(0).numpy(),
               (out_v / count).squeeze(0).numpy())
     if with_offset:
-        return result + ((out_of / count).squeeze(0).numpy(),)
+        result = result + ((out_of / count).squeeze(0).numpy(),)
+    if with_regression:
+        result = result + ((out_onr / count).squeeze(0).numpy(),
+                           (out_offr / count).squeeze(0).numpy())
     return result

@@ -364,3 +364,75 @@ def conditional_suppress(onset, frame, cfg):
                 value = 1.0 - decay * cfg.harmonic_strength
                 factor[t0:t1, target] = np.minimum(factor[t0:t1, target], value)
     return onset * factor
+
+
+def _refine_peak(curve, peak):
+    """用左右邻帧做三角形插值，返回亚帧的峰值位置（单位：帧）。
+
+    参数:
+        curve (numpy.ndarray): (T,) 单键的回归输出（0–1）。
+        peak (int): 局部最大帧号。
+
+    返回:
+        float: 亚帧位置（可能带小数），单位帧。
+    """
+    if peak <= 0 or peak >= len(curve) - 1:
+        return float(peak)
+    y_a = float(curve[peak - 1])
+    y_b = float(curve[peak])
+    y_c = float(curve[peak + 1])
+    if y_b <= max(y_a, y_c) or y_b <= 1e-6:
+        return float(peak)
+    if y_c > y_a:
+        delta = 0.5 * (y_c - y_a) / max(y_b - y_a, 1e-6)
+    else:
+        delta = -0.5 * (y_a - y_c) / max(y_b - y_c, 1e-6)
+    return float(peak) + float(np.clip(delta, -0.5, 0.5))
+
+
+def decode_subframe(onset_reg, offset_reg, vel, onset_threshold=0.30,
+                    offset_threshold=0.30, min_gap_s=0.05, fallback_dur=0.08):
+    """用回归输出 + 亚帧插值解码音符事件。
+
+    对每个琴键分别找 onset_reg / offset_reg 的局部极大值，插值得到亚帧时间；
+    再把每个 onset 与它之后的第一个 offset 配成音符。
+
+    参数:
+        onset_reg (numpy.ndarray): (T, 88) onset 回归输出（0–1）。
+        offset_reg (numpy.ndarray): (T, 88) offset 回归输出（0–1）。
+        vel (numpy.ndarray): (T, 88) 力度概率（0–1）。
+        onset_threshold (float): onset 峰高阈值。
+        offset_threshold (float): offset 峰高阈值。
+        min_gap_s (float): 同一个键两次 onset 的最小间隔（秒）。
+        fallback_dur (float): 找不到对应 offset 时的兜底时值（秒）。
+
+    返回:
+        list[NoteEvent]: 音符事件（带亚帧时间）。
+    """
+    fps = SR / HOP_LENGTH
+    min_distance = max(1, int(round(min_gap_s * fps)))
+    events = []
+    for key in range(88):
+        onset_peaks, _ = find_peaks(onset_reg[:, key], height=onset_threshold,
+                                    prominence=0.05, distance=min_distance)
+        offset_peaks, _ = find_peaks(offset_reg[:, key], height=offset_threshold,
+                                     prominence=0.05, distance=min_distance)
+        if len(onset_peaks) == 0:
+            continue
+        onset_times = [_refine_peak(onset_reg[:, key], int(p)) / fps for p in onset_peaks]
+        offset_times = sorted(_refine_peak(offset_reg[:, key], int(p)) / fps
+                              for p in offset_peaks)
+        used = set()
+        for onset_time, onset_peak in zip(onset_times, onset_peaks):
+            end_time = None
+            for idx, offset_time in enumerate(offset_times):
+                if idx not in used and offset_time > onset_time + 0.02:
+                    end_time = offset_time
+                    used.add(idx)
+                    break
+            if end_time is None:
+                end_time = onset_time + fallback_dur
+            velocity = int(np.clip(vel[int(onset_peak), key] * 127, 24, 118))
+            events.append(NoteEvent(pitch=key + 21, start=float(onset_time),
+                                    end=float(end_time), velocity=velocity))
+    return sorted(events, key=lambda e: e.start)
