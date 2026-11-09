@@ -34,7 +34,7 @@ body {
 .device { margin-left: auto; font-size: 12px; color: var(--muted); }
 .device.warn { color: var(--accent); }
 
-.wrap { max-width: 1080px; margin: 0 auto; padding: 24px 28px 40px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 24px 28px 40px; }
 
 .card {
   background: var(--card);
@@ -57,7 +57,7 @@ body {
 .dropzone.over { border-color: var(--accent); background: #fdf3ef; }
 .dz-icon { font-size: 36px; }
 .dz-title { font-size: 18px; font-weight: 700; margin: 8px 0 4px; }
-.dz-hint { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+.dz-hint { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 14px; }
 
 .btn {
   display: inline-block;
@@ -69,43 +69,27 @@ body {
   font-size: 14px;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
 }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
 .btn.primary:hover { background: #a93226; }
 .btn.ghost { background: #fff; }
+.btn.small { padding: 6px 10px; font-size: 12.5px; }
+.btn.danger { color: var(--accent); }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.row {
+.result-head {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
 }
+.result-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
-.status-line { display: flex; align-items: center; gap: 10px; font-size: 15px; }
 .muted { color: var(--muted); font-size: 12.5px; }
-.dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--accent-2);
-  animation: pulse 1.2s infinite ease-in-out;
-}
-@keyframes pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
-
-.progress {
-  margin-top: 12px;
-  height: 8px;
-  background: #eee9df;
-  border-radius: 4px;
-  overflow: hidden;
-}
-.progress-inner {
-  height: 100%; width: 5%;
-  background: linear-gradient(90deg, var(--accent-2), var(--accent));
-  transition: width 0.4s ease;
-}
 
 .error {
   margin-top: 12px;
@@ -117,31 +101,83 @@ body {
   font-size: 13px;
 }
 
-.result-head {
+/* ---------- 曲目列表 ---------- */
+
+.track-list {
+  margin-top: 14px;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
 }
-.result-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.track-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fffdf9;
+}
+
+.track-main { min-width: 0; flex: 1; }
+.track-name {
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.track-meta {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.track-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.hint { margin: 10px 0 0; line-height: 1.6; }
+
+/* ---------- 谱面查看器 ---------- */
 
 audio { width: 100%; margin: 16px 0 6px; }
 
-.hint { margin: 2px 0 10px; }
+.viewer-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  margin: 4px 0 8px;
+  background: linear-gradient(#fff 75%, rgba(255, 255, 255, 0));
+}
+.page-indicator { font-size: 13px; color: var(--muted); min-width: 90px; text-align: center; }
 
-.pages { display: flex; flex-direction: column; gap: 14px; }
+.score-viewport {
+  max-height: calc(100vh - 300px);
+  min-height: 300px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+}
+
+.pages { display: block; }
 
 .score-page {
+  display: none;
   position: relative;
-  margin-bottom: 14px;
   cursor: crosshair;
   user-select: none;
   background: #fff;
-  border: 1px solid var(--line);
   border-radius: 8px;
 }
+.score-page.page-active { display: block; }
 .score-page svg {
   position: relative;
   z-index: 1;

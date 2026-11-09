@@ -19,6 +19,8 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
+import subprocess
 import time
 
 import numpy as np
@@ -80,6 +82,9 @@ def write_midi(events, midi_path, bpm=120.0):
 def synthesize_preview(events, wav_path, sr=22050):
     """用简单加法合成生成钢琴音色预览（不依赖外部音源，离线可用）。
 
+    这是 FluidSynth 不可用时的 fallback；正常情况下使用
+    synthesize_piano_midi() 渲染真实钢琴音色。
+
     参数:
         events (list): 音符事件。
         wav_path (str): 输出 wav 路径。
@@ -109,6 +114,67 @@ def synthesize_preview(events, wav_path, sr=22050):
     peak = float(np.max(np.abs(audio))) or 1.0
     audio = (audio / peak * 0.85).astype(np.float32)
     sf.write(str(wav_path), audio, sr, subtype="PCM_16")
+
+
+SOUNDFONT_CANDIDATES = [
+    os.environ.get("PIANO2_SOUNDFONT", ""),
+    "/usr/share/sounds/sf2/FluidR3_GM.sf2",
+    "/usr/share/sounds/sf2/TimGM6mb.sf2",
+    "/usr/share/sounds/sf2/default-GM.sf2",
+]
+
+
+def find_soundfont():
+    """返回可用的 SoundFont 路径；没有则返回 None。
+
+    返回:
+        str | None: SoundFont 文件路径。
+    """
+    for path in SOUNDFONT_CANDIDATES:
+        if path and os.path.isfile(path):
+            return path
+    return None
+
+
+def synthesize_piano_midi(midi_path, wav_path, sr=44100):
+    """用 FluidSynth + SoundFont 把 MIDI 渲染成真实钢琴音色 WAV。
+
+    比 synthesize_preview() 的正弦波合成更接近真钢琴；如果 FluidSynth
+    或 SoundFont 不存在，返回 False，由调用方回退到简单合成器。
+
+    参数:
+        midi_path (str): 输入 MIDI 路径（与谱面同一时间轴）。
+        wav_path (str): 输出 WAV 路径。
+        sr (int): 采样率。
+
+    返回:
+        bool: 成功渲染返回 True；缺少依赖返回 False。
+    """
+    fluidsynth = shutil.which("fluidsynth")
+    soundfont = find_soundfont()
+    if not fluidsynth or not soundfont or not os.path.isfile(midi_path):
+        return False
+    try:
+        subprocess.run(
+            [fluidsynth, "-ni", "-F", wav_path, "-r", str(sr), soundfont, midi_path],
+            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    if not os.path.isfile(wav_path) or os.path.getsize(wav_path) < 1024:
+        return False
+
+    # 统一响度并限制峰值，避免浏览器里忽大忽小或削波
+    audio, sr_in = sf.read(wav_path, dtype="float32")
+    if audio.ndim > 1:
+        audio = audio.mean(axis=1)
+    rms = float(np.sqrt(np.mean(audio ** 2))) or 1e-6
+    audio = audio * (10 ** (-20 / 20.0) / rms)
+    peak = float(np.max(np.abs(audio))) or 1.0
+    if peak > 0.95:
+        audio = audio / peak * 0.95
+    sf.write(wav_path, audio, sr_in, subtype="PCM_16")
+    return True
 
 
 def pngs_to_pdf(png_paths, pdf_path, max_width=1600, quality=82):
@@ -274,7 +340,8 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
 
     stage("合成回放音频")
     wav_path = os.path.join(out_dir, "preview.wav")
-    synthesize_preview(midi_notes, wav_path)
+    if not synthesize_piano_midi(midi_path, wav_path):
+        synthesize_preview(midi_notes, wav_path)
 
     return {
         "musicxml": "score.musicxml",

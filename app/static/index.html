@@ -14,53 +14,80 @@
   </header>
 
   <main class="wrap">
+    <!-- 初始状态：只有选择文件；选择后不自动转录 -->
     <section class="card" id="upload-card">
       <div class="dropzone" id="dropzone">
         <div class="dz-icon">🎹</div>
         <div class="dz-title">把钢琴录音拖到这里</div>
-        <div class="dz-hint">支持 wav / mp3 / m4a / flac，≤ 100 MB；只支持独奏钢琴；选择后自动开始转录</div>
+        <div class="dz-hint">
+          支持 wav / mp3 / m4a / flac，最多 10 首、总大小 ≤ 100 MB；只支持独奏钢琴。<br />
+          选择后先进入曲目列表，不会自动转录。
+        </div>
         <button class="btn primary" id="pick-btn">选择文件</button>
-        <input type="file" id="file-input" accept="audio/*" hidden />
+        <input type="file" id="file-input" accept="audio/*" multiple hidden />
       </div>
-      <div class="row" id="file-info" hidden>
-        <span id="file-name"></span>
-        <span class="muted" id="file-state">正在上传并转录…</span>
-      </div>
+      <div class="error" id="upload-error" hidden></div>
     </section>
 
-    <section class="card" id="status-card" hidden>
-      <div class="status-line">
-        <span class="dot" id="dot"></span>
-        <span id="stage">排队中…</span>
-        <span class="muted" id="elapsed"></span>
-      </div>
-      <div class="progress"><div class="progress-inner" id="progress-bar"></div></div>
-      <div class="error" id="error" hidden></div>
-    </section>
-
-    <section class="card" id="result-card" hidden>
+    <!-- 队列 / 结果列表：添加、转录、删除 -->
+    <section class="card" id="tracks-card" hidden>
       <div class="result-head">
         <div>
-          <div class="result-title">转录结果</div>
-          <div class="muted" id="stats"></div>
+          <div class="result-title" id="tracks-title">曲目列表</div>
+          <div class="muted" id="tracks-summary"></div>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" id="add-btn">继续添加</button>
+          <button class="btn primary" id="start-btn">开始转录</button>
+        </div>
+      </div>
+      <div class="error" id="tracks-error" hidden></div>
+      <div class="track-list" id="track-list"></div>
+      <div class="hint muted" id="tracks-hint">
+        每首曲目转录完成后可以单独打开；已完成的曲目也可以删除，再添加新曲目继续转录。
+      </div>
+    </section>
+
+    <!-- 谱面查看器：单页左右翻页 -->
+    <section class="card" id="score-card" hidden>
+      <div class="result-head">
+        <div>
+          <div class="result-title" id="score-title">转录结果</div>
+          <div class="muted" id="score-stats"></div>
         </div>
         <div class="actions">
           <a class="btn ghost" id="dl-xml" download>下载 MusicXML</a>
           <a class="btn ghost" id="dl-pdf" download>下载 PDF</a>
           <a class="btn ghost" id="dl-mid" download>下载 MIDI</a>
+          <button class="btn ghost" id="score-add-btn">添加曲目</button>
+          <button class="btn ghost" id="back-btn">← 曲目列表</button>
         </div>
       </div>
+
       <audio id="player" controls preload="metadata"></audio>
-      <div class="hint muted">播放时淡黄色块 + 红色音符跟随当前位置；点击或拖动乐谱也可以跳转</div>
-      <div class="pages" id="pages"></div>
+
+      <div class="viewer-toolbar">
+        <button class="btn ghost" id="prev-page" aria-label="上一页">← 上一页</button>
+        <span class="page-indicator" id="page-indicator">第 1 / 1 页</span>
+        <button class="btn ghost" id="next-page" aria-label="下一页">下一页 →</button>
+        <button class="btn primary" id="follow-btn" hidden>回到当前</button>
+      </div>
+
+      <div class="hint muted">
+        播放时当前页自动跟随、当前小节高亮；你翻到别的页后会出现「回到当前」，暂停时不显示。
+      </div>
+      <div class="score-viewport" id="score-viewport">
+        <div class="pages" id="pages"></div>
+      </div>
+      <div class="error" id="score-error" hidden></div>
     </section>
 
     <footer class="foot">
-      <span>M4.1 MVP</span>
+      <span>M4.2</span>
       <span>·</span>
       <span>独奏钢琴，建议 ≤ 5 分钟</span>
       <span>·</span>
-      <span>乐谱时值仍可能有误差（M3.5 会修）</span>
+      <span>乐谱时值仍可能有误差（进行中）</span>
     </footer>
   </main>
 

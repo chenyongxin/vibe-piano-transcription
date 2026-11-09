@@ -14,7 +14,7 @@
 | 模型与训练 | 五头模型 + 训练脚本；全量 20 轮（71k 步）完成：验证 F1 0.7656，留出集 onset F1 0.870 / 精确率 0.860（判据达标）；M3.5 首轮：offset 头使留出集 note F1 0.063→0.268，1 帧 onset 精确率 0.901 |
 | 评测 | oracle 自检 + 固定评测集 + 实验登记表 |
 | 全量训练（71k 步） | **完成（EXP-002）**；M3.5 首轮四组完成（EXP-003）：时值有改善但 Beethoven 回退，待组合实验 |
-| 浏览器应用 | **M4.1 MVP 可用**（本机运行：上传 → 看谱 → 下载 PDF/MIDI → 回放）；Docker 分发待做 |
+| 浏览器应用 | **M4.2 可用**（多曲目队列、单曲/多曲、单页翻页、真实钢琴回放）；Docker 分发待做 |
 
 ## 快速开始
 
@@ -25,9 +25,10 @@ pip install -e .
 # 单元测试（10 个测试；无数据/无 GPU 时自动跳过依赖项）
 python -m pytest -q
 
-# 启动浏览器应用（M4.1 MVP）
+# 启动浏览器应用（M4.2）
+# 真实钢琴回放需要 fluidsynth + FluidR3_GM.sf2；缺失时自动回退到简易合成器
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-# 浏览器打开 http://127.0.0.1:8000 ，拖入一段钢琴录音
+# 浏览器打开 http://127.0.0.1:8000 ，选择文件后先进入曲目列表，点「开始转录」
 
 # 音频 → 乐谱（命令行）
 python scripts/transcribe.py --wav /path/to/audio.wav --out-dir outputs/transcribe

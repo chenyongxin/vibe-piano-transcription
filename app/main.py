@@ -78,3 +78,11 @@ def get_job(job_id: str):
     if job is None:
         raise HTTPException(status_code=404, detail="任务不存在（可能已过期清理）")
     return store.to_dict(job)
+
+
+@app.delete("/api/jobs/{job_id}")
+def delete_job(job_id: str):
+    """删除一个任务及其产物（前端删除已完成曲目时调用）。"""
+    if not store.remove(job_id):
+        raise HTTPException(status_code=404, detail="任务不存在（可能已过期清理）")
+    return {"deleted": job_id}

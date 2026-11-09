@@ -72,6 +72,22 @@ class JobStore:
         with self.lock:
             return self.jobs.get(job_id)
 
+    def remove(self, job_id):
+        """删除任务及其产物目录；不存在返回 False。
+
+        参数:
+            job_id (str): 任务 id。
+
+        返回:
+            bool: 是否删除成功。
+        """
+        with self.lock:
+            job = self.jobs.pop(job_id, None)
+        if job is None:
+            return False
+        self._remove_dir(job.out_dir)
+        return True
+
     def _run(self, job, audio_path):
         """后台执行转录，更新任务状态。"""
         job.status = "running"
