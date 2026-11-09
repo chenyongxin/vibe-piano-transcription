@@ -75,7 +75,7 @@ def make_piece(pick, index):
     # 模型转录
     holder = ModelHolder(MODEL)
     result = transcribe(os.path.join(out_dir, "original.wav"), out_dir, holder,
-                        title=title, use_offset_end=True)
+                        title=title, use_offset_end=True, postprocess=True)
 
     # GT 回放（与截段对齐、时间归零）
     gt = events_from_midi(midi_path)

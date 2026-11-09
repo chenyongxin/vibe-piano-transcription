@@ -56,24 +56,33 @@ def combine_midi(gt_path, model_path, out_path):
     out.write(out_path)
 
 
+def _draw_roll(ax, midi_path, color, duration, alpha=1.0, linewidth=2.2):
+    """在给定坐标轴上画一个 MIDI 的钢琴卷帘。"""
+    pm = pretty_midi.PrettyMIDI(midi_path)
+    for inst in pm.instruments:
+        for n in inst.notes:
+            if n.start > duration:
+                continue
+            ax.plot([n.start, min(n.end, duration)], [n.pitch, n.pitch],
+                    color=color, linewidth=linewidth, alpha=alpha,
+                    solid_capstyle="butt")
+    ax.set_xlim(0, duration)
+    ax.set_ylabel("MIDI 音高", fontsize=9)
+    ax.grid(alpha=0.2, linestyle=":")
+
+
 def pianoroll_figure(gt_mid, model_mid, title, out_png, duration=20.0):
-    """画 GT 与模型的钢琴卷帘对比。"""
-    fig, axes = plt.subplots(2, 1, figsize=(12, 6.2), sharex=True, sharey=True)
-    for ax, path, tag, color in ((axes[0], gt_mid, "GT", C.COLOR_DARK),
-                                 (axes[1], model_mid, "模型输出", C.COLOR_ORANGE)):
-        pm = pretty_midi.PrettyMIDI(path)
-        for inst in pm.instruments:
-            for n in inst.notes:
-                if n.start > duration:
-                    continue
-                ax.plot([n.start, min(n.end, duration)], [n.pitch, n.pitch],
-                        color=color, linewidth=2.2, solid_capstyle="butt")
-        ax.set_ylabel("MIDI 音高", fontsize=9)
-        ax.set_title(tag, fontsize=9.5, loc="left")
-        ax.grid(alpha=0.2, linestyle=":")
-        ax.set_xlim(0, duration)
-    axes[1].set_xlabel("时间（秒）", fontsize=9)
-    fig.suptitle(title + "：GT（上） vs 模型（下）", fontsize=11)
+    """画三格对比：GT、模型、以及叠在一起（透明）。"""
+    fig, axes = plt.subplots(3, 1, figsize=(12, 8.2), sharex=True, sharey=True)
+    _draw_roll(axes[0], gt_mid, C.COLOR_DARK, duration)
+    axes[0].set_title("GT", fontsize=9.5, loc="left")
+    _draw_roll(axes[1], model_mid, C.COLOR_ORANGE, duration)
+    axes[1].set_title("模型输出", fontsize=9.5, loc="left")
+    _draw_roll(axes[2], gt_mid, C.COLOR_DARK, duration, alpha=0.55, linewidth=2.6)
+    _draw_roll(axes[2], model_mid, C.COLOR_ORANGE, duration, alpha=0.55, linewidth=2.6)
+    axes[2].set_title("叠加（蓝=GT，橙=模型；重合处呈深色）", fontsize=9.5, loc="left")
+    axes[2].set_xlabel("时间（秒）", fontsize=9)
+    fig.suptitle(title + "：GT / 模型 / 叠加", fontsize=11)
     fig.tight_layout()
     fig.savefig(out_png, dpi=130, facecolor="white")
     plt.close(fig)

@@ -44,5 +44,6 @@ training/YYYY-MM-DD_<主题简写>.md
 | 2026-11-07 | [Round 2 组合实验](2026-11-07_round2.md) | 6 组：combo_base / offset1 / aug / 对照 / seed / 40 轮 |
 | 2026-11-08 | [夜间损失权重实验](2026-11-08_overnight.md) | offset 损失 2.0 三 seed 确认；3.0/4.0 扫描 |
 | 2026-11-08 | [回归 + 亚帧原型](2026-11-08_regression_prototype.md) | test split 基准；onset 回归成功、offset 回归失败 |
+| 2026-11-09 | [人工校核与后处理](2026-11-09_manual_validation.md) | 三首曲目卷帘；时值问题最突出；八度重复后处理效果有限 |
 
 新报告从 [`TEMPLATE.md`](TEMPLATE.md) 复制结构。

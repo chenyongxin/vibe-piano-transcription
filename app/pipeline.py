@@ -181,7 +181,7 @@ def _build_timing(xml_path, page_svgs, end_seconds, step=0.1):
 
 
 def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progress=None,
-               use_offset_end=False):
+               use_offset_end=False, postprocess=False):
     """音频 → 全部产物，返回结果字典。
 
     参数:
@@ -190,6 +190,8 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
         holder (ModelHolder): 模型持有者（复用权重）。
         title (str): 乐谱标题。
         progress (callable | None): 进度回调，参数是中文阶段名。
+        use_offset_end (bool): 是否用 offset 头决定音符结束时间（需 6 头以上模型）。
+        postprocess (bool): 是否应用八度重复抑制 + 同音高重叠截断。
 
     返回:
         dict: 产物文件名、音符数、耗时、设备。
@@ -214,10 +216,16 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
         stage("解码成音符")
         cfg = DecodeConfig(**DECODE_DEFAULTS, use_offset_end=True)
         events = decode(probs[0], probs[1], probs[2], cfg, offset_probs=probs[3])
+        if postprocess:
+            from piano2.postprocess import postprocess_events
+            events, _stats = postprocess_events(events, onset=probs[0], frame=probs[1])
     else:
         onset, frame, vel = infer_sliding_window(model, cqt, holder.device)
         stage("解码成音符")
         events = decode(onset, frame, vel, DecodeConfig(**DECODE_DEFAULTS))
+        if postprocess:
+            from piano2.postprocess import postprocess_events
+            events, _stats = postprocess_events(events, onset=onset, frame=frame)
     stage("生成乐谱")
     xml_path = os.path.join(out_dir, "score.musicxml")
     write_musicxml([(e.pitch, e.start, e.end, e.velocity) for e in events],
