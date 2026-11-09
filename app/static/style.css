@@ -176,6 +176,7 @@ audio { width: 100%; margin: 16px 0 6px; }
   user-select: none;
   background: #fff;
   border-radius: 8px;
+  overflow: hidden;
 }
 .score-page.page-active { display: block; }
 .score-page svg {
@@ -190,7 +191,8 @@ audio { width: 100%; margin: 16px 0 6px; }
   position: absolute;
   z-index: 0;
   background: var(--band);
-  border-radius: 4px;
+  border-left: 3px solid #d4a017;
+  border-radius: 2px;
   pointer-events: none;
   display: none;
 }

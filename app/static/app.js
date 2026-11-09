@@ -57,17 +57,19 @@ function hideError() {
 /* ---------- 健康检查 ---------- */
 
 async function checkHealth() {
+  const node = el("device");
+  if (!node) return;
   try {
     const r = await fetch("/api/health");
     const d = await r.json();
     const label = d.device === "cuda" ? "GPU（CUDA）" : (d.device === "mps" ? "Apple MPS" : "CPU");
-    el("device").textContent = `推理设备：${label}`;
+    node.textContent = `推理设备：${label}`;
     if (!d.checkpoint_exists) {
-      el("device").textContent += " · ⚠ 模型缺失";
-      el("device").classList.add("warn");
+      node.textContent += " · ⚠ 模型缺失";
+      node.classList.add("warn");
     }
   } catch (e) {
-    el("device").textContent = "后端未连接";
+    node.textContent = "后端未连接";
   }
 }
 
@@ -480,21 +482,35 @@ function paintSample(idx) {
     });
   }
   if (s.measures && s.measures.length) {
-    const rec = view.els.get(s.measures[0]);
+    let rec = view.els.get(s.measures[0]);
+    let measureEl = rec && rec.el.closest ? rec.el.closest("g.measure") : null;
+    if (!measureEl && s.ids && s.ids.length) {
+      const noteRec = view.els.get(s.ids[0]);
+      measureEl = noteRec && noteRec.el.closest ? noteRec.el.closest("g.measure") : null;
+    }
     const band = view.bands[view.pageIndex];
-    if (rec && band) {
-      const wrap = view.pageWraps[view.pageIndex];
-      const svg = rec.el.ownerSVGElement;
-      const vb = svg && svg.viewBox ? svg.viewBox.baseVal : null;
-      if (vb && vb.width) {
-        const scale = wrap.clientWidth / vb.width;
-        const box = rec.el.getBBox();
-        band.style.display = "block";
-        band.style.left = `${box.x * scale}px`;
-        band.style.top = `${box.y * scale}px`;
-        band.style.width = `${box.width * scale}px`;
-        band.style.height = `${box.height * scale}px`;
+    const wrap = view.pageWraps[view.pageIndex];
+    if (measureEl && band && wrap) {
+      // 用屏幕坐标差定位：verovio 的 SVG 是嵌套的（外层 svg + 内层 viewBox），
+      // 直接用 getBBox()*scale 会被嵌套 viewBox 和缩放带偏，高亮块就对不准小节。
+      // 纵向只用 staff（五线谱）的包围盒，避免把 tempo 记号和空白也框进去。
+      const wr = wrap.getBoundingClientRect();
+      const mr = measureEl.getBoundingClientRect();
+      const staffRects = Array.from(measureEl.querySelectorAll(".staff"))
+        .map((node) => node.getBoundingClientRect())
+        .filter((r) => r.width > 0 && r.height >= 0);
+      let top = mr.top;
+      let height = mr.height;
+      if (staffRects.length) {
+        top = Math.min(...staffRects.map((r) => r.top));
+        const bottom = Math.max(...staffRects.map((r) => r.bottom));
+        height = bottom - top;
       }
+      band.style.display = "block";
+      band.style.left = `${mr.left - wr.left}px`;
+      band.style.top = `${top - wr.top}px`;
+      band.style.width = `${mr.width}px`;
+      band.style.height = `${height}px`;
     }
   }
 }
