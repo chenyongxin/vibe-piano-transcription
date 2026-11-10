@@ -39,6 +39,31 @@ python scripts/evaluate.py --model models/best.pt
 
 数据与模型权重不随仓库分发，路径用环境变量指定（见 `src/piano2/constants.py`）。
 
+## 数据目录
+
+钢琴项目的数据统一放在 `E:\Docker\piano2_data\`（容器内挂载为 `/Docker/piano2_data`），
+不再散落在 `E:\Docker` 根目录：
+
+| 路径 | 内容 |
+|---|---|
+| `raw/maestro-v3.0.0/` | MAESTRO v3.0.0 原始音频 + MIDI（约 123 GB） |
+| `processed/maestro_processed_v2/` | 数据 v2（memmap，训练默认） |
+| `processed/maestro_processed_v3a/` … `v4/` | 后续标签版本（offset 窗口、回归目标等） |
+| `processed/maestro_processed/` | 旧版压缩 npz 数据 |
+| `archives/maestro_processed.zip` | 旧数据压缩包（约 17.7 GB） |
+| `validation/piano_validation/` | 人工校核包（3 首不同难度） |
+| `timbre_ab/piano_timbre_ab/` | 音色 A/B 试听文件 |
+| `demo/piano2_demo/` | 早期演示产物 |
+| `scratch/dsh_scratch/` | 诊断脚本与临时输出 |
+
+默认路径已同步到 `src/piano2/constants.py`：
+
+- `PIANO2_MAESTRO_ROOT=/Docker/piano2_data/raw/maestro-v3.0.0`
+- `PIANO2_DATA_ROOT=/Docker/piano2_data/processed/maestro_processed_v2`
+- `PIANO2_SRC_ROOT=/Docker/piano2_data/processed/maestro_processed`
+
+如果数据放在别处，用这三个环境变量覆盖即可，不用改代码。
+
 ## 目录
 
 | 目录 | 内容 |

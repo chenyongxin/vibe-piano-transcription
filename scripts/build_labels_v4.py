@@ -25,10 +25,10 @@ import pretty_midi
 
 FPS = 31.25
 J = 5
-V3B = "/Docker/maestro_processed_v3b"
-V3A = "/Docker/maestro_processed_v3a"
-V4 = "/Docker/maestro_processed_v4"
-MAESTRO = "/Docker/maestro-v3.0.0"
+V3B = "/Docker/piano2_data/processed/maestro_processed_v3b"
+V3A = "/Docker/piano2_data/processed/maestro_processed_v3a"
+V4 = "/Docker/piano2_data/processed/maestro_processed_v4"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
 
 
 def link_or_copy(src, dst):

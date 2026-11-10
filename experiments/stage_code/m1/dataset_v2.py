@@ -19,7 +19,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-DATA_ROOT = "/Docker/maestro_processed_v2"
+DATA_ROOT = "/Docker/piano2_data/processed/maestro_processed_v2"
 SEG_FRAMES = 313  # 10 秒 @ 31.25 fps
 
 

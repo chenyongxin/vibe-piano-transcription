@@ -3,7 +3,7 @@
 目的（M3.5 实验 D2）：验证 note F1 偏低是否主要因为「训练 frame 含踏板、评测用键释放」
 口径不一致。CQT 与 pedal 直接从 v2 硬链接复用，只重建标签（约 2 分钟）。
 
-目录结构（/Docker/maestro_processed_v3a）：
+目录结构（/Docker/piano2_data/processed/maestro_processed_v3a）：
     {split}/{name}.cqt.npy   ← 硬链接 v2
     {split}/{name}.lab.npy   ← 重建：通道 0 改为 frame_key（不含踏板），通道 5 复制 v2 的 pedal
     {split}/{name}.pedal.npy ← 硬链接 v2
@@ -27,9 +27,9 @@ import pandas as pd
 import pretty_midi
 
 FPS = 31.25
-V2 = "/Docker/maestro_processed_v2"
-V3A = "/Docker/maestro_processed_v3a"
-MAESTRO = "/Docker/maestro-v3.0.0"
+V2 = "/Docker/piano2_data/processed/maestro_processed_v2"
+V3A = "/Docker/piano2_data/processed/maestro_processed_v3a"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
 
 
 def link_or_copy(src, dst):

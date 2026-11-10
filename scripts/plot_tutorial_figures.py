@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch  # noqa: E402
 
 C = plot_style
-DATA = "/Docker/maestro_processed_v2"
+DATA = "/Docker/piano2_data/processed/maestro_processed_v2"
 OUT = "/Docker/git/piano2/docs/figs"
 FPS = 31.25
 

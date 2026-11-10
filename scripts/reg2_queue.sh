@@ -6,7 +6,7 @@
 set -uo pipefail
 cd /Docker/git/piano2 || exit 1
 
-V4=/Docker/maestro_processed_v4
+V4=/Docker/piano2_data/processed/maestro_processed_v4
 QUEUE_DIR=outputs/reg2
 mkdir -p "$QUEUE_DIR" outputs/eval
 log() { echo "[$(date '+%m-%d %H:%M:%S')] $*" | tee -a "$QUEUE_DIR/queue.log"; }

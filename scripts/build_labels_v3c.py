@@ -3,7 +3,7 @@
 背景：v3b 的 offset 标签是 2 帧窗口 [end, end+2)，正样本中心比真实键释放晚半帧（16 ms）。
 这与 onset 的 2 帧标签是同一个问题；v3c 把 offset 改为 1 帧，验证能否进一步改善时值。
 
-目录结构（/Docker/maestro_processed_v3c）：
+目录结构（/Docker/piano2_data/processed/maestro_processed_v3c）：
     {split}/{name}.cqt.npy   ← 硬链接 v3a（最终指向 v2 同一份数据）
     {split}/{name}.lab.npy   ← 7 通道：v3a 的 6 通道 + offset（1 帧）
     {split}/{name}.pedal.npy ← 硬链接 v3a
@@ -27,9 +27,9 @@ import pandas as pd
 import pretty_midi
 
 FPS = 31.25
-V3A = "/Docker/maestro_processed_v3a"
-V3C = "/Docker/maestro_processed_v3c"
-MAESTRO = "/Docker/maestro-v3.0.0"
+V3A = "/Docker/piano2_data/processed/maestro_processed_v3a"
+V3C = "/Docker/piano2_data/processed/maestro_processed_v3c"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
 
 
 def link_or_copy(src, dst):

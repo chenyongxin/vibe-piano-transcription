@@ -43,8 +43,8 @@
   },
   "build": {
     "script_sha256": "99161f5a1cc3345b4d3d474435e2a756c73e784a870269838e390f4801e1086c",
-    "source_root": "/Docker/maestro_processed",
-    "dest_root": "/Docker/maestro_processed_v2",
+    "source_root": "/Docker/piano2_data/processed/maestro_processed",
+    "dest_root": "/Docker/piano2_data/processed/maestro_processed_v2",
     "counts": {
       "test_ok": 177,
       "validation_ok": 137,

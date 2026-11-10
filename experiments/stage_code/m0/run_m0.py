@@ -48,8 +48,8 @@ from transcribe_readable import (  # noqa: E402
     write_readable_musicxml,
 )
 
-MAESTRO = "/Docker/maestro-v3.0.0"
-PROCESSED_TEST = "/Docker/maestro_processed/test"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
+PROCESSED_TEST = "/Docker/piano2_data/processed/maestro_processed/test"
 OUT = os.path.join(ROOT, "outputs", "M0")
 CKPT = os.path.join(ROOT, "trained_data", "checkpoints", "model_best.pth")
 FPS = 16000 / 512  # 31.25 帧/秒

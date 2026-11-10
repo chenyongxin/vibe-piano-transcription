@@ -15,7 +15,7 @@
 
 ## 2. 数据 v2 的设计
 
-数据 v2 在 M1 重建，目录 `/Docker/maestro_processed_v2`（约 33 GB），每首曲目三个文件：
+数据 v2 在 M1 重建，目录 `/Docker/piano2_data/processed/maestro_processed_v2`（约 33 GB），每首曲目三个文件：
 
 | 文件 | 形状 | dtype | 内容 |
 |---|---|---|---|
@@ -116,7 +116,7 @@ python scripts/check_labels.py
 
 产物：
 
-- `PIANO2_DATA_ROOT`（默认 `/Docker/maestro_processed_v2`）：数据本身；
+- `PIANO2_DATA_ROOT`（默认 `/Docker/piano2_data/processed/maestro_processed_v2`）：数据本身；
 - `outputs/M1/data_manifest.json`：配置、拆分统计、标签正样本率、脚本指纹。
 
 manifest 的作用是**追溯**：改了标签口径后，靠它区分「这份分数是用哪版数据训出来的」。

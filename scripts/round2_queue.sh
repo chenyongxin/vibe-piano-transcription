@@ -9,9 +9,9 @@ cd /Docker/git/piano2 || exit 1
 
 STD_STEPS=71160
 LONG_STEPS=142320
-V3A=/Docker/maestro_processed_v3a
-V3B=/Docker/maestro_processed_v3b
-V3C=/Docker/maestro_processed_v3c
+V3A=/Docker/piano2_data/processed/maestro_processed_v3a
+V3B=/Docker/piano2_data/processed/maestro_processed_v3b
+V3C=/Docker/piano2_data/processed/maestro_processed_v3c
 QUEUE_DIR=outputs/overnight2
 mkdir -p "$QUEUE_DIR" outputs/eval
 

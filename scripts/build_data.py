@@ -8,7 +8,7 @@
        不用每步解压整首歌——旧管线 9 倍的 I/O 浪费就来自这里）。
     4. 预生成 10 秒段索引；验证集固定段；生成 manifest（清单/指纹）。
 
-输出目录结构（容器内 /Docker/maestro_processed_v2）：
+输出目录结构（容器内 /Docker/piano2_data/processed/maestro_processed_v2）：
     {split}/{idx:04d}_{stem}.cqt.npy      (T, 264) float32
     {split}/{idx:04d}_{stem}.lab.npy      (T, 6, 88) uint8
         通道顺序：frame, onset1, onset2, onset3, velocity(0-127), pedal(0/1 广播到 88 键)

@@ -40,8 +40,8 @@ import score_metrics  # noqa: E402
 
 OUT = os.path.join(ROOT, "outputs", "M0", "m05")
 FIGS = os.path.join(OUT, "figs")
-MAESTRO = "/Docker/maestro-v3.0.0"
-PROCESSED_TEST = "/Docker/maestro_processed/test"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
+PROCESSED_TEST = "/Docker/piano2_data/processed/maestro_processed/test"
 FPS = 16000 / 512
 DEV = ("haydn", "mozart", "beethoven")
 CEILING = {"haydn": 0.950, "mozart": 0.949, "beethoven": 0.797}

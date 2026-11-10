@@ -12,6 +12,6 @@
 
 说明见 `../docs/06_stage_programs.md`。
 
-这些脚本依赖旧仓库的路径与缓存（旧数据 `/Docker/maestro_processed`、旧输出
+这些脚本依赖旧仓库的路径与缓存（旧数据 `/Docker/piano2_data/processed/maestro_processed`、旧输出
 `piano_practice/outputs/`、旧检查点 `trained_data/`），在新仓里**不保证直接可跑**；
 它们的作用是追溯与重跑关键实验。日常使用请走 `scripts/`。

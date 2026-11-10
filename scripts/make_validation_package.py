@@ -1,6 +1,6 @@
 """准备人工校核包：3 首不同难度的真实曲目 → 模型谱 + 回放音频。
 
-产物目录（容器内 /Docker/piano_validation，Windows 侧 E:\\Docker\\piano_validation）：
+产物目录（容器内 /Docker/piano2_data/validation/piano_validation，Windows 侧 E:\\Docker\\piano_validation）：
     README.md                        校核说明与评分表
     index.json                       曲目清单与指标
     01_<slug>/original.wav           20 秒原始音频截段
@@ -32,7 +32,7 @@ from piano2.constants import MAESTRO_ROOT  # noqa: E402
 from piano2.core import NoteEvent  # noqa: E402
 from piano2.notation import events_from_midi  # noqa: E402
 
-OUT_ROOT = "/Docker/piano_validation"
+OUT_ROOT = "/Docker/piano2_data/validation/piano_validation"
 MODEL = "/Docker/git/piano2/outputs/M1/combo_offset_loss2/checkpoints/best.pt"
 EXCERPT_S = 20.0
 

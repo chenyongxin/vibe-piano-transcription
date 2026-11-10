@@ -16,7 +16,7 @@
 
 ## 数据位置
 
-- 数据 v2：`/Docker/maestro_processed_v2`（约 33 GB，主机 `E:\Docker\maestro_processed_v2`）
+- 数据 v2：`/Docker/piano2_data/processed/maestro_processed_v2`（约 33 GB，主机 `E:\Docker\piano2_data\processed\maestro_processed_v2`）
 - manifest：`outputs/M1/data_manifest.json`
 - 训练产物：`outputs/M1/pilot_onset{1,2,3}/`
 

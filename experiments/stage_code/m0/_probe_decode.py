@@ -1,4 +1,4 @@
-﻿"""在同一首曲目上对比三种解码：纯峰值 / 无谐波抑制的迟滞状态机 / 正式管线（含谐波抑制）。"""
+"""在同一首曲目上对比三种解码：纯峰值 / 无谐波抑制的迟滞状态机 / 正式管线（含谐波抑制）。"""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ from transcribe_readable import (  # noqa: E402
     probabilities_to_events, suppress_harmonic_onsets,
 )
 
-MAESTRO = "/Docker/maestro-v3.0.0"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
 CKPT = os.path.join(ROOT, "trained_data", "checkpoints", "model_best.pth")
 TRACK_SUFFIX = "MIDI-Unprocessed_08_R1_2008_01-05_ORIG_MID--AUDIO_08_R1_2008_wav--2"
 

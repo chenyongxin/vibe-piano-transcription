@@ -7,8 +7,8 @@ set -uo pipefail
 cd /Docker/git/piano2 || exit 1
 
 STEPS=71160
-V3B=/Docker/maestro_processed_v3b
-V3D=/Docker/maestro_processed_v3d
+V3B=/Docker/piano2_data/processed/maestro_processed_v3b
+V3D=/Docker/piano2_data/processed/maestro_processed_v3d
 QUEUE_DIR=outputs/afternoon
 mkdir -p "$QUEUE_DIR" outputs/eval
 

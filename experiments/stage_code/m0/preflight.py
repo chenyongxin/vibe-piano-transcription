@@ -49,8 +49,8 @@ import notation_v1  # noqa: E402
 import prob_cache  # noqa: E402
 from transcribe_readable import compute_cqt  # noqa: E402
 
-MAESTRO = "/Docker/maestro-v3.0.0"
-PROCESSED = "/Docker/maestro_processed"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
+PROCESSED = "/Docker/piano2_data/processed/maestro_processed"
 OUT = os.path.join(ROOT, "outputs", "M0")
 CKPT = os.path.join(ROOT, "trained_data", "checkpoints", "model_best.pth")
 FPS = 16000 / 512

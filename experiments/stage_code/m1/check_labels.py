@@ -16,7 +16,7 @@ import os
 
 import numpy as np
 
-DATA_ROOT = "/Docker/maestro_processed_v2"
+DATA_ROOT = "/Docker/piano2_data/processed/maestro_processed_v2"
 MANIFEST = "/Docker/git/piano_practice/outputs/M1/data_manifest.json"
 
 

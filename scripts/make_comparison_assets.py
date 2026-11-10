@@ -26,7 +26,7 @@ plot_style.use_cjk_font()
 import matplotlib.pyplot as plt  # noqa: E402
 
 C = plot_style
-ROOT = "/Docker/piano_validation"
+ROOT = "/Docker/piano2_data/validation/piano_validation"
 TARGET_RMS = 10 ** (-20 / 20.0)   # -20 dBFS
 
 

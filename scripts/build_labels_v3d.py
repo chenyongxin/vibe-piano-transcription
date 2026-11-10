@@ -4,7 +4,7 @@
 （留出集 note F1 0.251 < v3b 的 0.372）。v3d 用「以 end 为中心的 3 帧」，既保留足够正样本，
 又消除窗口中心的系统偏差——这是从 onset「窗口中心偏差」直接推出来的对照实验。
 
-目录结构（/Docker/maestro_processed_v3d）：与 v3b 相同，只是 offset 通道为 3 帧。
+目录结构（/Docker/piano2_data/processed/maestro_processed_v3d）：与 v3b 相同，只是 offset 通道为 3 帧。
 
 用法（容器内）：
     cd /Docker/git/piano2 && python scripts/build_labels_v3d.py --workers 8
@@ -23,9 +23,9 @@ import pandas as pd
 import pretty_midi
 
 FPS = 31.25
-V3A = "/Docker/maestro_processed_v3a"
-V3D = "/Docker/maestro_processed_v3d"
-MAESTRO = "/Docker/maestro-v3.0.0"
+V3A = "/Docker/piano2_data/processed/maestro_processed_v3a"
+V3D = "/Docker/piano2_data/processed/maestro_processed_v3d"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
 
 
 def link_or_copy(src, dst):

@@ -5,8 +5,8 @@ import os
 from piano2.eval import mxlib
 from piano2.notation import write_musicxml
 
-AUDIO = "/Docker/maestro-v3.0.0/2008/MIDI-Unprocessed_09_R3_2008_01-07_ORIG_MID--AUDIO_09_R3_2008_wav--2.wav"
-MIDI = "/Docker/maestro-v3.0.0/2008/MIDI-Unprocessed_09_R3_2008_01-07_ORIG_MID--AUDIO_09_R3_2008_wav--2.midi"
+AUDIO = "/Docker/piano2_data/raw/maestro-v3.0.0/2008/MIDI-Unprocessed_09_R3_2008_01-07_ORIG_MID--AUDIO_09_R3_2008_wav--2.wav"
+MIDI = "/Docker/piano2_data/raw/maestro-v3.0.0/2008/MIDI-Unprocessed_09_R3_2008_01-07_ORIG_MID--AUDIO_09_R3_2008_wav--2.midi"
 
 
 def test_write_musicxml(tmp_path):

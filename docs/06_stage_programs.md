@@ -88,7 +88,7 @@
 ## 7. 怎么跑这些阶段程序
 
 它们依赖**旧仓库**的路径与缓存（`E:\Docker\git\piano_practice\outputs\`、`trained_data\`、
-旧数据 `/Docker/maestro_processed`），所以：
+旧数据 `/Docker/piano2_data/processed/maestro_processed`），所以：
 
 - 想复跑某个阶段实验：切到旧仓库 `m0/`、`m1/` 下按当时的命令跑（README 里有）；
 - 只想看结论：读 `experiments/reports/` 与 `history/`；

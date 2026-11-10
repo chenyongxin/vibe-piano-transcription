@@ -12,9 +12,9 @@ set -uo pipefail
 cd /Docker/git/piano2 || exit 1
 
 STD_STEPS=71160          # 20 轮
-V2=/Docker/maestro_processed_v2
-V3A=/Docker/maestro_processed_v3a
-V3B=/Docker/maestro_processed_v3b
+V2=/Docker/piano2_data/processed/maestro_processed_v2
+V3A=/Docker/piano2_data/processed/maestro_processed_v3a
+V3B=/Docker/piano2_data/processed/maestro_processed_v3b
 QUEUE_DIR=outputs/overnight
 mkdir -p "$QUEUE_DIR" outputs/eval
 

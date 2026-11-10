@@ -27,7 +27,7 @@ from transcribe_readable import (  # noqa: E402
     HOP_LENGTH, SR, compute_cqt, infer_sliding_window, load_model,
 )
 
-MAESTRO = "/Docker/maestro-v3.0.0"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
 CKPT = os.path.join(ROOT, "trained_data", "checkpoints", "model_best.pth")
 
 

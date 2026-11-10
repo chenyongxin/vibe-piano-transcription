@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.join(ROOT, "m0"))
 
 from transcribe_readable import compute_cqt, infer_sliding_window, load_model  # noqa: E402
 
-MAESTRO = "/Docker/maestro-v3.0.0"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
 CKPT = os.path.join(ROOT, "trained_data", "checkpoints", "model_best.pth")
 CACHE_DIR = os.path.join(ROOT, "outputs", "M0", "cache")
 

@@ -4,7 +4,7 @@
 第 7 个通道 offset（MIDI note-off 处的 2 帧窗口），供模型的 offset 头学习；
 训练时用 offset 峰直接定音符结束时间，与评测口径（键释放）一致。
 
-目录结构（/Docker/maestro_processed_v3b）：
+目录结构（/Docker/piano2_data/processed/maestro_processed_v3b）：
     {split}/{name}.cqt.npy   ← 硬链接 v3a（最终指向 v2 同一份数据）
     {split}/{name}.lab.npy   ← 7 通道：v3a 的 6 通道 + offset
     {split}/{name}.pedal.npy ← 硬链接 v3a
@@ -28,9 +28,9 @@ import pandas as pd
 import pretty_midi
 
 FPS = 31.25
-V3A = "/Docker/maestro_processed_v3a"
-V3B = "/Docker/maestro_processed_v3b"
-MAESTRO = "/Docker/maestro-v3.0.0"
+V3A = "/Docker/piano2_data/processed/maestro_processed_v3a"
+V3B = "/Docker/piano2_data/processed/maestro_processed_v3b"
+MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
 
 
 def link_or_copy(src, dst):

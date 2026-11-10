@@ -61,7 +61,7 @@ def main():
                                    onset_threshold=0.60, onset_prominence=0.005,
                                    peak_distance=5, frame_off_threshold=0.18,
                                    release_frames=3)
-    holdout2_midi = os.path.join("/Docker/maestro-v3.0.0", final["holdout2"]["midi"])
+    holdout2_midi = os.path.join("/Docker/piano2_data/raw/maestro-v3.0.0", final["holdout2"]["midi"])
     gts = {}
     for name in DEV:
         ev = notation_v1.events_from_midi(

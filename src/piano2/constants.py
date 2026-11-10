@@ -25,9 +25,9 @@ FRAME_MS = 1000.0 / FPS
 
 # ── 路径（均可用环境变量覆盖） ──
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SRC_ROOT = Path(os.environ.get("PIANO2_SRC_ROOT", "/Docker/maestro_processed"))
-DATA_ROOT = Path(os.environ.get("PIANO2_DATA_ROOT", "/Docker/maestro_processed_v2"))
-MAESTRO_ROOT = Path(os.environ.get("PIANO2_MAESTRO_ROOT", "/Docker/maestro-v3.0.0"))
+SRC_ROOT = Path(os.environ.get("PIANO2_SRC_ROOT", "/Docker/piano2_data/processed/maestro_processed"))
+DATA_ROOT = Path(os.environ.get("PIANO2_DATA_ROOT", "/Docker/piano2_data/processed/maestro_processed_v2"))
+MAESTRO_ROOT = Path(os.environ.get("PIANO2_MAESTRO_ROOT", "/Docker/piano2_data/raw/maestro-v3.0.0"))
 OUTPUT_ROOT = Path(os.environ.get("PIANO2_OUTPUT_ROOT", str(REPO_ROOT / "outputs")))
 CKPT = Path(os.environ.get("PIANO2_CKPT", str(REPO_ROOT / "models" / "best.pt")))
 

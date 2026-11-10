@@ -168,7 +168,7 @@ def fig_holdout():
 def load_data():
     step3 = json.load(open(os.path.join(M05_OUT, "step3b_final.json"), encoding="utf-8"))
     caches = {n: prob_cache.load_cache(n) for n in DEV}
-    holdout2_midi = os.path.join("/Docker/maestro-v3.0.0", step3["holdout2"]["midi"])
+    holdout2_midi = os.path.join("/Docker/piano2_data/raw/maestro-v3.0.0", step3["holdout2"]["midi"])
     gts = {}
     for name in DEV:
         midi = prob_cache.GT_MIDI.get(name, holdout2_midi)

@@ -74,8 +74,8 @@ python scripts/evaluate.py --model outputs/M1/pilot_onset2/checkpoints/best.pt
 
 | 环境变量 | 默认值 | 含义 |
 |---|---|---|
-| `PIANO2_DATA_ROOT` | `/Docker/maestro_processed_v2` | 数据 v2 根目录 |
-| `PIANO2_MAESTRO_ROOT` | `/Docker/maestro-v3.0.0` | MAESTRO 原始数据 |
+| `PIANO2_DATA_ROOT` | `/Docker/piano2_data/processed/maestro_processed_v2` | 数据 v2 根目录 |
+| `PIANO2_MAESTRO_ROOT` | `/Docker/piano2_data/raw/maestro-v3.0.0` | MAESTRO 原始数据 |
 | `PIANO2_OUTPUT_ROOT` | `/Docker/git/piano2/outputs` | 输出目录 |
 | `PIANO2_CKPT` | 旧模型检查点 | 默认模型权重 |
 
