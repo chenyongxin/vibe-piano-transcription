@@ -1,0 +1,13 @@
+{
+  "model": "outputs/M1/hybrid_reg2/checkpoints/best.pt",
+  "track": "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_06_R1_2015_wav--6.midi",
+  "n_pred": 1979,
+  "n_ref": 2124,
+  "onset_P": 0.9101,
+  "onset_R": 0.8479,
+  "onset_F1": 0.8779,
+  "note_P": 0.4184,
+  "note_R": 0.3898,
+  "note_F1": 0.4036,
+  "n_est": 1979
+}
