@@ -311,7 +311,8 @@ Dockerfile 默认使用阿里云 apt 镜像并安装 `fluidsynth` + `fluid-sound
 - `decode_pedal()` 用双阈值迟滞把概率解码成踩下/松开区间；
 - app 生成 `playback.mid`，写入 CC64（sustain pedal）后再交给 FluidSynth 渲染；
 - `score.mid` 仍是谱面导出的 MIDI（用于下载/DAW），不含踏板；
-- 谱面本身尚未写踏板记号，后续会把踏板标记加入 MusicXML。
+- MusicXML/PDF 已写入标准的 `<direction><pedal type="start|stop">`，verovio 渲染成
+  谱面下方的踏板线；谱面本身仍按 key-off 时值记谱。
 
 这项改动不改变 note/onset 指标，只改变回放听感；和 SOTA 的对比中，SOTA 的原始 MIDI
 本来就带 CC64，所以之前的听感差距有一部分来自我们这边漏用了踏板。

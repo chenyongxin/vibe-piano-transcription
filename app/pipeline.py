@@ -307,7 +307,7 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
     stage("生成乐谱")
     xml_path = os.path.join(out_dir, "score.musicxml")
     write_musicxml([(e.pitch, e.start, e.end, e.velocity) for e in events],
-                   audio_path, xml_path, title=title)
+                   audio_path, xml_path, title=title, pedal_events=pedal_events)
     stage("导出 MIDI（与谱面同一时间轴）")
     midi_path = os.path.join(out_dir, "score.mid")
     try:

@@ -368,7 +368,8 @@ def events_from_midi(midi_path):
     return sorted(out, key=lambda e: (e[1], e[0]))
 
 
-def write_musicxml(events, audio_path, out_path, title="M0 v1 transcription"):
+def write_musicxml(events, audio_path, out_path, title="M0 v1 transcription",
+                   pedal_events=None):
     """一步到位：事件 → MusicXML。
 
     参数:
@@ -376,6 +377,8 @@ def write_musicxml(events, audio_path, out_path, title="M0 v1 transcription"):
         audio_path (str): 对应音频（用于速度/拍点估计）。
         out_path (str): 输出 MusicXML 路径。
         title (str): 标题。
+        pedal_events (list | None): 踏板区间（含 start/end 的对象）；写入 MusicXML
+            的 pedal direction（Ped. / *）。
 
     返回:
         dict: 统计信息。
@@ -383,7 +386,96 @@ def write_musicxml(events, audio_path, out_path, title="M0 v1 transcription"):
     score, stats = build_score(events, audio_path, title=title)
     os.makedirs(os.path.dirname(os.path.abspath(out_path)) or ".", exist_ok=True)
     score.write("musicxml", fp=out_path)
+    if pedal_events:
+        bpm, beat_times = estimate_tempo_and_beats(audio_path)
+        _add_pedal_directions(out_path, pedal_events, bpm, beat_times)
     return stats
+
+
+def _add_pedal_directions(xml_path, pedal_events, bpm, beat_times):
+    """向已生成的 MusicXML 插入 sustain pedal 的 start/stop direction。
+
+    music21 没有高层 sustain pedal 对象，这里在 MusicXML 层插入标准
+    `<direction><direction-type><pedal type="start|stop"/></direction-type><offset/></direction>`，
+    verovio 会把它渲染成 Ped. / * 标记。
+
+    参数:
+        xml_path (str): MusicXML 路径（原地修改）。
+        pedal_events (list): 含 start/end 的踏板对象。
+        bpm (float): 速度，兜底用。
+        beat_times (numpy.ndarray): 拍点时刻，用于秒 → 四分音符位置映射。
+    """
+    import xml.etree.ElementTree as ET
+
+    ET.register_namespace("", "http://www.musicxml.org/ns/musicxml")
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    ns_uri = root.tag.split("}")[0].lstrip("{") if root.tag.startswith("{") else ""
+    ns = f"{{{ns_uri}}}" if ns_uri else ""
+
+    divisions = None
+    for d in root.iter(f"{ns}divisions"):
+        divisions = int(float(d.text))
+        break
+    if not divisions:
+        divisions = 1
+
+    # 选择低音谱表所在的 part 写踏板标记；找不到就写第一个 part
+    parts = root.findall(f"{ns}part")
+    part = None
+    for p in parts:
+        pids = [e.text or "" for e in p.iter(f"{ns}part-name")]
+        pid = p.get("id", "")
+        if "LH" in pid or any("Piano" in x for x in pids):
+            part = p
+            break
+    if part is None and parts:
+        part = parts[0]
+    if part is None:
+        return
+
+    measures = {}
+    for m in part.findall(f"{ns}measure"):
+        try:
+            measures[int(m.get("number"))] = m
+        except (TypeError, ValueError):
+            continue
+
+    def quarter_pos(t):
+        return float(time_to_quarter(np.array([float(t)]), beat_times, bpm)[0])
+
+    def measure_offset(t):
+        q = max(0.0, quarter_pos(t))
+        m_no = int(q // MEASURE_LEN) + 1
+        return m_no, q - (m_no - 1) * MEASURE_LEN
+
+    directions = []
+    for pe in pedal_events:
+        if float(pe.end) <= float(pe.start) + 0.06:
+            continue
+        m_start, o_start = measure_offset(pe.start)
+        m_end, o_end = measure_offset(pe.end)
+        # 量化后起点/终点落在同一位置时，verovio 会忽略这条踏板
+        if (m_end, o_end) <= (m_start, o_start):
+            continue
+        directions.append((m_start, o_start, "start"))
+        directions.append((m_end, o_end, "stop"))
+
+    # 同一小节内按 offset 排序；否则 verovio 会因为 start/stop 先后顺序错乱而忽略踏板
+    directions.sort(key=lambda x: (x[0], x[1], 0 if x[2] == "start" else 1))
+    for m_no, offset_q, typ in directions:
+        measure = measures.get(m_no)
+        if measure is None:
+            continue
+        direction = ET.Element(f"{ns}direction", {"placement": "below"})
+        dtype = ET.SubElement(direction, f"{ns}direction-type")
+        # line + sign 让 verovio 同时画踏板线和 Ped. / * 标记
+        ET.SubElement(dtype, f"{ns}pedal", {"type": typ, "line": "yes", "sign": "yes"})
+        offset = ET.SubElement(direction, f"{ns}offset")
+        offset.text = str(int(round(offset_q * divisions)))
+        measure.append(direction)
+
+    tree.write(xml_path, encoding="utf-8", xml_declaration=True)
 
 
 if __name__ == "__main__":
