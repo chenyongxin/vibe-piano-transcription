@@ -302,6 +302,20 @@ M4.2 改为**一次只显示一页**：
 Dockerfile 默认使用阿里云 apt 镜像并安装 `fluidsynth` + `fluid-soundfont-gm`
 （镜像约增加 150 MB）；SoundFont 路径可用 `PIANO2_SOUNDFONT` 覆盖。
 
+### 11.3.1 踏板头接入回放（2026-11-10）
+
+之前模型虽然训练了 `pedal` / `pedal_on` 两个头，但推理/回放完全没有使用，导致回放是
+「干、断」的。现在：
+
+- `infer_sliding_window(..., with_pedal=True)` 同时返回 pedal / pedal_on 概率；
+- `decode_pedal()` 用双阈值迟滞把概率解码成踩下/松开区间；
+- app 生成 `playback.mid`，写入 CC64（sustain pedal）后再交给 FluidSynth 渲染；
+- `score.mid` 仍是谱面导出的 MIDI（用于下载/DAW），不含踏板；
+- 谱面本身尚未写踏板记号，后续会把踏板标记加入 MusicXML。
+
+这项改动不改变 note/onset 指标，只改变回放听感；和 SOTA 的对比中，SOTA 的原始 MIDI
+本来就带 CC64，所以之前的听感差距有一部分来自我们这边漏用了踏板。
+
 ### 11.4 验证
 
 用无头 Edge + CDP 实际跑通了以下流程：

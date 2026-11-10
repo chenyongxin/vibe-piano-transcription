@@ -30,7 +30,7 @@ import soundfile as sf
 import verovio
 
 from piano2.constants import CKPT, DECODE_DEFAULTS
-from piano2.decode import DecodeConfig, decode
+from piano2.decode import DecodeConfig, decode, decode_pedal
 from piano2.inference import compute_cqt, infer_sliding_window, load_model, pick_device
 from piano2.notation import write_musicxml
 from . import render_service
@@ -58,13 +58,14 @@ class ModelHolder:
 
 
 
-def write_midi(events, midi_path, bpm=120.0):
+def write_midi(events, midi_path, bpm=120.0, pedal_events=None):
     """把解码出的音符事件写成标准 MIDI（下载或外部播放用）。
 
     参数:
         events (list): 音符事件（pitch/start/end/velocity）。
         midi_path (str): 输出路径。
         bpm (float): 速度标记（不影响绝对时间，只影响小节网格）。
+        pedal_events (list | None): 踏板区间（含 start/end 的对象）；写入 CC64。
     """
     pm = pretty_midi.PrettyMIDI(initial_tempo=bpm)
     inst = pretty_midi.Instrument(program=0, name="Piano")
@@ -75,6 +76,12 @@ def write_midi(events, midi_path, bpm=120.0):
             start=float(e.start),
             end=float(max(e.end, e.start + 0.02)),
         ))
+    if pedal_events:
+        for pe in pedal_events:
+            inst.control_changes.append(pretty_midi.ControlChange(
+                number=64, value=127, time=float(pe.start)))
+            inst.control_changes.append(pretty_midi.ControlChange(
+                number=64, value=0, time=float(pe.end)))
     pm.instruments.append(inst)
     pm.write(str(midi_path))
 
@@ -277,18 +284,23 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
     cqt = compute_cqt(audio_path)
     stage("模型推理")
     model = holder.get()
+    pedal_events = []
     if use_offset_end and getattr(model, "has_offset", False):
-        probs = infer_sliding_window(model, cqt, holder.device, with_offset=True)
+        probs = infer_sliding_window(model, cqt, holder.device,
+                                     with_offset=True, with_pedal=True)
         stage("解码成音符")
         cfg = DecodeConfig(**DECODE_DEFAULTS, use_offset_end=True)
         events = decode(probs[0], probs[1], probs[2], cfg, offset_probs=probs[3])
+        pedal_events = decode_pedal(probs[4], probs[5])
         if postprocess:
             from piano2.postprocess import postprocess_events
             events, _stats = postprocess_events(events, onset=probs[0], frame=probs[1])
     else:
-        onset, frame, vel = infer_sliding_window(model, cqt, holder.device)
+        probs = infer_sliding_window(model, cqt, holder.device, with_pedal=True)
+        onset, frame, vel, pedal, pedal_on = probs
         stage("解码成音符")
         events = decode(onset, frame, vel, DecodeConfig(**DECODE_DEFAULTS))
+        pedal_events = decode_pedal(pedal, pedal_on)
         if postprocess:
             from piano2.postprocess import postprocess_events
             events, _stats = postprocess_events(events, onset=onset, frame=frame)
@@ -303,7 +315,7 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
         with open(midi_path, "wb") as fh:
             fh.write(midi_bytes)
     except Exception:
-        write_midi(events, midi_path)  # 兜底：verovio 导出失败时用事件写 MIDI
+        write_midi(events, midi_path, pedal_events=pedal_events)  # 兜底
     pmid = pretty_midi.PrettyMIDI(midi_path)
     midi_notes = sorted((n for inst in pmid.instruments for n in inst.notes),
                         key=lambda n: n.start)
@@ -340,7 +352,10 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
 
     stage("合成回放音频")
     wav_path = os.path.join(out_dir, "preview.wav")
-    if not synthesize_piano_midi(midi_path, wav_path):
+    # 回放 MIDI 带踏板 CC64；score.mid 仍是视觉谱面的 MIDI，不混用
+    playback_mid = os.path.join(out_dir, "playback.mid")
+    write_midi(events, playback_mid, pedal_events=pedal_events)
+    if not synthesize_piano_midi(playback_mid, wav_path):
         synthesize_preview(midi_notes, wav_path)
 
     return {

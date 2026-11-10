@@ -110,7 +110,7 @@ def load_model(checkpoint, device="auto"):
 
 @torch.no_grad()
 def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
-                         with_offset=False, with_regression=False):
+                         with_offset=False, with_regression=False, with_pedal=False):
     """滑窗推理并做重叠平均。
 
     参数:
@@ -121,11 +121,13 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
         stride (int): 步长帧数。
         with_offset (bool): 是否同时返回 offset 头概率（6 头以上模型才有效）。
         with_regression (bool): 是否返回 onset_reg / offset_reg 回归输出（8 头模型才有效）。
+        with_pedal (bool): 是否返回 pedal / pedal_on 概率（5 头以上模型才有效）。
 
     返回:
         tuple: 默认 (onset, frame, velocity)；
             加 with_offset 时追加 offset；
-            加 with_regression 时再追加 onset_reg、offset_reg。
+            加 with_regression 时再追加 onset_reg、offset_reg；
+            加 with_pedal 时再追加 pedal、pedal_on（形状 (T,1)）。
     """
     device = pick_device(device)
     x = torch.tensor(normalize_input(cqt), dtype=torch.float32).unsqueeze(0).to(device)
@@ -136,6 +138,8 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
     out_of = torch.zeros((1, total, 88))
     out_onr = torch.zeros((1, total, 88))
     out_offr = torch.zeros((1, total, 88))
+    out_p = torch.zeros((1, total, 1))
+    out_po = torch.zeros((1, total, 1))
     count = torch.zeros((1, total, 1))
     for start in range(0, total, stride):
         end = min(start + window, total)
@@ -143,10 +147,12 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
         if chunk.shape[1] == 0:
             continue
         with torch.autocast(device_type="cuda", enabled=(device == "cuda")):
-            o, f, v, _p, _po, of, onr, offr = model(chunk)
+            o, f, v, p, po, of, onr, offr = model(chunk)
             o = torch.sigmoid(o.float())
             f = torch.sigmoid(f.float())
             v = torch.sigmoid(v.float())
+            p = torch.sigmoid(p.float())
+            po = torch.sigmoid(po.float())
             of = torch.sigmoid(of.float())
             onr = torch.sigmoid(onr.float())
             offr = torch.sigmoid(offr.float())
@@ -157,6 +163,8 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
         out_of[:, start:end, :] += of[:, :n, :].cpu()
         out_onr[:, start:end, :] += onr[:, :n, :].cpu()
         out_offr[:, start:end, :] += offr[:, :n, :].cpu()
+        out_p[:, start:end, :] += p[:, :n, :].cpu()
+        out_po[:, start:end, :] += po[:, :n, :].cpu()
         count[:, start:end, :] += 1.0
     count[count == 0] = 1.0
     result = ((out_o / count).squeeze(0).numpy(),
@@ -167,4 +175,7 @@ def infer_sliding_window(model, cqt, device="auto", window=2048, stride=1024,
     if with_regression:
         result = result + ((out_onr / count).squeeze(0).numpy(),
                            (out_offr / count).squeeze(0).numpy())
+    if with_pedal:
+        result = result + ((out_p / count).squeeze(0).numpy(),
+                           (out_po / count).squeeze(0).numpy())
     return result

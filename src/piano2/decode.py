@@ -436,3 +436,72 @@ def decode_subframe(onset_reg, offset_reg, vel, onset_threshold=0.30,
             events.append(NoteEvent(pitch=key + 21, start=float(onset_time),
                                     end=float(end_time), velocity=velocity))
     return sorted(events, key=lambda e: e.start)
+
+
+@dataclass(frozen=True)
+class PedalEvent:
+    """一个延音踏板事件。
+
+    属性:
+        start (float): 踩下时刻（秒）。
+        end (float): 松开时刻（秒）。
+    """
+
+    start: float
+    end: float
+
+
+def decode_pedal(pedal, pedal_on=None, on_threshold=0.5, off_threshold=0.35,
+                 release_frames=3, min_gap_s=0.05):
+    """把 pedal 头概率解码成踏板的踩下/松开区间。
+
+    pedal 头预测的是「踏板状态」；这里用双阈值迟滞避免边缘抖动：
+    pedal >= on_threshold 视为踩下，连续 release_frames 帧 <= off_threshold
+    视为松开。pedal_on 头暂不强制参与，只作为可选输入保留。
+
+    参数:
+        pedal (numpy.ndarray): (T,) 或 (T,1) 踏板状态概率。
+        pedal_on (numpy.ndarray | None): (T,) 或 (T,1) 踩下瞬间概率，暂未使用。
+        on_threshold (float): 踩下判定阈值。
+        off_threshold (float): 松开判定阈值。
+        release_frames (int): 连续多少帧低于 off_threshold 才判定松开。
+        min_gap_s (float): 相邻踏板事件之间小于该间隔时合并。
+
+    返回:
+        list[PedalEvent]: 按开始时间排序的踏板区间。
+    """
+    pedal = np.asarray(pedal, dtype=np.float32).reshape(-1)
+    frame_s = HOP_LENGTH / SR
+    events = []
+    state = False
+    start = 0
+    below = 0
+    for i, p in enumerate(pedal):
+        if not state:
+            if p >= on_threshold:
+                state = True
+                start = i
+                below = 0
+        else:
+            if p <= off_threshold:
+                below += 1
+                if below >= release_frames:
+                    end = i - release_frames + 1
+                    if end > start:
+                        events.append(PedalEvent(start * frame_s, end * frame_s))
+                    state = False
+                    start = 0
+                    below = 0
+            else:
+                below = 0
+    if state:
+        events.append(PedalEvent(start * frame_s, len(pedal) * frame_s))
+
+    # 合并靠得太近的踏板区间，避免 CC64 抖动
+    merged = []
+    for ev in events:
+        if merged and ev.start - merged[-1].end <= min_gap_s:
+            merged[-1] = PedalEvent(merged[-1].start, ev.end)
+        else:
+            merged.append(ev)
+    return merged
