@@ -74,6 +74,22 @@
 
 也就是说，混合模型用很小的 note F1 代价，换到了接近 SOTA 路线的 10 ms 分辨率。
 
+### 3.3 MAESTRO test split（177 首）
+
+| 指标 | 分类 best（combo） | `hybrid_reg2` | 变化 |
+|---|---:|---:|---:|
+| onset F1 @50 ms | 0.8709 | **0.8701** | -0.0008 |
+| onset F1 @30 ms | 0.8606 | 0.8530 | -0.0076 |
+| onset F1 @20 ms | 0.8039 | **0.8119** | +0.0080 |
+| onset F1 @10 ms | 0.5067 | **0.6264** | **+0.1197** |
+| note-with-offset F1 | 0.3272 | **0.3314** | +0.0042 |
+
+聚合计数：74,1410 个 GT 音符，70,6237 个预测；10 ms 下命中 453,391 个。
+
+结论：**test split 验证了 hybrid 的核心收益**——note F1 和 50 ms onset 基本不降，
+20/10 ms onset 明显提升，10 ms 提升约 12 个点。30 ms 略低 0.0076，属于局部修正
+在中等容差边界上的波动，不影响整体判断。
+
 ## 4. 解释
 
 - **offset 标签**：1 帧监督太稀，2 帧仍是最佳折中；继续加 loss 只是让模型更相信同样稀疏的目标，不能补信息。
@@ -84,21 +100,23 @@
 
 | 优先级 | 任务 | 目的 |
 |---|---|---|
-| 1 | 在 MAESTRO test split（177 首）上评测 `hybrid_reg2` | 拿到和论文同口径的完整数字 |
-| 2 | 把混合解码接入 app/推理 | 让产品也用上亚帧 onset |
-| 3 | 继续 offset 标签/目标设计（软标签、中心窗口、回归 offset） | 真正修时值，而不是只调权重 |
-| 4 | 若 test split 确认收益，考虑把 hybrid 作为新的默认模型 | 高分辨率与 note F1 的平衡 |
+| 1 | 把混合解码接入 app/推理 | 让产品也用上亚帧 onset |
+| 2 | 继续 offset 标签/目标设计（软标签、中心窗口、回归 offset） | 真正修时值，而不是只调权重 |
+| 3 | 若确认产品收益，把 hybrid 作为新的默认模型 | 高分辨率与 note F1 的平衡 |
+| 4 | 和 SOTA 的同口径对比继续保留 onset/高分辨率为主 | SOTA 的 note-off 受踏板语义影响 |
 
 ## 6. 结论
 
 - 1 帧 offset 不可行；2 帧是当前 offset 的最佳监督方式，loss 从 2.0 加到 3.0 无收益；
 - `hybrid_reg2` 在留出集上达到 **note F1 0.4046 / onset10 0.660**，相比分类 best 用约 0.006 note F1 换到 +0.144 的 10 ms F1；
 - 亚帧 onset 不必重写整套 decoder，**局部修正分类起点**就足够有效；
-- test split 评测已启动，结果决定是否把 hybrid 作为默认模型。
+- test split 上 `hybrid_reg2` 的 onset10 从 **0.5067 提到 0.6264**，note F1 从 0.3272 升到 0.3314，
+  50 ms onset 基本不变，因此它是当前**高分辨率指标的新 best**，下一步应接入 app/推理。
 
 ## 7. 相关链接
 
 - 留出集对照：`outputs/eval/duration_1f_w3_holdout.json`、`duration_2f_w3_holdout.json`
 - 混合评测：`outputs/eval/hybrid_reg2_hybrid.json`、`hybrid_reg2_holdout.json`
+- test split：`outputs/eval/hybrid_reg2_test.json`
 - 模型：`outputs/M1/hybrid_reg2/checkpoints/best.pt`
 - 脚本：`scripts/hybrid_queue.sh`、`scripts/evaluate_hybrid.py`、`scripts/evaluate_hybrid_test.py`
