@@ -46,5 +46,6 @@ training/YYYY-MM-DD_<主题简写>.md
 | 2026-11-08 | [回归 + 亚帧原型](2026-11-08_regression_prototype.md) | test split 基准；onset 回归成功、offset 回归失败 |
 | 2026-11-09 | [人工校核与后处理](2026-11-09_manual_validation.md) | 三首曲目卷帘；时值问题最突出；八度重复后处理效果有限 |
 | 2026-11-11 | [offset 对照与混合回归](2026-11-11_duration_offset_hybrid.md) | 1 帧失败；hybrid_reg2 holdout note 0.4046 / onset10 0.660；test split onset10 0.5067→0.6264 |
+| 2026-11-12 | [v5 精确时间回归首轮](2026-11-12_v5_exact_target.md) | 相位修对但 test onset10 0.6264→0.6139、note 0.3314→0.3220；v4 reg2 仍最佳 |
 
 新报告从 [`TEMPLATE.md`](TEMPLATE.md) 复制结构。
