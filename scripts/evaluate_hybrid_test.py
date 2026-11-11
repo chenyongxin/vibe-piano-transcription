@@ -28,9 +28,11 @@ FPS = 31.25
 
 def refine_near(curve, time_s, radius_frames=1, min_value=0.10):
     """只在事件起点 ±1 帧内找峰并插值。"""
-    frame = int(round(time_s * FPS))
+    if len(curve) < 3:
+        return time_s
+    frame = min(max(1, int(round(time_s * FPS))), len(curve) - 2)
     lo = max(1, frame - radius_frames)
-    hi = min(len(curve) - 1, frame + radius_frames)
+    hi = min(len(curve) - 2, frame + radius_frames)
     best = None
     for f in range(lo, hi + 1):
         if curve[f] >= curve[f - 1] and curve[f] >= curve[f + 1] and curve[f] >= min_value:
