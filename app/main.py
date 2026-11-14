@@ -27,7 +27,7 @@ MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
 ALLOWED_SUFFIXES = {".wav", ".mp3", ".m4a", ".flac", ".ogg", ".aac", ".webm"}
 MAX_UPLOAD_MB = 300
 
-app = FastAPI(title="钢琴转录", version="0.2.1")
+app = FastAPI(title="钢琴转录", version="0.2.2")
 store = JobStore(out_root=MEDIA_ROOT)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/media", StaticFiles(directory=str(MEDIA_ROOT)), name="media")

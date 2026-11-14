@@ -20,6 +20,8 @@ const state = {
 const view = {
   audio: null,
   els: new Map(),          // SVG 元素 id -> {el, page}
+  idTimes: new Map(),      // SVG 元素 id -> 最早播放时间
+  measureTimes: new Map(), // measure id -> 最早播放时间
   pageWraps: [],
   bands: [],
   samples: [],
@@ -347,6 +349,8 @@ async function loadScore(track) {
   const pagesEl = el("pages");
   pagesEl.innerHTML = "";
   view.els.clear();
+  view.idTimes.clear();
+  view.measureTimes.clear();
   view.pageWraps = [];
   view.bands = [];
   view.samples = [];
@@ -385,6 +389,14 @@ async function loadScore(track) {
     const timing = await (await fetch(r.timing)).json();
     if (token !== view.loadToken) return;
     view.samples = timing.samples || [];
+    view.samples.forEach((sample) => {
+      (sample.ids || []).forEach((id) => {
+        if (!view.idTimes.has(id)) view.idTimes.set(id, Number(sample.t));
+      });
+      (sample.measures || []).forEach((id) => {
+        if (!view.measureTimes.has(id)) view.measureTimes.set(id, Number(sample.t));
+      });
+    });
     view.sampleY = view.samples.map((s) => {
       const rec = s.ids && s.ids.length ? view.els.get(s.ids[0]) : null;
       if (!rec) return 0;
@@ -546,18 +558,62 @@ function updateHighlight() {
 function seekFromClick(wrap, evt) {
   if (!view.samples.length) return;
   const pageNo = Number(wrap.dataset.page);
-  const rect = wrap.getBoundingClientRect();
-  const yFrac = Math.min(1, Math.max(0, (evt.clientY - rect.top) / rect.height));
-  let best = -1;
-  let bestDist = Infinity;
-  for (let i = 0; i < view.samples.length; i++) {
-    if (Number(view.samples[i].page) !== pageNo) continue;
-    const d = Math.abs(view.sampleY[i] - yFrac);
-    if (d < bestDist) { bestDist = d; best = i; }
+  let targetTime = null;
+
+  // 1) 优先按鼠标命中的谱面元素：音符 -> 该音符时间；小节/谱线 -> 小节时间。
+  const hit = document.elementFromPoint(evt.clientX, evt.clientY);
+  if (hit && wrap.contains(hit)) {
+    let node = hit;
+    while (node && node !== wrap) {
+      if (node.id && view.idTimes.has(node.id)) {
+        targetTime = view.idTimes.get(node.id);
+        break;
+      }
+      node = node.parentElement;
+    }
+    if (targetTime === null) {
+      const measure = hit.closest ? hit.closest("g.measure") : null;
+      if (measure && view.measureTimes.has(measure.id)) {
+        targetTime = view.measureTimes.get(measure.id);
+      }
+    }
   }
-  if (best < 0) return;
+
+  // 2) 点击空白区域时，找离点击点最近的当前页小节（同时用 x/y，不再只投影 y）。
+  if (targetTime === null) {
+    let bestDist = Infinity;
+    wrap.querySelectorAll("g.measure").forEach((measure) => {
+      if (!measure.id || !view.measureTimes.has(measure.id)) return;
+      const r = measure.getBoundingClientRect();
+      const dx = evt.clientX < r.left ? r.left - evt.clientX
+        : (evt.clientX > r.right ? evt.clientX - r.right : 0);
+      const dy = evt.clientY < r.top ? r.top - evt.clientY
+        : (evt.clientY > r.bottom ? evt.clientY - r.bottom : 0);
+      const dist = dx * dx + dy * dy;
+      if (dist < bestDist) {
+        bestDist = dist;
+        targetTime = view.measureTimes.get(measure.id);
+      }
+    });
+  }
+
+  // 3) 最后才退回旧的纵向投影，兼容没有 measure 信息的旧 timing.json。
+  if (targetTime === null) {
+    const rect = wrap.getBoundingClientRect();
+    const yFrac = Math.min(1, Math.max(0, (evt.clientY - rect.top) / rect.height));
+    let best = -1;
+    let bestDist = Infinity;
+    for (let i = 0; i < view.samples.length; i++) {
+      if (Number(view.samples[i].page) !== pageNo) continue;
+      const d = Math.abs(view.sampleY[i] - yFrac);
+      if (d < bestDist) { bestDist = d; best = i; }
+    }
+    if (best < 0) return;
+    targetTime = view.samples[best].t;
+  }
+
   const wasPlaying = !view.audio.paused;
-  view.audio.currentTime = view.samples[best].t;
+  view.audio.currentTime = targetTime;
   if (wasPlaying) view.audio.play();
 }
 

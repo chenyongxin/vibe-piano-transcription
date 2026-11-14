@@ -398,7 +398,14 @@ ValueError: MIDI file has a largest tick of ..., it is likely corrupt
   任务继续完成；
 - 结果字段 `score_midi_fallback` 会标记是否使用了回退。
 
-### 12.7 验收
+### 12.7 谱面点击跳转
+
+- `seekFromClick()` 不再只按点击 Y 坐标投影；优先用 `document.elementFromPoint()` 命中的音符/小节 id，
+  映射到 timing sample 的音频时间；
+- 点击空白区域时，用当前页所有小节的 2D 包围盒距离选最近小节；
+- 旧 timing.json 没有 measure 字段时，才回退到纵向投影。
+
+### 12.8 验收
 
 ```text
 上传 20 秒 Schubert 录音 → 8 秒内完成 → 193 个音符 / 1 页
