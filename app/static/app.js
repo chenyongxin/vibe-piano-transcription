@@ -5,8 +5,8 @@ const STAGES = ["排队中", "提取特征（CQT）", "模型推理", "解码成
                 "导出 MIDI（与谱面同一时间轴）", "渲染乐谱", "合成回放音频", "完成"];
 
 const MAX_TRACKS = 5;
-const MAX_FILE_BYTES = 300 * 1024 * 1024;
-const MAX_TOTAL_BYTES = 5 * 300 * 1024 * 1024;
+const MAX_FILE_BYTES = 500 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 5 * 500 * 1024 * 1024;
 const ALLOWED = /\.(wav|mp3|m4a|flac|ogg|aac|webm)$/i;
 
 const state = {
@@ -27,6 +27,7 @@ const view = {
   samples: [],
   sampleY: [],
   pageIndex: 0,
+  renderedPage: -1,
   follow: true,
   playing: false,
   currentSample: -1,
@@ -35,6 +36,16 @@ const view = {
 };
 
 let pollTimer = null;
+let toastTimer = null;
+
+function showToast(message, duration = 6500) {
+  const node = el("toast");
+  if (!node) return;
+  node.textContent = message;
+  node.hidden = false;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { node.hidden = true; }, duration);
+}
 
 function stagePercent(stage) {
   const i = STAGES.indexOf(stage);
@@ -115,7 +126,7 @@ function addFiles(fileList) {
       continue;
     }
     if (totalBytes() + f.size > MAX_TOTAL_BYTES) {
-      errors.push(`总大小不能超过 1.5 GB，已忽略 ${f.name}`);
+      errors.push(`总大小不能超过 2.5 GB，已忽略 ${f.name}`);
       continue;
     }
     state.tracks.push({
@@ -184,7 +195,7 @@ function renderTracks() {
     const nDone = state.tracks.filter((t) => t.status === "done").length;
     el("tracks-title").textContent = state.processing ? "正在转录…" : "曲目列表";
     el("tracks-summary").textContent =
-      `${state.tracks.length} / ${MAX_TRACKS} 首 · ${formatSize(totalBytes())} / 1.5 GB` +
+      `${state.tracks.length} / ${MAX_TRACKS} 首 · ${formatSize(totalBytes())} / 2.5 GB` +
       ` · 已完成 ${nDone} 首`;
     el("add-btn").disabled = state.processing || state.tracks.length >= MAX_TRACKS;
     el("start-btn").disabled = state.processing ||
@@ -288,16 +299,24 @@ async function startTranscription() {
       t.status = "done";
       t.stage = "";
       renderTracks();
+      if (state.mode === "score") {
+        showToast(`「${t.name}」已完成，可回到曲目列表打开。`);
+      }
     } catch (e) {
       t.status = "failed";
       t.error = e.message || "失败";
       renderTracks();
+      if (state.mode === "score") {
+        showToast(`「${t.name}」转录失败：${t.error}`, 8000);
+      }
     }
   }
 
   state.processing = false;
   if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
   const done = state.tracks.filter((t) => t.status === "done");
+  // 用户正在看谱/播放时，后台完成的曲目只提示，不强行切页或暂停。
+  if (state.mode === "score") return;
   if (done.length === 1 && state.tracks.length === 1) {
     openScore(done[0]);
   } else {
@@ -356,6 +375,7 @@ async function loadScore(track) {
   view.samples = [];
   view.sampleY = [];
   view.pageIndex = 0;
+  view.renderedPage = -1;
   view.follow = true;
   view.playing = false;
   view.currentSample = -1;
@@ -420,9 +440,16 @@ async function loadScore(track) {
 }
 
 function renderPage() {
+  const pageChanged = view.renderedPage !== view.pageIndex;
+  view.renderedPage = view.pageIndex;
   view.pageWraps.forEach((wrap, i) => {
     wrap.classList.toggle("page-active", i === view.pageIndex);
   });
+  if (pageChanged) {
+    // 翻到新页时先回到页首；如果当前小节在页内靠下，再由 ensureBandVisible 滚过去。
+    const viewport = el("score-viewport");
+    if (viewport) viewport.scrollTop = 0;
+  }
   updatePageControls();
   clearActive();
   const idx = view.currentSample >= 0 ? view.currentSample : sampleIndexAt(view.audio.currentTime || 0);
@@ -527,6 +554,26 @@ function paintSample(idx) {
       band.style.width = `${mr.width}px`;
       band.style.height = `${height}px`;
     }
+  }
+  ensureBandVisible();
+}
+
+function ensureBandVisible() {
+  if (!view.playing) return;
+  const band = view.bands[view.pageIndex];
+  const viewport = el("score-viewport");
+  if (!band || !viewport || band.style.display === "none") return;
+  const br = band.getBoundingClientRect();
+  const vr = viewport.getBoundingClientRect();
+  const margin = 72;
+  let delta = 0;
+  if (br.top < vr.top + margin) {
+    delta = br.top - vr.top - margin;
+  } else if (br.bottom > vr.bottom - margin) {
+    delta = br.bottom - vr.bottom + margin;
+  }
+  if (delta) {
+    viewport.scrollTop += delta;
   }
 }
 

@@ -8,7 +8,7 @@ Turn solo piano recordings into editable sheet music — locally.
 
 ## What it does
 
-- Upload WAV / MP3 / M4A / FLAC recordings (up to 5 tracks, 300 MB each).
+- Upload WAV / MP3 / M4A / FLAC recordings (up to 5 tracks, 500 MB each).
 - A hybrid model turns audio into note events, then into readable music notation.
 - Review the result page by page, with the current measure highlighted during playback.
 - Listen back with a realistic piano sound and pedal (CC64) support.

@@ -356,11 +356,16 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
     stage("渲染乐谱")
     n_pages = render_service.page_count(xml_path)
     n_pages = max(1, min(int(n_pages), 20))  # 防御：异常文件最多渲染 20 页
-    step = 0.1
+    step = 0.04
     times_s, t = [], 0.0
     while t <= audio_duration + 0.05:
-        times_s.append(t)
+        times_s.append(round(t, 3))
         t += step
+    # 再补上每个原始音符的起点，快速段落的高亮边界也能被精确采样。
+    for event in events:
+        if 0.0 <= event.start <= audio_duration:
+            times_s.append(round(float(event.start), 3))
+    times_s = sorted(set(times_s))
     svg_texts, samples, score_duration = render_service.render_svg_with_timing(
         xml_path, n_pages, times_s, audio_duration
     )
