@@ -30,7 +30,7 @@ import soundfile as sf
 import verovio
 
 from piano2.constants import CKPT, DECODE_DEFAULTS
-from piano2.decode import DecodeConfig, decode, decode_pedal
+from piano2.decode import DecodeConfig, decode, decode_pedal, refine_onsets
 from piano2.inference import compute_cqt, infer_sliding_window, load_model, pick_device
 from piano2.notation import write_musicxml
 from . import render_service
@@ -253,7 +253,7 @@ def _build_timing(xml_path, page_svgs, end_seconds, step=0.1):
     return {"step": step, "duration": round(end_seconds, 2), "samples": samples}
 
 
-def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progress=None,
+def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
                use_offset_end=False, postprocess=False):
     """音频 → 全部产物，返回结果字典。
 
@@ -263,11 +263,12 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
         holder (ModelHolder): 模型持有者（复用权重）。
         title (str): 乐谱标题。
         progress (callable | None): 进度回调，参数是中文阶段名。
-        use_offset_end (bool): 是否用 offset 头决定音符结束时间（需 6 头以上模型）。
+        use_offset_end (bool): 是否用 offset 头决定音符结束时间；8 头 hybrid
+            模型会自动启用 offset 和 onset_reg，不依赖这个开关。
         postprocess (bool): 是否应用八度重复抑制 + 同音高重叠截断。
 
     返回:
-        dict: 产物文件名、音符数、耗时、设备。
+        dict: 产物文件名、音符数、耗时、设备、模型类型。
 
     异常:
         RuntimeError: 推理/渲染/导出任一环节失败。
@@ -284,8 +285,26 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
     cqt = compute_cqt(audio_path)
     stage("模型推理")
     model = holder.get()
+    has_regression = bool(getattr(model, "has_regression", False))
+    has_offset = bool(getattr(model, "has_offset", False))
     pedal_events = []
-    if use_offset_end and getattr(model, "has_offset", False):
+    model_kind = "classification"
+    if has_regression:
+        # hybrid：分类头负责音符存在/时值，onset_reg 只做局部亚帧修正。
+        probs = infer_sliding_window(model, cqt, holder.device,
+                                     with_offset=True, with_regression=True,
+                                     with_pedal=True)
+        onset, frame, vel, offset, onset_reg, offset_reg, pedal, pedal_on = probs
+        stage("解码成音符")
+        cfg = DecodeConfig(**DECODE_DEFAULTS, use_offset_end=True)
+        events = decode(onset, frame, vel, cfg, offset_probs=offset)
+        events = refine_onsets(events, onset_reg)
+        pedal_events = decode_pedal(pedal, pedal_on)
+        if postprocess:
+            from piano2.postprocess import postprocess_events
+            events, _stats = postprocess_events(events, onset=onset, frame=frame)
+        model_kind = "hybrid"
+    elif use_offset_end and has_offset:
         probs = infer_sliding_window(model, cqt, holder.device,
                                      with_offset=True, with_pedal=True)
         stage("解码成音符")
@@ -295,6 +314,7 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
         if postprocess:
             from piano2.postprocess import postprocess_events
             events, _stats = postprocess_events(events, onset=probs[0], frame=probs[1])
+        model_kind = "offset"
     else:
         probs = infer_sliding_window(model, cqt, holder.device, with_pedal=True)
         onset, frame, vel, pedal, pedal_on = probs
@@ -371,4 +391,6 @@ def transcribe(audio_path, out_dir, holder, title="piano2 transcription", progre
         "n_pages": len(page_paths),
         "elapsed_s": round(time.time() - t0, 1),
         "device": holder.device,
+        "model": model_kind,
+        "checkpoint": holder.checkpoint,
     }

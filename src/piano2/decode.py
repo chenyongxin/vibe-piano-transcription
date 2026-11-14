@@ -390,6 +390,50 @@ def _refine_peak(curve, peak):
     return float(peak) + float(np.clip(delta, -0.5, 0.5))
 
 
+def refine_onsets(events, onset_reg, radius_frames=1, min_value=0.10):
+    """用 onset_reg 头把分类起点从整数帧修到帧内。
+
+    对每个已解码的 NoteEvent，只在它起点附近 ±radius_frames 帧内找 onset_reg
+    的局部峰，再用三角插值得到亚帧位置；音符是否存在、结束时间和力度都不变。
+
+    参数:
+        events (list[NoteEvent]): 分类解码得到的音符事件。
+        onset_reg (numpy.ndarray): (T, 88) 的 onset_reg 回归输出，值域 0–1。
+        radius_frames (int): 在候选起点两侧搜索的帧数，默认 1。
+        min_value (float): 局部峰的最低值，低于它不修正，默认 0.10。
+
+    返回:
+        list[NoteEvent]: 起点被修正后的新事件列表。
+
+    异常:
+        ValueError: onset_reg 不是二维数组。
+    """
+    if onset_reg.ndim != 2:
+        raise ValueError(f"onset_reg 应为 (T, 88)，实际 {onset_reg.shape}")
+    fps = SR / HOP_LENGTH
+    total_frames = onset_reg.shape[0]
+    if total_frames < 3 or not events:
+        return list(events)
+    refined = []
+    for event in events:
+        key = int(event.pitch) - 21
+        if not 0 <= key < onset_reg.shape[1]:
+            refined.append(event)
+            continue
+        curve = onset_reg[:, key]
+        frame = min(max(1, int(round(event.start * fps))), total_frames - 2)
+        lo = max(1, frame - radius_frames)
+        hi = min(total_frames - 2, frame + radius_frames)
+        best = None
+        for f in range(lo, hi + 1):
+            if curve[f] >= curve[f - 1] and curve[f] >= curve[f + 1] and curve[f] >= min_value:
+                if best is None or curve[f] > curve[best]:
+                    best = f
+        start = _refine_peak(curve, best) / fps if best is not None else event.start
+        refined.append(NoteEvent(event.pitch, start, event.end, event.velocity))
+    return refined
+
+
 def decode_subframe(onset_reg, offset_reg, vel, onset_threshold=0.30,
                     offset_threshold=0.30, min_gap_s=0.05, fallback_dur=0.08):
     """用回归输出 + 亚帧插值解码音符事件。

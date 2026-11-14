@@ -121,6 +121,7 @@ class JobStore:
                 "n_events": job.result["n_events"],
                 "n_pages": job.result["n_pages"],
                 "device": job.result["device"],
+                "model": job.result.get("model", ""),
                 "duration_s": job.result.get("duration_s", 0),
                 "pages": [f"{media}/{name}" for name in job.result["pages"]],
                 "svg_pages": [f"{media}/{name}" for name in job.result.get("svg_pages", [])],

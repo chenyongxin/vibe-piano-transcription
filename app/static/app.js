@@ -1,4 +1,4 @@
-/* piano2 M4.2：多曲目队列 + 单页翻页查看器 + 播放跟随 */
+/* 钢琴转录 M4.3：多曲目队列 + 单页翻页查看器 + 播放跟随 */
 
 const el = (id) => document.getElementById(id);
 const STAGES = ["排队中", "提取特征（CQT）", "模型推理", "解码成音符", "生成乐谱",

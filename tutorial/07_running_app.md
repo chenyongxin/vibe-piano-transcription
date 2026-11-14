@@ -1,6 +1,6 @@
 # 07 运行浏览器应用
 
-> 状态：**M4.2 可用**（本机运行）：多曲目队列、单曲/多曲、单页翻页、真实钢琴回放。
+> 状态：**M4.3 可用**（本机运行）：hybrid 模型、多曲目队列、单页翻页、真实钢琴回放。
 > Docker 镜像分发完成后，本文会补上「接收方」的完整傻瓜步骤；当前内容适用于开发者/本机试用。
 
 ## 摘要
@@ -12,7 +12,7 @@
 | 项目 | 要求 |
 |---|---|
 | Python 环境 | 已安装本项目依赖（`pip install -e .`）；开发用的是 `piano` 容器 |
-| 模型权重 | `models/best.pt`（约 135 MB）；没有的话用 `PIANO2_CKPT=/path/to/best.pt` 指定 |
+| 模型权重 | `models/best.pt`（hybrid_reg2，约 143 MB）；没有的话用 `PIANO2_CKPT=/path/to/best.pt` 指定 |
 | 真实钢琴音色（可选） | `fluidsynth` + `FluidR3_GM.sf2`；没有时自动回退到简易合成器 |
 | 浏览器 | Edge / Chrome / Firefox 任意现代浏览器 |
 | 显卡 | 可选；有 NVIDIA GPU 更快，没有 GPU 走 CPU（5 分钟音频约 9 秒） |
@@ -56,14 +56,17 @@
 | 曲目列表无法添加 | 最多 10 首、总大小不超过 100 MB；删掉一些再试 |
 | 只能看到一页 | 多页曲目用「上一页 / 下一页」或键盘 ←、→ 翻页；只有 1 页时控件隐藏 |
 | 播放回放不像钢琴 | 服务器缺少 FluidSynth 或 SoundFont，正在用简易合成器回退；装好后重启服务即可 |
-| 谱面时值不准 | 已知问题（M3.5 修复中）；onset 已较准，节奏细节还有误差 |
+| 谱面时值不准 | 已知问题；hybrid 已改善起音时间，但谱面仍量化到 16 分音符，节奏细节还有误差 |
 | 音频很长 | 建议 ≤ 5 分钟；更长音频会变慢并占更多内存 |
 
-## Docker 版（M4.2 计划）
+## Docker 版（M4.3）
 
 ```text
-接收方：docker load -i piano2-app.tar
-        docker run --gpus all -p 8000:8000 piano2-app
+接收方：docker build -t piano-transcription .
+        docker run --rm -p 8000:8000 \
+          -v "$PWD/models:/workspace/models" \
+          piano-transcription \
+          bash -c "cd /workspace && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
         浏览器打开 http://localhost:8000
 ```
 

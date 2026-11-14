@@ -3,23 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>piano2 · 钢琴录音转乐谱</title>
+  <meta name="description" content="钢琴转录：把独奏钢琴录音自动转成可编辑的乐谱，支持 MusicXML、PDF 与 MIDI。" />
+  <title>钢琴转录 · 录音转乐谱</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <header class="bar">
-    <div class="brand">piano2</div>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="钢琴转录首页">
+      <span class="brand-mark" aria-hidden="true">♪</span>
+      <span class="brand-text">
+        <strong>钢琴转录</strong>
+        <small>录音 → 乐谱</small>
+      </span>
+    </a>
+    <div class="device" id="device">本地推理</div>
   </header>
 
   <main class="wrap">
     <!-- 初始状态：只有选择文件；选择后不自动转录 -->
-    <section class="card" id="upload-card">
+    <section class="hero" id="upload-card">
+      <div class="hero-copy">
+        <div class="eyebrow">PIANO TRANSCRIPTION</div>
+        <h1>把钢琴录音<br />变成可编辑的乐谱</h1>
+        <p class="lede">
+          上传一段独奏钢琴录音，自动生成 MusicXML、PDF 与 MIDI；
+          支持踏板回放和逐页查看。
+        </p>
+      </div>
+
       <div class="dropzone" id="dropzone">
-        <div class="dz-icon">🎹</div>
-        <div class="dz-title">把钢琴录音拖到这里</div>
+        <div class="dz-icon" aria-hidden="true">♫</div>
+        <div class="dz-title">拖入钢琴录音</div>
         <div class="dz-hint">
-          支持 wav / mp3 / m4a / flac，最多 10 首、总大小 ≤ 100 MB；只支持独奏钢琴。<br />
-          选择后先进入曲目列表，不会自动转录。
+          WAV / MP3 / M4A / FLAC · 最多 10 首 · 总大小 ≤ 100 MB<br />
+          仅支持独奏钢琴；选择后先加入列表，不会自动转录。
         </div>
         <button class="btn primary" id="pick-btn">选择文件</button>
         <input type="file" id="file-input" accept="audio/*" multiple hidden />
@@ -42,7 +60,7 @@
       <div class="error" id="tracks-error" hidden></div>
       <div class="track-list" id="track-list"></div>
       <div class="hint muted" id="tracks-hint">
-        每首曲目转录完成后可以单独打开；已完成的曲目也可以删除，再添加新曲目继续转录。
+        转录完成后可单独打开乐谱；已完成的曲目也可以删除，再添加新曲目。
       </div>
     </section>
 
@@ -54,9 +72,9 @@
           <div class="muted" id="score-stats"></div>
         </div>
         <div class="actions">
-          <a class="btn ghost" id="dl-xml" download>下载 MusicXML</a>
-          <a class="btn ghost" id="dl-pdf" download>下载 PDF</a>
-          <a class="btn ghost" id="dl-mid" download>下载 MIDI</a>
+          <a class="btn ghost" id="dl-xml" download>MusicXML</a>
+          <a class="btn ghost" id="dl-pdf" download>PDF</a>
+          <a class="btn ghost" id="dl-mid" download>MIDI</a>
           <button class="btn ghost" id="score-add-btn">添加曲目</button>
           <button class="btn ghost" id="back-btn">← 曲目列表</button>
         </div>
@@ -66,13 +84,13 @@
 
       <div class="viewer-toolbar">
         <button class="btn ghost" id="prev-page" aria-label="上一页">← 上一页</button>
-        <span class="page-indicator" id="page-indicator">第 1 / 1 页</span>
+        <span class="page-indicator" id="page-indicator"></span>
         <button class="btn ghost" id="next-page" aria-label="下一页">下一页 →</button>
         <button class="btn primary" id="follow-btn" hidden>回到当前</button>
       </div>
 
       <div class="hint muted">
-        播放时当前页自动跟随、当前小节高亮；你翻到别的页后会出现「回到当前」，暂停时不显示。
+        播放时自动跟随当前页；翻到其他页后，点「回到当前」返回正在播放的位置。
       </div>
       <div class="score-viewport" id="score-viewport">
         <div class="pages" id="pages"></div>
@@ -80,6 +98,14 @@
       <div class="error" id="score-error" hidden></div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <span>钢琴转录</span>
+    <span class="dot">·</span>
+    <span>本地推理，音频不会上传到第三方</span>
+    <span class="dot">·</span>
+    <span>MusicXML / PDF / MIDI</span>
+  </footer>
 
   <script src="/static/app.js"></script>
 </body>
