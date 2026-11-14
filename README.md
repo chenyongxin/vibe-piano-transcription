@@ -91,6 +91,13 @@ docker run --rm --gpus all -p 8000:8000 \
   piano-transcription:gpu
 ```
 
+> **Platform note:** the GPU image requires the NVIDIA container runtime and an
+> NVIDIA GPU. macOS cannot expose Apple GPU (Metal) or NVIDIA GPUs to Linux
+> containers; use `Dockerfile.cpu` on both Intel and Apple Silicon Macs.
+> `docker run --gpus all` will fail on macOS. If an Apple Silicon build cannot
+> find an arm64 wheel for a dependency, build with `--platform linux/amd64`
+> (emulated and slower) instead of switching to the GPU image.
+
 Or use the compose profiles:
 
 ```bash

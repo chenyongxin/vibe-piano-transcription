@@ -6,6 +6,8 @@
 #     -v "$PWD/models:/workspace/models" piano-transcription:gpu
 #
 # 模型权重不进入 git；可挂载，也可在构建时用 MODEL_URL 下载 release 权重。
+# macOS 不支持 NVIDIA GPU 透传，Mac 用户请改用 Dockerfile.cpu。
+
 ARG BASE_IMAGE=pytorch/pytorch:2.9.0-cuda12.6-cudnn9-runtime
 FROM ${BASE_IMAGE}
 

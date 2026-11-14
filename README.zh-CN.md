@@ -88,6 +88,12 @@ docker run --rm --gpus all -p 8000:8000 \
   piano-transcription:gpu
 ```
 
+> **平台说明**：GPU 镜像需要 NVIDIA container runtime 和 NVIDIA GPU。
+> macOS 的 Docker 不能把 Apple GPU（Metal）或 NVIDIA GPU 透传给 Linux 容器；
+> Intel Mac 和 Apple Silicon Mac 都应使用 `Dockerfile.cpu`。
+> 在 macOS 上执行 `docker run --gpus all` 会直接失败。如果 Apple Silicon 上某个依赖
+> 没有 arm64 wheel，可用 `--platform linux/amd64` 构建（会走模拟、较慢），不要改用 GPU 镜像。
+
 也可以用 compose 的 profile：
 
 ```bash
