@@ -110,21 +110,28 @@ def _png_size(png_path):
     return width, height
 
 
-def render_svg_with_timing(xml_path, n_pages, times_ms, page_width=2200, scale=48):
-    """一次加载内同时渲染全部 SVG 页并采样时间轴，保证元素 id 一致。
+def render_svg_with_timing(xml_path, n_pages, times_s, audio_duration_s,
+                           page_width=2200, scale=48):
+    """一次加载内渲染全部 SVG 页，并把「音频时间」映射到乐谱元素。
 
     关键点：verovio 每次 loadFile 会重新生成元素 id，所以「渲染 SVG」和
     「查询某时刻的元素」必须在同一次加载里完成，否则 id 对不上。
 
+    另一个关键点：原始音频时长和量化的乐谱时长可能略有差异。这里用
+    verovio 的 timemap 取乐谱实际时长，再把音频时间按比例映射到乐谱时间；
+    返回的采样 t 仍然是**音频时间**，前端可以直接和 audio.currentTime 比较。
+
     参数:
         xml_path (str): MusicXML 路径。
         n_pages (int): 页数。
-        times_ms (list[float]): 采样时间点（毫秒）。
+        times_s (list[float]): 音频时间采样点（秒）。
+        audio_duration_s (float): 原始音频时长（秒）。
         page_width (int): 页面宽度。
         scale (int): 缩放。
 
     返回:
-        tuple[list[str], list[dict]]: (SVG 文本列表, 时间轴采样)。
+        tuple[list[str], list[dict], float]:
+            (SVG 文本列表, 时间轴采样, 乐谱实际时长秒)。
     """
     import re
 
@@ -135,14 +142,29 @@ def render_svg_with_timing(xml_path, n_pages, times_ms, page_width=2200, scale=4
         _apply_options(tk, page_width=page_width, scale=scale)
         if not tk.loadFile(str(xml_path)):
             raise RuntimeError(f"verovio 无法加载: {xml_path}")
+        score_duration_s = 0.0
+        try:
+            timemap = tk.renderToTimemap()
+            score_duration_s = max(
+                (float(item.get("tstamp", 0)) for item in timemap if isinstance(item, dict)),
+                default=0.0,
+            ) / 1000.0
+        except Exception:
+            # verovio 版本差异时退化为按采样范围查询；不影响 SVG 渲染。
+            score_duration_s = 0.0
+        score_duration_s = max(score_duration_s, 0.001)
+        audio_duration_s = max(float(audio_duration_s), 0.001)
+
         for pg in range(1, n_pages + 1):
             svgs.append(tk.renderToSVG(pg))
         id_page = {}
         for page, svg in enumerate(svgs, 1):
             for match in re.finditer(r'id="([^"]+)"', svg):
                 id_page.setdefault(match.group(1), page)
-        for ms in times_ms:
-            data = tk.getElementsAtTime(int(ms))
+        for t_audio in times_s:
+            t_audio = min(max(float(t_audio), 0.0), audio_duration_s)
+            score_ms = int(round(t_audio / audio_duration_s * score_duration_s * 1000.0))
+            data = tk.getElementsAtTime(score_ms)
             ids = [i for i in data.get("notes", []) if i in id_page]
             if not ids:
                 continue
@@ -150,9 +172,9 @@ def render_svg_with_timing(xml_path, n_pages, times_ms, page_width=2200, scale=4
             measure = data.get("measure")
             page = data.get("page") or id_page[ids[0]]
             measures = [measure] if measure in id_page else []
-            samples.append({"t": round(ms / 1000.0, 2),
+            samples.append({"t": round(t_audio, 2),
                             "page": int(page), "ids": ids, "measures": measures})
-    return svgs, samples
+    return svgs, samples, score_duration_s
 
 
 def render_svg(xml_path, page=1, page_width=2200, scale=48):

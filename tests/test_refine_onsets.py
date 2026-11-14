@@ -1,9 +1,9 @@
-"""onset_reg 亚帧修正测试。"""
+"""onset_reg 亚帧修正与踏板平滑测试。"""
 
 import numpy as np
 
 from piano2.core import NoteEvent
-from piano2.decode import refine_onsets
+from piano2.decode import PedalEvent, refine_onsets, smooth_pedal_events
 
 
 def test_refine_onsets_recovers_subframe_position():
@@ -27,3 +27,21 @@ def test_refine_onsets_keeps_flat_curve_start():
     events = [NoteEvent(60, 10 / 31.25, 20 / 31.25, 80)]
     refined = refine_onsets(events, onset_reg)
     assert refined[0].start == events[0].start
+def test_smooth_pedal_bridges_small_gap():
+    """相邻踏板间隔小于阈值时应合并，避免硬切断。"""
+    events = [PedalEvent(0.0, 1.0), PedalEvent(1.1, 2.0), PedalEvent(3.0, 4.0)]
+    out = smooth_pedal_events(events, max_gap_s=0.3, release_tail_s=0.05)
+    assert len(out) == 2
+    assert out[0].start == 0.0
+    assert out[0].end >= 2.05
+    assert out[1].start == 3.0
+    assert out[1].end >= 4.05
+
+
+def test_smooth_pedal_keeps_large_gap():
+    """大间隔不合并，但前一个区间仍延长尾巴。"""
+    events = [PedalEvent(0.0, 1.0), PedalEvent(2.0, 3.0)]
+    out = smooth_pedal_events(events, max_gap_s=0.3, release_tail_s=0.1)
+    assert len(out) == 2
+    assert out[0].end >= 1.1
+    assert out[1].start == 2.0

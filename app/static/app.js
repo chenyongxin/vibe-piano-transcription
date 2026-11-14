@@ -4,8 +4,9 @@ const el = (id) => document.getElementById(id);
 const STAGES = ["排队中", "提取特征（CQT）", "模型推理", "解码成音符", "生成乐谱",
                 "导出 MIDI（与谱面同一时间轴）", "渲染乐谱", "合成回放音频", "完成"];
 
-const MAX_TRACKS = 10;
-const MAX_TOTAL_BYTES = 100 * 1024 * 1024;
+const MAX_TRACKS = 5;
+const MAX_FILE_BYTES = 300 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 5 * 300 * 1024 * 1024;
 const ALLOWED = /\.(wav|mp3|m4a|flac|ogg|aac|webm)$/i;
 
 const state = {
@@ -112,7 +113,7 @@ function addFiles(fileList) {
       continue;
     }
     if (totalBytes() + f.size > MAX_TOTAL_BYTES) {
-      errors.push(`总大小不能超过 100 MB，已忽略 ${f.name}`);
+      errors.push(`总大小不能超过 1.5 GB，已忽略 ${f.name}`);
       continue;
     }
     state.tracks.push({
@@ -181,7 +182,7 @@ function renderTracks() {
     const nDone = state.tracks.filter((t) => t.status === "done").length;
     el("tracks-title").textContent = state.processing ? "正在转录…" : "曲目列表";
     el("tracks-summary").textContent =
-      `${state.tracks.length} / ${MAX_TRACKS} 首 · ${formatSize(totalBytes())} / 100 MB` +
+      `${state.tracks.length} / ${MAX_TRACKS} 首 · ${formatSize(totalBytes())} / 1.5 GB` +
       ` · 已完成 ${nDone} 首`;
     el("add-btn").disabled = state.processing || state.tracks.length >= MAX_TRACKS;
     el("start-btn").disabled = state.processing ||
@@ -306,6 +307,8 @@ async function startTranscription() {
 
 function sampleIndexAt(t) {
   if (!view.samples.length) return -1;
+  // 音频起点到第一个谱面事件之间不该提前高亮下一小节。
+  if (t < view.samples[0].t - 0.05) return -1;
   let lo = 0, hi = view.samples.length - 1, idx = 0;
   while (lo <= hi) {
     const mid = (lo + hi) >> 1;
@@ -518,7 +521,10 @@ function paintSample(idx) {
 function updateHighlight() {
   if (!view.samples.length || !view.audio) return;
   const idx = sampleIndexAt(view.audio.currentTime || 0);
-  if (idx < 0) return;
+  if (idx < 0) {
+    if (view.currentSample !== -1) clearActive();
+    return;
+  }
   const s = view.samples[idx];
   if (view.playing && view.follow) {
     const target = Math.max(0, Number(s.page) - 1);

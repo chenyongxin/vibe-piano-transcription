@@ -434,6 +434,41 @@ def refine_onsets(events, onset_reg, radius_frames=1, min_value=0.10):
     return refined
 
 
+def smooth_pedal_events(events, max_gap_s=0.90, release_tail_s=0.12):
+    """平滑踏板区间，减少相邻小节交界处的“断—再踩”割裂感。
+
+    规则：
+    1. 每个区间的松开时刻向后延长 release_tail_s，给钢琴自然释放留一点尾巴；
+    2. 相邻区间如果 gap ≤ max_gap_s，直接合并成一个连续踏板区间，不再先松开再踩下；
+    3. 大间隔保留，但前一个区间仍会延长尾巴。
+
+    参数:
+        events (list[PedalEvent]): decode_pedal 得到的踏板区间。
+        max_gap_s (float): 可合并的最大间隔（秒），默认 0.90。
+        release_tail_s (float): 松开尾巴延长量（秒），默认 0.12。
+
+    返回:
+        list[PedalEvent]: 平滑后的区间，按开始时间排序。
+    """
+    ordered = sorted(events, key=lambda e: e.start)
+    if not ordered:
+        return []
+    merged = []
+    for event in ordered:
+        start = max(0.0, float(event.start))
+        end = max(start, float(event.end))
+        if not merged:
+            merged.append(PedalEvent(start, end + release_tail_s))
+            continue
+        prev = merged[-1]
+        if start <= prev.end + max_gap_s:
+            merged[-1] = PedalEvent(prev.start, max(prev.end, end) + release_tail_s)
+        else:
+            merged[-1] = PedalEvent(prev.start, prev.end + release_tail_s)
+            merged.append(PedalEvent(start, end + release_tail_s))
+    return merged
+
+
 def decode_subframe(onset_reg, offset_reg, vel, onset_threshold=0.30,
                     offset_threshold=0.30, min_gap_s=0.05, fallback_dur=0.08):
     """用回归输出 + 亚帧插值解码音符事件。

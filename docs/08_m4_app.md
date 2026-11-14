@@ -260,7 +260,7 @@ IDLE（只有「选择文件」）
 
 约束：
 
-- 最多 **10 首**，总大小 **≤ 100 MB**（前端与后端都按单文件 100 MB 校验）；
+- 最多 **5 首**，单首 **≤ 300 MB**（前端与后端都按单文件 300 MB 校验）；
 - 转录完成后仍可继续添加；「开始转录」只处理状态为「待转录」的新曲目，已完成的不会重跑；
 - 已完成的曲目可以删除（会调用 `DELETE /api/jobs/{id}` 清理服务端产物）。
 
@@ -360,12 +360,35 @@ Dockerfile 默认使用阿里云 apt 镜像并安装 `fluidsynth` + `fluid-sound
 
 ![M4.3 结果页](figs/49_app_m43_result.png)
 
-### 12.3 验收
+### 12.3 时间轴与小节高亮
+
+- `render_svg_with_timing()` 现在接收**原始音频时间**，用 verovio timemap 取得乐谱实际时长，再按比例映射；
+  返回的采样 `t` 与 `audio.currentTime` 同一条时间轴；
+- `timing.json` 的 `duration` 改为原始音频时长，UI 的时长/进度条/高亮不再使用偏长的 `score.mid` 时长；
+- `sampleIndexAt()` 在第一个谱面事件之前返回 -1，避免暂停/开头提前高亮下一小节；
+- 小节高亮仍使用 verovio 当前 `measure` 元素，截取五线谱 staff 的屏幕包围盒。
+
+### 12.4 踏板平滑
+
+新增 `piano2.decode.smooth_pedal_events()`：
+
+- 相邻踏板区间 gap ≤ 0.90 s 时直接合并，避免「松开—立刻再踩」的硬切断；
+- 每个区间松开时刻延长 0.12 s，保留钢琴自然释放尾巴；
+- app 在 `decode_pedal()` 后统一做这一步，再写 `playback.mid` 的 CC64 和谱面踏板线。
+
+### 12.5 上传限制
+
+- 前端：最多 5 首，单首 ≤ 300 MB（总上限 1.5 GB）；
+- 后端：`MAX_UPLOAD_MB = 300`；
+- 文案、错误提示和曲目统计同步更新。
+
+### 12.6 验收
 
 ```text
 上传 20 秒 Schubert 录音 → 8 秒内完成 → 193 个音符 / 1 页
 API health 返回 device=cuda
 任务结果 model=hybrid
+timing.duration = 20.0，与 preview.wav 一致
 ```
 
 详细使用步骤见 `../tutorial/07_running_app.md`。

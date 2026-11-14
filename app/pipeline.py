@@ -23,6 +23,7 @@ import shutil
 import subprocess
 import time
 
+import librosa
 import numpy as np
 import pretty_midi
 import pymupdf
@@ -30,7 +31,13 @@ import soundfile as sf
 import verovio
 
 from piano2.constants import CKPT, DECODE_DEFAULTS
-from piano2.decode import DecodeConfig, decode, decode_pedal, refine_onsets
+from piano2.decode import (
+    DecodeConfig,
+    decode,
+    decode_pedal,
+    refine_onsets,
+    smooth_pedal_events,
+)
 from piano2.inference import compute_cqt, infer_sliding_window, load_model, pick_device
 from piano2.notation import write_musicxml
 from . import render_service
@@ -324,6 +331,8 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
         if postprocess:
             from piano2.postprocess import postprocess_events
             events, _stats = postprocess_events(events, onset=onset, frame=frame)
+    # 相邻踏板区间跨小节时合并/延长尾巴，减少回放中的硬切断。
+    pedal_events = smooth_pedal_events(pedal_events)
     stage("生成乐谱")
     xml_path = os.path.join(out_dir, "score.musicxml")
     write_musicxml([(e.pitch, e.start, e.end, e.velocity) for e in events],
@@ -339,17 +348,19 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
     pmid = pretty_midi.PrettyMIDI(midi_path)
     midi_notes = sorted((n for inst in pmid.instruments for n in inst.notes),
                         key=lambda n: n.start)
-    duration = float(pmid.get_end_time())
+    audio_duration = float(librosa.get_duration(path=audio_path))
 
     stage("渲染乐谱")
     n_pages = render_service.page_count(xml_path)
     n_pages = max(1, min(int(n_pages), 20))  # 防御：异常文件最多渲染 20 页
     step = 0.1
-    times_ms, t = [], 0.0
-    while t <= duration + 0.05:
-        times_ms.append(t * 1000.0)
+    times_s, t = [], 0.0
+    while t <= audio_duration + 0.05:
+        times_s.append(t)
         t += step
-    svg_texts, samples = render_service.render_svg_with_timing(xml_path, n_pages, times_ms)
+    svg_texts, samples, score_duration = render_service.render_svg_with_timing(
+        xml_path, n_pages, times_s, audio_duration
+    )
 
     svg_names = []
     for pg, svg in enumerate(svg_texts, 1):
@@ -357,7 +368,7 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
         with open(os.path.join(out_dir, svg_name), "w", encoding="utf-8") as fh:
             fh.write(svg)
         svg_names.append(svg_name)
-    timing = {"step": step, "duration": round(duration, 2), "samples": samples}
+    timing = {"step": step, "duration": round(audio_duration, 2), "samples": samples}
     with open(os.path.join(out_dir, "timing.json"), "w", encoding="utf-8") as fh:
         json.dump(timing, fh, ensure_ascii=False)
 
@@ -386,7 +397,8 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
         "timing": "timing.json",
         "pages": [os.path.basename(p) for p in page_paths],
         "svg_pages": svg_names,
-        "duration_s": round(duration, 2),
+        "duration_s": round(audio_duration, 2),
+        "score_duration_s": round(score_duration, 2),
         "n_events": len(events),
         "n_pages": len(page_paths),
         "elapsed_s": round(time.time() - t0, 1),
