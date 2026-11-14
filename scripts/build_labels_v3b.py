@@ -28,9 +28,9 @@ import pandas as pd
 import pretty_midi
 
 FPS = 31.25
-V3A = "/Docker/piano2_data/processed/maestro_processed_v3a"
-V3B = "/Docker/piano2_data/processed/maestro_processed_v3b"
-MAESTRO = "/Docker/piano2_data/raw/maestro-v3.0.0"
+V3A = os.environ.get("PIANO2_V3A_ROOT", "/Docker/piano2_data/processed/maestro_processed_v3a")
+V3B = os.environ.get("PIANO2_V3B_ROOT", "/Docker/piano2_data/processed/maestro_processed_v3b")
+MAESTRO = os.environ.get("PIANO2_MAESTRO_ROOT", "/Docker/piano2_data/raw/maestro-v3.0.0")
 
 
 def link_or_copy(src, dst):

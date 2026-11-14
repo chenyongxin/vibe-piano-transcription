@@ -8,7 +8,7 @@
 
 ## 功能
 
-- 上传 WAV / MP3 / M4A / FLAC，最多 10 首、总大小 ≤ 100 MB；
+- 上传 WAV / MP3 / M4A / FLAC，最多 5 首、单首 ≤ 300 MB；
 - 混合模型把音频解码成音符事件，再生成可读乐谱；
 - 结果页逐页查看，播放时自动跟随并高亮当前小节；
 - 真实钢琴音色回放，支持踏板（CC64）；
@@ -67,20 +67,91 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 真实钢琴回放需要 `fluidsynth` 和 SoundFont（如 `FluidR3_GM.sf2`）；
 缺少时自动回退到轻量合成器。
 
-### Docker
+### Docker：CPU 与 GPU 两个版本
+
+仓库提供两个 Dockerfile：
+
+| 文件 | 适用 | 启动 |
+|---|---|---|
+| `Dockerfile.cpu` | 无 NVIDIA GPU 的笔记本/服务器 | `docker build -f Dockerfile.cpu -t piano-transcription:cpu .` |
+| `Dockerfile.gpu` | NVIDIA CUDA（RTX 4060 等） | `docker build -f Dockerfile.gpu -t piano-transcription:gpu .` |
 
 ```bash
-docker build -t piano-transcription .
+# CPU
 docker run --rm -p 8000:8000 \
   -v "$PWD/models:/workspace/models" \
-  piano-transcription \
-  bash -c "cd /workspace && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
+  piano-transcription:cpu
+
+# GPU
+docker run --rm --gpus all -p 8000:8000 \
+  -v "$PWD/models:/workspace/models" \
+  piano-transcription:gpu
 ```
 
-有 CUDA 时加 `--gpus all`。
+也可以用 compose 的 profile：
 
-> 模型权重不随仓库分发。请把 checkpoint 放到 `models/best.pt`，或设置
-> `PIANO2_CKPT`。
+```bash
+docker compose --profile cpu up --build
+# 或：docker compose --profile gpu up --build
+```
+
+镜像启动后会自动运行 Web 应用。模型权重**不随仓库分发**，请把 checkpoint 放到
+`models/best.pt`，或设置 `PIANO2_CKPT`。如果希望真正零挂载启动，可以把
+`best.pt` 放到 GitHub Release，然后用 `MODEL_URL` 构建：
+
+```bash
+docker build -f Dockerfile.gpu \
+  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.0/best.pt \
+  -t ghcr.io/<owner>/<repo>/piano-transcription:gpu .
+```
+
+GitHub Actions 工作流 [`.github/workflows/docker.yml`](.github/workflows/docker.yml)
+会在 `main`/tag 上构建 CPU 和 GPU 镜像并推到 GHCR。服务器部署：
+
+```bash
+docker run -d --gpus all -p 8000:8000 \
+  -v /srv/piano2/models:/workspace/models \
+  ghcr.io/<owner>/<repo>/piano-transcription:gpu
+```
+
+## 复现模型参数
+
+当前 app 使用 `hybrid_reg2`（数据 v4 + offset-loss 2.0 + reg-loss 0.5）。
+
+```bash
+# 1. 从 https://magenta.tensorflow.org/datasets/maestro 下载 MAESTRO v3.0.0，解压到：
+#    data/raw/maestro-v3.0.0/maestro-v3.0.0.csv, *.midi, *.wav
+export PIANO2_MAESTRO_ROOT="$PWD/data/raw/maestro-v3.0.0"
+
+# 2. 构建 CQT + 标签（脚本默认路径是 /Docker/piano2_data；
+#    换机器时用环境变量覆盖）
+export PIANO2_DATA_ROOT="$PWD/data/processed/maestro_processed_v2"
+export PIANO2_V2_ROOT="$PWD/data/processed/maestro_processed_v2"
+python scripts/build_data.py --workers 8
+
+export PIANO2_V3A_ROOT="$PWD/data/processed/maestro_processed_v3a"
+python scripts/build_labels_v3a.py --workers 8
+export PIANO2_V3B_ROOT="$PWD/data/processed/maestro_processed_v3b"
+python scripts/build_labels_v3b.py --workers 8
+export PIANO2_V4_ROOT="$PWD/data/processed/maestro_processed_v4"
+python scripts/build_labels_v4.py --workers 8
+
+# 3. 训练 hybrid_reg2（20 轮 / 71,160 步；RTX 4060 约 1.6 小时）
+export PIANO2_DATA_ROOT="$PWD/data/processed/maestro_processed_v4"
+python -m piano2.train --max-steps 71160 --batch 16 --val-every 500 \
+  --save-every 200 --val-segments 120 --num-workers 4 \
+  --run-name hybrid_reg2 --label-channel onset1 \
+  --offset-loss 2.0 --reg-loss 0.5 --seed 0
+
+# 4. 在 MAESTRO test split 上评测
+python scripts/evaluate_hybrid_test.py \
+  --model outputs/M1/hybrid_reg2/checkpoints/best.pt \
+  --out outputs/eval/hybrid_reg2_test.json
+```
+
+训练产物在 `outputs/M1/hybrid_reg2/checkpoints/best.pt`；复制到 `models/best.pt`
+后 app 就会加载它。完整实验和消融见
+[训练报告](training/2026-11-11_duration_offset_hybrid.md)。
 
 ## 项目结构
 

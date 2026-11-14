@@ -8,7 +8,7 @@ Turn solo piano recordings into editable sheet music — locally.
 
 ## What it does
 
-- Upload WAV / MP3 / M4A / FLAC recordings (up to 10 tracks, 100 MB total).
+- Upload WAV / MP3 / M4A / FLAC recordings (up to 5 tracks, 300 MB each).
 - A hybrid model turns audio into note events, then into readable music notation.
 - Review the result page by page, with the current measure highlighted during playback.
 - Listen back with a realistic piano sound and pedal (CC64) support.
@@ -70,20 +70,92 @@ Open <http://127.0.0.1:8000>.
 Realistic piano playback needs `fluidsynth` and a SoundFont such as `FluidR3_GM.sf2`;
 without them the app falls back to a lightweight synthesizer.
 
-### Docker
+### Docker: CPU and GPU
+
+Two Dockerfiles are included:
+
+| File | Target | Start |
+|---|---|---|
+| `Dockerfile.cpu` | CPU-only laptops / servers | `docker build -f Dockerfile.cpu -t piano-transcription:cpu .` |
+| `Dockerfile.gpu` | NVIDIA CUDA (RTX 4060+) | `docker build -f Dockerfile.gpu -t piano-transcription:gpu .` |
 
 ```bash
-docker build -t piano-transcription .
+# CPU
 docker run --rm -p 8000:8000 \
   -v "$PWD/models:/workspace/models" \
-  piano-transcription \
-  bash -c "cd /workspace && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
+  piano-transcription:cpu
+
+# GPU
+docker run --rm --gpus all -p 8000:8000 \
+  -v "$PWD/models:/workspace/models" \
+  piano-transcription:gpu
 ```
 
-Add `--gpus all` if CUDA is available.
+Or use the compose profiles:
 
-> Model weights are not included in this repository. Place a checkpoint at
-> `models/best.pt` or set `PIANO2_CKPT`.
+```bash
+docker compose --profile cpu up --build
+# or: docker compose --profile gpu up --build
+```
+
+The images start the web app automatically. Model weights are deliberately **not**
+stored in git; mount a checkpoint at `models/best.pt` (or set `PIANO2_CKPT`).
+For a true zero-mount deployment, attach `best.pt` to a GitHub Release and build with:
+
+```bash
+docker build -f Dockerfile.gpu \
+  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.0/best.pt \
+  -t ghcr.io/<owner>/<repo>/piano-transcription:gpu .
+```
+
+GitHub Actions workflow [`.github/workflows/docker.yml`](.github/workflows/docker.yml)
+builds both CPU and GPU images and pushes them to GHCR on `main`/tags. A server can then use
+
+```bash
+docker run -d --gpus all -p 8000:8000 \
+  -v /srv/piano2/models:/workspace/models \
+  ghcr.io/<owner>/<repo>/piano-transcription:gpu
+```
+
+## Reproduce the model
+
+The current app uses `hybrid_reg2` (data v4 + offset-loss 2.0 + reg-loss 0.5).
+
+```bash
+# 1. Download MAESTRO v3.0.0 from https://magenta.tensorflow.org/datasets/maestro and put the extracted folder here:
+#    data/raw/maestro-v3.0.0/maestro-v3.0.0.csv, *.midi, *.wav
+export PIANO2_MAESTRO_ROOT="$PWD/data/raw/maestro-v3.0.0"
+
+# 2. Build CQT + labels (the scripts default to /Docker/piano2_data;
+#    override the roots when running elsewhere).
+export PIANO2_DATA_ROOT="$PWD/data/processed/maestro_processed_v2"
+export PIANO2_V2_ROOT="$PWD/data/processed/maestro_processed_v2"
+python scripts/build_data.py --workers 8
+
+export PIANO2_V3A_ROOT="$PWD/data/processed/maestro_processed_v3a"
+python scripts/build_labels_v3a.py --workers 8
+export PIANO2_V3B_ROOT="$PWD/data/processed/maestro_processed_v3b"
+python scripts/build_labels_v3b.py --workers 8
+export PIANO2_V4_ROOT="$PWD/data/processed/maestro_processed_v4"
+python scripts/build_labels_v4.py --workers 8
+
+# 3. Train hybrid_reg2 (20 epochs, 71,160 steps; about 1.6 h on RTX 4060)
+export PIANO2_DATA_ROOT="$PWD/data/processed/maestro_processed_v4"
+python -m piano2.train --max-steps 71160 --batch 16 --val-every 500 \
+  --save-every 200 --val-segments 120 --num-workers 4 \
+  --run-name hybrid_reg2 --label-channel onset1 \
+  --offset-loss 2.0 --reg-loss 0.5 --seed 0
+
+# 4. Evaluate on MAESTRO test split
+python scripts/evaluate_hybrid_test.py \
+  --model outputs/M1/hybrid_reg2/checkpoints/best.pt \
+  --out outputs/eval/hybrid_reg2_test.json
+```
+
+The checkpoint is written to
+`outputs/M1/hybrid_reg2/checkpoints/best.pt`; copy it to `models/best.pt`
+for the app. Full experiment details and ablations are in
+[the training report](training/2026-11-11_duration_offset_hybrid.md).
 
 ## Project layout
 

@@ -1,0 +1,19 @@
+# 构建上下文里不需要的文件
+.git/
+.github/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+outputs/
+data/
+models/
+*.pt
+*.pth
+*.npz
+*.npy
+*.wav
+*.mp3
+*.flac
+docs/figs/
+docs/readme/
