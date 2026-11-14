@@ -1,107 +1,123 @@
-# piano2：钢琴音频 → 可读乐谱
+# Piano Transcription
 
-输入一段钢琴独奏录音，输出 MusicXML 乐谱（可渲染 PNG/PDF）。
+**[English](README.md) | [简体中文](README.zh-CN.md)**
 
-本项目是「钢琴自动转谱」项目的最终版仓库：M0（诊断）→ M0.5（解码器重构）→ M0.6（训练前门禁）
-→ M1（数据 v2 与训练脚本）→ **M2 建仓（当前）** → M3 全量训练 → M4 浏览器应用。
+Turn solo piano recordings into editable sheet music — locally.
 
-## 现状
+![Piano transcription web app](docs/readme/home.png)
 
-| 部分 | 状态 |
-|---|---|
-| 解码器（概率图 → 音符事件） | 定型：onset F1 0.952 / 0.943 / 0.798（稀疏/中等/密集），留出集 0.821 |
-| 记谱（事件 → MusicXML） | v1.1：黑音符占比 0.724、左右手小节一致、时长误差 -2.83% |
-| 模型与训练 | 五头模型 + 训练脚本；全量 20 轮（71k 步）完成：验证 F1 0.7656，留出集 onset F1 0.870 / 精确率 0.860（判据达标）；M3.5 首轮：offset 头使留出集 note F1 0.063→0.268，1 帧 onset 精确率 0.901 |
-| 评测 | oracle 自检 + 固定评测集 + 实验登记表 |
-| 全量训练（71k 步） | **完成（EXP-002）**；M3.5 首轮四组完成（EXP-003）：时值有改善但 Beethoven 回退，待组合实验 |
-| 浏览器应用 | **M4.2 可用**（多曲目队列、单曲/多曲、单页翻页、真实钢琴回放）；Docker 分发待做 |
+## What it does
 
-## 快速开始
+- Upload WAV / MP3 / M4A / FLAC recordings (up to 10 tracks, 100 MB total).
+- A hybrid model turns audio into note events, then into readable music notation.
+- Review the result page by page, with the current measure highlighted during playback.
+- Listen back with a realistic piano sound and pedal (CC64) support.
+- Download **MusicXML**, **PDF**, and **MIDI**.
 
-```bash
-# 安装（容器内或本机虚拟环境）
-pip install -e .
+![Result page with score viewer](docs/readme/result.png)
 
-# 单元测试（10 个测试；无数据/无 GPU 时自动跳过依赖项）
-python -m pytest -q
+## How it works
 
-# 启动浏览器应用（M4.2）
-# 真实钢琴回放需要 fluidsynth + FluidR3_GM.sf2；缺失时自动回退到简易合成器
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-# 浏览器打开 http://127.0.0.1:8000 ，选择文件后先进入曲目列表，点「开始转录」
-
-# 音频 → 乐谱（命令行）
-python scripts/transcribe.py --wav /path/to/audio.wav --out-dir outputs/transcribe
-
-# 固定评测集评测
-python scripts/evaluate.py --model models/best.pt
+```text
+audio
+  → log-CQT (32 ms frames, 264 bins)
+  → CNN + Transformer
+  → 8 heads: onset / frame / velocity / offset / pedal / pedal_on /
+             onset_reg / offset_reg
+  → decode to NoteEvent(pitch, start, end, velocity)
+  → MusicXML / PDF / MIDI / piano playback
 ```
 
-数据与模型权重不随仓库分发，路径用环境变量指定（见 `src/piano2/constants.py`）。
+The model keeps a **classification backbone** for note presence and duration,
+and uses a **sub-frame onset regression** head to refine note starts inside a frame.
+Raw note events are used for event-level metrics and playback; the score is quantized
+to a readable rhythmic grid (16th notes).
 
-## 数据目录
+## Results
 
-钢琴项目的数据统一放在 `E:\Docker\piano2_data\`（容器内挂载为 `/Docker/piano2_data`），
-不再散落在 `E:\Docker` 根目录：
+Results on the MAESTRO v3.0.0 test split (177 tracks, raw note events):
 
-| 路径 | 内容 |
+| Metric | Hybrid model |
+|---|---:|
+| note-with-offset F1 (key-off ground truth) | 0.331 |
+| onset F1 @ 50 ms | 0.870 |
+| onset F1 @ 20 ms | 0.812 |
+| **onset F1 @ 10 ms** | **0.626** |
+
+The 10 ms onset F1 is **0.626**, compared with **0.507** for the classification-only
+baseline. A holdout track reaches **0.660** at 10 ms and **0.405** note F1.
+
+For reference, a ByteDance piano-transcription model measured on three validation
+excerpts reached **0.901** onset F1 @10 ms and **0.444** note F1. Its note-off targets
+are closer to acoustic sustain/pedal release, so the note-F1 comparison is not
+apples-to-apples with key-off ground truth.
+
+## Quick start
+
+### Local Python
+
+```bash
+python -m pip install -e .
+
+# Put a trained checkpoint at models/best.pt, or set PIANO2_CKPT:
+#   export PIANO2_CKPT=/path/to/checkpoint.pt
+
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Open <http://127.0.0.1:8000>.
+
+Realistic piano playback needs `fluidsynth` and a SoundFont such as `FluidR3_GM.sf2`;
+without them the app falls back to a lightweight synthesizer.
+
+### Docker
+
+```bash
+docker build -t piano-transcription .
+docker run --rm -p 8000:8000 \
+  -v "$PWD/models:/workspace/models" \
+  piano-transcription \
+  bash -c "cd /workspace && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
+```
+
+Add `--gpus all` if CUDA is available.
+
+> Model weights are not included in this repository. Place a checkpoint at
+> `models/best.pt` or set `PIANO2_CKPT`.
+
+## Project layout
+
+| Path | Contents |
 |---|---|
-| `raw/maestro-v3.0.0/` | MAESTRO v3.0.0 原始音频 + MIDI（约 123 GB） |
-| `processed/maestro_processed_v2/` | 数据 v2（memmap，训练默认） |
-| `processed/maestro_processed_v3a/` … `v4/` | 后续标签版本（offset 窗口、回归目标等） |
-| `processed/maestro_processed/` | 旧版压缩 npz 数据 |
-| `archives/maestro_processed.zip` | 旧数据压缩包（约 17.7 GB） |
-| `validation/piano_validation/` | 人工校核包（3 首不同难度） |
-| `timbre_ab/piano_timbre_ab/` | 音色 A/B 试听文件 |
-| `demo/piano2_demo/` | 早期演示产物 |
-| `scratch/dsh_scratch/` | 诊断脚本与临时输出 |
+| `app/` | FastAPI backend, job queue, score rendering, static UI |
+| `src/piano2/` | features, model, training, decoding, notation, evaluation |
+| `tutorial/` | step-by-step guides from audio to score |
+| `docs/` | architecture, data, decoding, notation, app design |
+| `training/` | experiment reports and results |
+| `scripts/` | command-line entry points and evaluation scripts |
+| `tests/` | pytest suite |
 
-默认路径已同步到 `src/piano2/constants.py`：
+## Documentation
 
-- `PIANO2_MAESTRO_ROOT=/Docker/piano2_data/raw/maestro-v3.0.0`
-- `PIANO2_DATA_ROOT=/Docker/piano2_data/processed/maestro_processed_v2`
-- `PIANO2_SRC_ROOT=/Docker/piano2_data/processed/maestro_processed`
+- [Tutorial index](tutorial/README.md)
+- [Project overview](docs/01_overview.md)
+- [Data and labels](docs/02_data.md)
+- [Model and training](docs/03_model_training.md)
+- [Decoding](docs/04_decoding.md)
+- [App design](docs/08_m4_app.md)
+- [Experiment reports](training/README.md)
 
-如果数据放在别处，用这三个环境变量覆盖即可，不用改代码。
+## Limitations
 
-## 目录
+- Designed for **solo piano**; mixes and ensemble recordings are out of scope.
+- The score is a readable rhythmic representation, not a millisecond-accurate
+  performance transcription. Sub-frame timing is preserved in raw events and playback,
+  but is quantized in MusicXML/PDF.
+- Dense, pedaled textures and fast repeated notes remain difficult.
+- Trained on MAESTRO; generalization to unseen pianos/rooms is still being evaluated.
 
-| 目录 | 内容 |
-|---|---|
-| `src/piano2/` | 产品代码：特征、模型、训练、解码、记谱、渲染、评测 |
-| `scripts/` | 命令行入口：`build_data.py`、`transcribe.py`、`evaluate.py`、`check_labels.py` |
-| `tests/` | pytest 测试 |
-| `docs/` | 产品与技术参考：总览、数据、模型训练、解码、记谱评测、阶段程序、路线图、M4 应用设计；`docs/history/` 是历史文档 |
-| `tutorial/` | **教学与入门**：从声音到乐谱的每一步、图解、常见问题、应用使用教程 |
-| `experiments/` | 各里程碑的阶段程序、报告、产物与实验登记表 |
+## Data and license notes
 
-## 文档
-
-- [`docs/01_overview.md`](docs/01_overview.md)：项目总览与流水线
-- [`docs/02_data.md`](docs/02_data.md)：数据 v2 设计与重建
-- [`docs/03_model_training.md`](docs/03_model_training.md)：模型结构与训练策略
-- [`docs/04_decoding.md`](docs/04_decoding.md)：解码器原理、参数与效果
-- [`docs/05_notation_eval.md`](docs/05_notation_eval.md)：记谱、渲染与评测口径
-- [`docs/06_stage_programs.md`](docs/06_stage_programs.md)：M0/M0.5/M0.6/M1 程序说明
-- [`docs/07_roadmap.md`](docs/07_roadmap.md)：M3 训练与 M4 应用计划
-- [`docs/08_m4_app.md`](docs/08_m4_app.md)：M4 浏览器应用（Docker 本地交付）设计
-- [`docs/00_glossary.md`](docs/00_glossary.md)：术语表
-
-## 教程
-
-- [`tutorial/README.md`](tutorial/README.md)：教程目录与阅读路径
-- [`tutorial/02_features_cqt_hop_frames.md`](tutorial/02_features_cqt_hop_frames.md)：CQT、hop、帧、T
-- [`tutorial/03_labels_from_midi.md`](tutorial/03_labels_from_midi.md)：6 个标签通道与踏板
-- [`tutorial/06_faq.md`](tutorial/06_faq.md)：常见问题（黑音符、holdout、PUA、训练成本）
-- [`tutorial/07_running_app.md`](tutorial/07_running_app.md)：浏览器应用使用教程（M4 完成后补全）
-
-## 训练报告
-
-- [	raining/README.md](training/README.md)：训练报告目录与写作约定（每次大跑：时间、目的、结果、下一步猜想）
-- [	raining/2026-11-05_m3_full_71k.md](training/2026-11-05_m3_full_71k.md)：M3 全量 20 轮（71,160 步）
-- [	raining/2026-11-06_m3_5_nightly.md](training/2026-11-06_m3_5_nightly.md)：M3.5 首轮四组对照实验（D2 / A / B / C）
-
-## 重要说明
-
-- 训练数据 MAESTRO v3.0.0 采用 CC BY-NC-SA 4.0 许可，**本项目仅用于非商业用途**；
-- 解码器与记谱层在 M0/M0.5 已证明不是主要瓶颈，改动顺序见 `docs/01_overview.md` 第 6 节。
+Training data comes from MAESTRO v3.0.0, which is distributed under
+CC BY-NC-SA 4.0. This project is intended for research and non-commercial use.
+Third-party model names and results are referenced for comparison only.
