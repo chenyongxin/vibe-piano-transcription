@@ -27,10 +27,23 @@ MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
 ALLOWED_SUFFIXES = {".wav", ".mp3", ".m4a", ".flac", ".ogg", ".aac", ".webm"}
 MAX_UPLOAD_MB = 300
 
-app = FastAPI(title="钢琴转录", version="0.2.0")
+app = FastAPI(title="钢琴转录", version="0.2.1")
 store = JobStore(out_root=MEDIA_ROOT)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/media", StaticFiles(directory=str(MEDIA_ROOT)), name="media")
+
+
+@app.middleware("http")
+async def disable_shell_cache(request, call_next):
+    """禁止缓存 HTML/静态资源，避免前端更新后浏览器仍加载旧 app.js。
+
+    API 和媒体文件不受影响；本地 app 的静态资源很小，不做长缓存是更稳妥的取舍。
+    """
+    response = await call_next(request)
+    if request.url.path == "/" or request.url.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+    return response
 
 
 @app.get("/", include_in_schema=False)
