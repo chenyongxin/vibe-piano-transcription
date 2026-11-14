@@ -409,7 +409,7 @@ ValueError: MIDI file has a largest tick of ..., it is likely corrupt
 
 - 多曲目串行转录时，`startTranscription()` 完成后若用户已经在 score 页面，**只弹 toast 提示**，不再调用 `showTracks()`，也不暂停 audio；
 - 页面切换时 `.score-viewport` 自动回到页首；
-- 播放中当前小节高亮会自动滚入视口（`ensureBandVisible()`），避免用户滚到下面后看不到当前小节；
+- 播放中当前小节高亮会自动滚入视口（`ensureBandVisible()`）；用户手动滚动后暂停自动跟随，翻页/回到当前后恢复；
 - timing 采样从 0.10 s 缩短到 0.04 s，并额外加入每个音符起点，改善快速段落的高亮边界。
 
 ### 12.9 验收

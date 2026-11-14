@@ -29,6 +29,9 @@ const view = {
   pageIndex: 0,
   renderedPage: -1,
   follow: true,
+  manualScroll: false,
+  ignoreScroll: false,
+  ignoreScrollTop: 0,
   playing: false,
   currentSample: -1,
   rafId: null,
@@ -377,6 +380,8 @@ async function loadScore(track) {
   view.pageIndex = 0;
   view.renderedPage = -1;
   view.follow = true;
+  view.manualScroll = false;
+  view.ignoreScroll = false;
   view.playing = false;
   view.currentSample = -1;
   if (view.rafId) { cancelAnimationFrame(view.rafId); view.rafId = null; }
@@ -439,6 +444,15 @@ async function loadScore(track) {
   }
 }
 
+function setScoreScrollTop(value) {
+  const viewport = el("score-viewport");
+  if (!viewport) return;
+  view.ignoreScroll = true;
+  view.ignoreScrollTop = value;
+  viewport.scrollTop = value;
+  setTimeout(() => { view.ignoreScroll = false; }, 120);
+}
+
 function renderPage() {
   const pageChanged = view.renderedPage !== view.pageIndex;
   view.renderedPage = view.pageIndex;
@@ -446,9 +460,9 @@ function renderPage() {
     wrap.classList.toggle("page-active", i === view.pageIndex);
   });
   if (pageChanged) {
-    // 翻到新页时先回到页首；如果当前小节在页内靠下，再由 ensureBandVisible 滚过去。
-    const viewport = el("score-viewport");
-    if (viewport) viewport.scrollTop = 0;
+    // 翻到新页时回到页首，并恢复自动跟随；用户手动滚动后不强行拉回。
+    view.manualScroll = false;
+    setScoreScrollTop(0);
   }
   updatePageControls();
   clearActive();
@@ -499,6 +513,7 @@ function updateFollowButton() {
 function returnToCurrent() {
   if (!view.playing) return;
   view.follow = true;
+  view.manualScroll = false;
   const pp = playbackPageIndex();
   if (pp !== view.pageIndex) {
     view.pageIndex = pp;
@@ -559,7 +574,7 @@ function paintSample(idx) {
 }
 
 function ensureBandVisible() {
-  if (!view.playing) return;
+  if (!view.playing || view.manualScroll) return;
   const band = view.bands[view.pageIndex];
   const viewport = el("score-viewport");
   if (!band || !viewport || band.style.display === "none") return;
@@ -573,7 +588,7 @@ function ensureBandVisible() {
     delta = br.bottom - vr.bottom + margin;
   }
   if (delta) {
-    viewport.scrollTop += delta;
+    setScoreScrollTop(viewport.scrollTop + delta);
   }
 }
 
@@ -661,6 +676,7 @@ function seekFromClick(wrap, evt) {
 
   const wasPlaying = !view.audio.paused;
   view.audio.currentTime = targetTime;
+  view.manualScroll = false;
   if (wasPlaying) view.audio.play();
 }
 
@@ -671,6 +687,7 @@ function bindPlayer() {
   view.audio = audio;
   audio.addEventListener("play", () => {
     view.playing = true;
+    view.manualScroll = false;
     if (!view.follow) {
       view.follow = (playbackPageIndex() === view.pageIndex);
     }
@@ -696,6 +713,16 @@ function pauseAudio() {
 
 function bindEvents() {
   const dz = el("dropzone");
+  const viewport = el("score-viewport");
+  viewport.addEventListener("scroll", () => {
+    const top = viewport.scrollTop;
+    if (view.ignoreScroll && Math.abs(top - view.ignoreScrollTop) <= 2) {
+      view.ignoreScroll = false;
+      return;
+    }
+    view.ignoreScroll = false;
+    if (state.mode === "score") view.manualScroll = true;
+  });
   ["dragenter", "dragover"].forEach((ev) => dz.addEventListener(ev, (e) => {
     e.preventDefault();
     dz.classList.add("over");
