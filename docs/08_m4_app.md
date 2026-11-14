@@ -382,7 +382,23 @@ Dockerfile 默认使用阿里云 apt 镜像并安装 `fluidsynth` + `fluid-sound
 - 后端：`MAX_UPLOAD_MB = 300`；
 - 文案、错误提示和曲目统计同步更新。
 
-### 12.6 验收
+### 12.6 长曲目的 score.mid 兜底
+
+长曲目在 verovio 导出 MIDI 时可能生成异常大的 tick 数，`pretty_midi` 解析会抛出：
+
+```text
+ValueError: MIDI file has a largest tick of ..., it is likely corrupt
+```
+
+这不是输入音频损坏，而是导出的谱面 MIDI 文件不可靠。现在 pipeline 在写完
+`score.mid` 后立刻做一次 `pretty_midi.PrettyMIDI` 校验：
+
+- 校验通过：保留谱面时间轴 MIDI；
+- 校验失败：回退到 `write_midi(events, ...)`，用原始音符事件生成可用的 MIDI，
+  任务继续完成；
+- 结果字段 `score_midi_fallback` 会标记是否使用了回退。
+
+### 12.7 验收
 
 ```text
 上传 20 秒 Schubert 录音 → 8 秒内完成 → 193 个音符 / 1 页

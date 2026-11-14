@@ -339,15 +339,18 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
                    audio_path, xml_path, title=title, pedal_events=pedal_events)
     stage("导出 MIDI（与谱面同一时间轴）")
     midi_path = os.path.join(out_dir, "score.mid")
+    score_midi_fallback = False
     try:
         midi_bytes = render_service.export_midi(xml_path)
         with open(midi_path, "wb") as fh:
             fh.write(midi_bytes)
+        # 长曲目/异常谱面可能让 verovio 导出巨大 tick 的 MIDI；先校验，
+        # 解析失败就回退到原始事件，避免整个转录任务因下载文件损坏而失败。
+        pretty_midi.PrettyMIDI(midi_path)
     except Exception:
-        write_midi(events, midi_path, pedal_events=pedal_events)  # 兜底
-    pmid = pretty_midi.PrettyMIDI(midi_path)
-    midi_notes = sorted((n for inst in pmid.instruments for n in inst.notes),
-                        key=lambda n: n.start)
+        write_midi(events, midi_path, pedal_events=pedal_events)
+        score_midi_fallback = True
+    midi_notes = events
     audio_duration = float(librosa.get_duration(path=audio_path))
 
     stage("渲染乐谱")
@@ -405,4 +408,5 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
         "device": holder.device,
         "model": model_kind,
         "checkpoint": holder.checkpoint,
+        "score_midi_fallback": score_midi_fallback,
     }

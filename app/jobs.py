@@ -122,6 +122,7 @@ class JobStore:
                 "n_pages": job.result["n_pages"],
                 "device": job.result["device"],
                 "model": job.result.get("model", ""),
+                "score_midi_fallback": job.result.get("score_midi_fallback", False),
                 "duration_s": job.result.get("duration_s", 0),
                 "pages": [f"{media}/{name}" for name in job.result["pages"]],
                 "svg_pages": [f"{media}/{name}" for name in job.result.get("svg_pages", [])],
