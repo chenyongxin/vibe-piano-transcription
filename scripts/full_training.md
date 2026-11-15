@@ -7,7 +7,7 @@
 docker start piano
 
 # 从头开始训练（后台运行）
-docker exec -d -w /Docker/git/piano2 piano `
+docker exec -d -w $REPO_ROOT piano `
   bash -c "nohup bash scripts/full_train.sh >/tmp/train.log 2>&1 &"
 ```
 
@@ -15,10 +15,10 @@ docker exec -d -w /Docker/git/piano2 piano `
 
 ```powershell
 # 进度文件（步数、最佳 F1、更新时间）
-docker exec piano cat /Docker/git/piano2/outputs/M1/m3_full_4060/progress.json
+docker exec piano cat $REPO_ROOT/outputs/M1/m3_full_4060/progress.json
 
 # 训练日志末尾
-docker exec piano tail -20 /Docker/git/piano2/outputs/M1/m3_full_4060_train.log
+docker exec piano tail -20 $REPO_ROOT/outputs/M1/m3_full_4060_train.log
 ```
 
 每 200 步保存一次检查点：
@@ -28,7 +28,7 @@ docker exec piano tail -20 /Docker/git/piano2/outputs/M1/m3_full_4060_train.log
 
 ```powershell
 docker start piano
-docker exec -d -w /Docker/git/piano2 piano `
+docker exec -d -w $REPO_ROOT piano `
   bash -c "nohup bash -c 'RESUME=1 bash scripts/full_train.sh' >/tmp/train_resume.log 2>&1 &"
 ```
 

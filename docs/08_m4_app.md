@@ -166,8 +166,8 @@ M4 把推理管线封装好之后，M3.5（时值修复）只需要替换「解�
 
 ```bash
 # 需要先装依赖：fastapi uvicorn python-multipart（已在 requirements.txt）
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-# 浏览器打开 http://127.0.0.1:8000
+python -m uvicorn app.main:app --host localhost --port 8000
+# 浏览器打开 http://localhost:8000
 ```
 
 模型默认从 `models/best.pt` 读取（可用 `PIANO2_CKPT` 覆盖）；设备自动检测（CUDA → MPS → CPU）。
@@ -422,3 +422,5 @@ timing.duration = 20.0，与 preview.wav 一致
 ```
 
 详细使用步骤见 `../tutorial/07_running_app.md`。
+
+更多版本变化见 [App changelog](09_app_changelog.md)，模型/记谱/音画限制见 [10_limitations.md](10_limitations.md)。

@@ -1,7 +1,7 @@
 # 钢琴转录项目：诊断报告与改进路线
 
 审阅日期：2026-10-31
-审阅对象：`E:\Docker\git\piano_practice`（对照其重构版 `E:\Docker\git\piano_transcriber`）
+审阅对象：`$REPO_ROOT`（对照其重构版 `$REPO_ROOT`）
 结论性质：讨论稿。按约定，本文不含实现代码，只给诊断、实验设计、路线与取舍。
 
 ## 摘要
@@ -25,7 +25,7 @@
 | max-seconds 用了 60 | 强推断 | 三首前 60 s GT 795/539/762，均值 698.67 吻合 n_ref=698 |
 | 模型真实 onset-only F1 | **未验证** | 区间 [0.044, 0.308]，需实验 E1 测 |
 
-详细审计报告在 `E:\Docker\piano2_data\scratch\dsh_scratch\piano_review\`（六份，含可复现脚本）。这些脚本只读，未改动仓库任何文件。
+详细审计报告在 `$DATA_ROOT\scratch\dsh_scratch\piano_review\`（六份，含可复现脚本）。这些脚本只读，未改动仓库任何文件。
 
 ---
 
@@ -45,11 +45,11 @@
 
 | 资产 | 规模 | 说明 |
 |---|---|---|
-| `E:\Docker\piano2_data\processed\maestro_processed` | 1276 个 npz，17.34 GiB | train 962 / val 137 / test 177，文件级无泄漏 |
+| `$DATA_ROOT\processed\maestro_processed` | 1276 个 npz，17.34 GiB | train 962 / val 137 / test 177，文件级无泄漏 |
 | 训练集总时长 | 159.67 h | 平均每首 18672 帧（约 10 分钟） |
 | 检查点 | 41 个 × 74.98 MiB = 3.00 GiB | 磁盘上有 3 份副本，合计约 9 GiB |
-| 原始数据 | `E:\Docker\piano2_data\raw\maestro-v3.0.0` | 还在，可以重新预处理 |
-| 官方参考实现 | `E:\Docker\git\piano_transcription` | 可作对照与预训练权重来源 |
+| 原始数据 | `$DATA_ROOT\raw\maestro-v3.0.0` | 还在，可以重新预处理 |
+| 官方参考实现 | `$SOTA_REPO_ROOT` | 可作对照与预训练权重来源 |
 
 ### 3.3 当前数据流
 
@@ -433,12 +433,12 @@ FastAPI (Docker)
 
 | 文件 | 内容 |
 |---|---|
-| `E:\Docker\piano2_data\scratch\dsh_scratch\piano_review\01_data_labels.md` | 数据与标签：npz 统计、踏板复现、CQT 口径、采样效率 |
-| `E:\Docker\piano2_data\scratch\dsh_scratch\piano_review\02_training.md` | 训练日志 200 epoch 全曲线、检查点、架构审计 |
-| `E:\Docker\piano2_data\scratch\dsh_scratch\piano_review\03_output_artifacts.md` | 14 个 MusicXML/MIDI 的黑音符拆解、GT 直通实验 |
-| `E:\Docker\piano2_data\scratch\dsh_scratch\piano_review\04_prototype_history.md` | Level 1–5 演进、历代后处理算法、可捡回的设计 |
-| `E:\Docker\piano2_data\scratch\dsh_scratch\piano_review\05_research.md` | 指标口径、开源基线、渲染方案、许可 |
-| `E:\Docker\piano2_data\scratch\dsh_scratch\piano_review\06_current_state.md` | 重构版代码、eval.py 审计、参数搜索复核 |
+| `$DATA_ROOT\scratch\dsh_scratch\piano_review\01_data_labels.md` | 数据与标签：npz 统计、踏板复现、CQT 口径、采样效率 |
+| `$DATA_ROOT\scratch\dsh_scratch\piano_review\02_training.md` | 训练日志 200 epoch 全曲线、检查点、架构审计 |
+| `$DATA_ROOT\scratch\dsh_scratch\piano_review\03_output_artifacts.md` | 14 个 MusicXML/MIDI 的黑音符拆解、GT 直通实验 |
+| `$DATA_ROOT\scratch\dsh_scratch\piano_review\04_prototype_history.md` | Level 1–5 演进、历代后处理算法、可捡回的设计 |
+| `$DATA_ROOT\scratch\dsh_scratch\piano_review\05_research.md` | 指标口径、开源基线、渲染方案、许可 |
+| `$DATA_ROOT\scratch\dsh_scratch\piano_review\06_current_state.md` | 重构版代码、eval.py 审计、参数搜索复核 |
 
 ### B. 指标口径速查
 
@@ -467,7 +467,7 @@ FastAPI (Docker)
 - MAESTRO v3.0.0：https://magenta.tensorflow.org/datasets/maestro （CC BY-NC-SA 4.0）
 - Onsets and Frames：https://arxiv.org/abs/1710.11153 （MAESTRO test onset F1 95.32）
 - High-resolution piano transcription with pedals：https://arxiv.org/abs/2010.01815 （onset F1 96.72，pedal onset 91.86）
-- 官方参考实现（本地已克隆）：`E:\Docker\git\piano_transcription`
+- 官方参考实现（本地已克隆）：`$SOTA_REPO_ROOT`
 - piano-transcription-inference（预训练基线）：https://pypi.org/project/piano-transcription-inference/
 - MuseScore CLI 文档：https://man.archlinux.org/man/extra/musescore/mscore.1.en.txt
 - OSMD：https://github.com/opensheetmusicdisplay/opensheetmusicdisplay
@@ -495,7 +495,7 @@ FastAPI (Docker)
 
 ---
 
-本报告未修改任何代码。所有审计脚本与中间产物在 `E:\Docker\piano2_data\scratch\dsh_scratch\piano_review\`，可自行复跑核对。
+本报告未修改任何代码。所有审计脚本与中间产物在 `$DATA_ROOT\scratch\dsh_scratch\piano_review\`，可自行复跑核对。
 
 ## 结论（存档，2026-10-31）
 

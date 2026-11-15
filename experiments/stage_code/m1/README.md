@@ -16,7 +16,7 @@
 
 ## 数据位置
 
-- 数据 v2：`/Docker/piano2_data/processed/maestro_processed_v2`（约 33 GB，主机 `E:\Docker\piano2_data\processed\maestro_processed_v2`）
+- 数据 v2：`$DATA_ROOT/processed/maestro_processed_v2`（约 33 GB，主机 `$DATA_ROOT\processed\maestro_processed_v2`）
 - manifest：`outputs/M1/data_manifest.json`
 - 训练产物：`outputs/M1/pilot_onset{1,2,3}/`
 
@@ -28,19 +28,19 @@
 
 ```powershell
 # 构建数据 v2（约 2 分钟）
-docker exec -w /Docker/git/piano_practice/m1 `
-  -e PYTHONPATH=/Docker/git/piano_practice/m1 piano python build_data_v2.py --workers 8
+docker exec -w $REPO_ROOT/m1 `
+  -e PYTHONPATH=$REPO_ROOT/m1 piano python build_data_v2.py --workers 8
 
 # 标签自检
-docker exec -w /Docker/git/piano_practice/m1 piano python check_labels.py
+docker exec -w $REPO_ROOT/m1 piano python check_labels.py
 
 # pilot（1000 步，约 90 秒）
-docker exec -w /Docker/git/piano_practice/m1 `
-  -e PYTHONPATH=/Docker/git/piano_practice/m0:/Docker/git/piano_practice/m1 `
+docker exec -w $REPO_ROOT/m1 `
+  -e PYTHONPATH=$REPO_ROOT/m0:$REPO_ROOT/m1 `
   piano python train_v2.py --max-steps 1000 --batch 16 --val-every 250 --val-segments 120
 
 # 断点续训
-docker exec -w /Docker/git/piano_practice/m1 `
-  -e PYTHONPATH=/Docker/git/piano_practice/m0:/Docker/git/piano_practice/m1 `
+docker exec -w $REPO_ROOT/m1 `
+  -e PYTHONPATH=$REPO_ROOT/m0:$REPO_ROOT/m1 `
   piano python train_v2.py --resume outputs/M1/pilot_onset2/checkpoints/best.pt
 ```

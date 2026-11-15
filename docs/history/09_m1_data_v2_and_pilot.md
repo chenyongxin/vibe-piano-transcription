@@ -78,20 +78,20 @@
 
 ```powershell
 # 1. 构建数据 v2（约 2 分钟）
-docker exec -w /Docker/git/piano_practice/m1 `
-  -e PYTHONPATH=/Docker/git/piano_practice/m1 piano python build_data_v2.py --workers 8
+docker exec -w $REPO_ROOT/m1 `
+  -e PYTHONPATH=$REPO_ROOT/m1 piano python build_data_v2.py --workers 8
 
 # 2. 标签宽度自检
-docker exec -w /Docker/git/piano_practice/m1 piano python check_labels.py
+docker exec -w $REPO_ROOT/m1 piano python check_labels.py
 
 # 3. 小规模试跑（约 90 秒）
-docker exec -w /Docker/git/piano_practice/m1 `
-  -e PYTHONPATH=/Docker/git/piano_practice/m0:/Docker/git/piano_practice/m1 `
+docker exec -w $REPO_ROOT/m1 `
+  -e PYTHONPATH=$REPO_ROOT/m0:$REPO_ROOT/m1 `
   piano python train_v2.py --max-steps 1000 --batch 16 --val-every 250 --val-segments 120
 
 # 4. 旧模型基线
-docker exec -w /Docker/git/piano_practice/m1 `
-  -e PYTHONPATH=/Docker/git/piano_practice/m0:/Docker/git/piano_practice/m1 `
+docker exec -w $REPO_ROOT/m1 `
+  -e PYTHONPATH=$REPO_ROOT/m0:$REPO_ROOT/m1 `
   piano python eval_old_model.py
 ```
 

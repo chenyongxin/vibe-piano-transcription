@@ -87,6 +87,6 @@
 
 ## 7. 相关链接
 
-- 校核包：`E:\Docker\piano2_data\validation\piano_validation\`（含三首曲目全部产物）
+- 校核包：`$DATA_ROOT\validation\piano_validation\`（含三首曲目全部产物）
 - 后处理代码：`src/piano2/postprocess.py`
 - 卷帘生成：`scripts/make_comparison_assets.py`

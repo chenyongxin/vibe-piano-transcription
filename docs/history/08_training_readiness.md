@@ -93,8 +93,8 @@ G7 实测（4060，合成数据，沿用现有 3 头模型作代理）：
 ## 5. 复现方式
 
 ```powershell
-docker exec -w /Docker/git/piano_practice/m0 `
-  -e PYTHONPATH=/Docker/git/piano_practice/m0:/Docker/git/piano_practice `
+docker exec -w $REPO_ROOT/m0 `
+  -e PYTHONPATH=$REPO_ROOT/m0:$REPO_ROOT `
   piano python preflight.py
 ```
 

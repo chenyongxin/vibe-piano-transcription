@@ -9,7 +9,7 @@
 | G3 训练/推理特征一致性 | PASS | MIDI-Unprocessed_09_R3_2008_ 帧数 2099/2099，相关 1.000000；MIDI-Unprocessed_10_R2_2008_ 帧数 3036/3036，相关 1.000000 |
 | G4 评测链路 oracle 自检 | PASS | GT 当预测 F1=1.000；+32ms=1.000；+64ms=0.082；打乱音高=0.193 |
 | G5 解码器达到天花板 | PASS | haydn: F1=0.952（天花板 0.950）；mozart: F1=0.943（天花板 0.949）；beethoven: F1=0.798（天花板 0.797）；holdout2: F1=0.821（天花板 0.825） |
-| G6 基线指标登记 | PASS | 写入 /Docker/git/piano_practice/outputs/M0/registry/EXP-000_baseline.json；模型 sha256=4f43ca733f6e…；曲目 ['haydn', 'mozart', 'beethoven', 'holdout2'] |
+| G6 基线指标登记 | PASS | 写入 $REPO_ROOT/outputs/M0/registry/EXP-000_baseline.json；模型 sha256=4f43ca733f6e…；曲目 ['haydn', 'mozart', 'beethoven', 'holdout2'] |
 | G7 资源与预算 | PASS | 可行配置 batch=16、seq=313 帧，每步 0.082s、峰值显存 1.63 GB；按 159.24 小时音频、10 秒片段、20 轮估算 71,658 步 ≈ 4060 上 1.6 小时 / 4090 上约 0.7 小时（4090 按 2.5 倍加速估算，未实测） |
 | G8 可复现性 | PASS | 重复解码一致=True；DataLoader 顺序固定种子可复现=True；注意：多进程 worker 内的 numpy 随机性仍需在训练脚本里显式设种子（当前未验证） |
 
@@ -91,7 +91,7 @@
     }
   },
   "G6": {
-    "registry_path": "/Docker/git/piano_practice/outputs/M0/registry/EXP-000_baseline.json",
+    "registry_path": "$REPO_ROOT/outputs/M0/registry/EXP-000_baseline.json",
     "tracks": [
       "haydn",
       "mozart",

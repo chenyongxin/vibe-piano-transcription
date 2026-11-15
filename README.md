@@ -54,6 +54,9 @@ apples-to-apples with key-off ground truth.
 
 ## Quick start
 
+For prerequisites, system packages, local install, Docker CPU/GPU, model-weight
+placement, and troubleshooting, see **[INSTALL.md](INSTALL.md)**.
+
 ### Local Python
 
 ```bash
@@ -65,7 +68,7 @@ python -m pip install -e .
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open <http://127.0.0.1:8000>.
+Open <http://localhost:8000>.
 
 Realistic piano playback needs `fluidsynth` and a SoundFont such as `FluidR3_GM.sf2`;
 without them the app falls back to a lightweight synthesizer.
@@ -111,7 +114,7 @@ For a true zero-mount deployment, attach `best.pt` to a GitHub Release and build
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.0/best.pt \
+  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.4/best.pt \
   -t ghcr.io/<owner>/<repo>/piano-transcription:gpu .
 ```
 
@@ -120,7 +123,7 @@ builds both CPU and GPU images and pushes them to GHCR on `main`/tags. A server 
 
 ```bash
 docker run -d --gpus all -p 8000:8000 \
-  -v /srv/piano2/models:/workspace/models \
+  -v "$PWD/models:/workspace/models" \
   ghcr.io/<owner>/<repo>/piano-transcription:gpu
 ```
 
@@ -133,7 +136,7 @@ The current app uses `hybrid_reg2` (data v4 + offset-loss 2.0 + reg-loss 0.5).
 #    data/raw/maestro-v3.0.0/maestro-v3.0.0.csv, *.midi, *.wav
 export PIANO2_MAESTRO_ROOT="$PWD/data/raw/maestro-v3.0.0"
 
-# 2. Build CQT + labels (the scripts default to /Docker/piano2_data;
+# 2. Build CQT + labels (the scripts default to a container data path;
 #    override the roots when running elsewhere).
 export PIANO2_DATA_ROOT="$PWD/data/processed/maestro_processed_v2"
 export PIANO2_V2_ROOT="$PWD/data/processed/maestro_processed_v2"
@@ -178,6 +181,9 @@ for the app. Full experiment details and ablations are in
 
 ## Documentation
 
+- [Installation guide](INSTALL.md)
+- [App changelog](docs/09_app_changelog.md)
+- [Model and transcription limitations](docs/10_limitations.md)
 - [Tutorial index](tutorial/README.md)
 - [Project overview](docs/01_overview.md)
 - [Data and labels](docs/02_data.md)
@@ -187,6 +193,9 @@ for the app. Full experiment details and ablations are in
 - [Experiment reports](training/README.md)
 
 ## Limitations
+
+See [docs/10_limitations.md](docs/10_limitations.md) for the detailed model, notation,
+and audio-visual alignment limitations.
 
 - Designed for **solo piano**; mixes and ensemble recordings are out of scope.
 - The score is a readable rhythmic representation, not a millisecond-accurate
@@ -200,3 +209,6 @@ for the app. Full experiment details and ablations are in
 Training data comes from MAESTRO v3.0.0, which is distributed under
 CC BY-NC-SA 4.0. This project is intended for research and non-commercial use.
 Third-party model names and results are referenced for comparison only.
+
+> Documentation uses `$REPO_ROOT`, `$DATA_ROOT`, and `$PROJECT_HOME` placeholders
+> instead of machine-specific paths; see [INSTALL.md](INSTALL.md) for the convention.

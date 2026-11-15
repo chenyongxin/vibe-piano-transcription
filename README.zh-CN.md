@@ -51,6 +51,9 @@ key-off 口径不能直接对比。
 
 ## 快速开始
 
+前置条件、系统依赖、本地安装、CPU/GPU Docker、模型权重放置和排错见
+**[INSTALL.zh-CN.md](INSTALL.zh-CN.md)**。
+
 ### 本地 Python
 
 ```bash
@@ -62,7 +65,7 @@ python -m pip install -e .
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-浏览器打开 <http://127.0.0.1:8000>。
+浏览器打开 <http://localhost:8000>。
 
 真实钢琴回放需要 `fluidsynth` 和 SoundFont（如 `FluidR3_GM.sf2`）；
 缺少时自动回退到轻量合成器。
@@ -107,7 +110,7 @@ docker compose --profile cpu up --build
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.0/best.pt \
+  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.4/best.pt \
   -t ghcr.io/<owner>/<repo>/piano-transcription:gpu .
 ```
 
@@ -116,7 +119,7 @@ GitHub Actions 工作流 [`.github/workflows/docker.yml`](.github/workflows/dock
 
 ```bash
 docker run -d --gpus all -p 8000:8000 \
-  -v /srv/piano2/models:/workspace/models \
+  -v "$PWD/models:/workspace/models" \
   ghcr.io/<owner>/<repo>/piano-transcription:gpu
 ```
 
@@ -129,7 +132,7 @@ docker run -d --gpus all -p 8000:8000 \
 #    data/raw/maestro-v3.0.0/maestro-v3.0.0.csv, *.midi, *.wav
 export PIANO2_MAESTRO_ROOT="$PWD/data/raw/maestro-v3.0.0"
 
-# 2. 构建 CQT + 标签（脚本默认路径是 /Docker/piano2_data；
+# 2. 构建 CQT + 标签（脚本默认使用容器内的数据路径；
 #    换机器时用环境变量覆盖）
 export PIANO2_DATA_ROOT="$PWD/data/processed/maestro_processed_v2"
 export PIANO2_V2_ROOT="$PWD/data/processed/maestro_processed_v2"
@@ -173,6 +176,9 @@ python scripts/evaluate_hybrid_test.py \
 
 ## 文档
 
+- [安装指南](INSTALL.zh-CN.md)
+- [App changelog](docs/09_app_changelog.md)
+- [模型与转录局限](docs/10_limitations.md)
 - [教程目录](tutorial/README.md)
 - [项目总览](docs/01_overview.md)
 - [数据与标签](docs/02_data.md)
@@ -182,6 +188,8 @@ python scripts/evaluate_hybrid_test.py \
 - [实验报告](training/README.md)
 
 ## 局限
+
+详细的模型、记谱与音画对齐限制见 [docs/10_limitations.md](docs/10_limitations.md)。
 
 - 只面向**独奏钢琴**；混音、合奏不在范围内。
 - 乐谱是可读的节奏表示，不是毫秒级演奏记录。亚帧时间保留在原始事件和回放中，
@@ -193,3 +201,6 @@ python scripts/evaluate_hybrid_test.py \
 
 训练数据来自 MAESTRO v3.0.0，采用 CC BY-NC-SA 4.0 许可。
 本项目仅用于研究与非商业用途；第三方模型名称和结果仅用于对比。
+
+> 文档使用 `$REPO_ROOT`、`$DATA_ROOT`、`$PROJECT_HOME` 占位符，
+> 不使用某台机器的绝对路径；约定见 [INSTALL.zh-CN.md](INSTALL.zh-CN.md)。

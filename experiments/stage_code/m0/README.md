@@ -25,8 +25,8 @@ apt-get install -y fonts-noto-cjk fonts-wqy-zenhei   # 画中文图用；没有�
 ## 一键重跑
 
 ```bash
-docker exec -w /Docker/git/piano_practice/m0 \
-  -e PYTHONPATH=/Docker/git/piano_practice/m0:/Docker/git/piano_practice \
+docker exec -w $REPO_ROOT/m0 \
+  -e PYTHONPATH=$REPO_ROOT/m0:$REPO_ROOT \
   piano python run_m0.py
 ```
 
