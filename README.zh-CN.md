@@ -179,6 +179,7 @@ python scripts/evaluate_hybrid_test.py \
 - [安装指南](INSTALL.zh-CN.md)
 - [App changelog](docs/09_app_changelog.md)
 - [模型与转录局限](docs/10_limitations.md)
+- [难段落失败归因报告](experiments/hard_passages/report.md)
 - [教程目录](tutorial/README.md)
 - [项目总览](docs/01_overview.md)
 - [数据与标签](docs/02_data.md)

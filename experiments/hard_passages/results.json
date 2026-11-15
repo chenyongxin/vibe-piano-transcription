@@ -1,0 +1,501 @@
+{
+  "version": "hard_passages_v1",
+  "model": "models/best.pt",
+  "manifest": "manifest.json",
+  "results": [
+    {
+      "id": "fast_repeats",
+      "category": "fast_repeats",
+      "reason": "同音快速重复",
+      "split": "test",
+      "track": "2011/MIDI-Unprocessed_02_R1_2011_MID--AUDIO_R1-D1_10_Track10_wav.midi",
+      "start": 88.0,
+      "duration": 8.0,
+      "features": {
+        "notes": 98,
+        "notes_per_second": 12.25,
+        "median_ioi_ms": 109.4,
+        "fast_repeats": 23,
+        "arpeggio_pairs": 0,
+        "grace_notes": 92,
+        "triplet_pairs": 31,
+        "pedal_fraction": 0.05
+      },
+      "gt_notes": 98,
+      "est_notes": 68,
+      "cleaned_notes": 68,
+      "score_notes": 74,
+      "short_gt": 92,
+      "short_hit": 59,
+      "short_recall": 0.641,
+      "onset_error_ms": {
+        "median": 2.1,
+        "p90": 16.7,
+        "n": 63
+      },
+      "offset_error_ms": {
+        "median": 119.1,
+        "p90": 533.5,
+        "n": 63
+      },
+      "quant_error_ms": {
+        "median": 26.3,
+        "p90": 42.9
+      },
+      "counts": {
+        "onset50": {
+          "tp": 63,
+          "n_ref": 98,
+          "n_est": 68,
+          "precision": 0.9265,
+          "recall": 0.6429,
+          "f1": 0.759
+        },
+        "onset20": {
+          "tp": 59,
+          "n_ref": 98,
+          "n_est": 68,
+          "precision": 0.8676,
+          "recall": 0.602,
+          "f1": 0.7108
+        },
+        "onset10": {
+          "tp": 45,
+          "n_ref": 98,
+          "n_est": 68,
+          "precision": 0.6618,
+          "recall": 0.4592,
+          "f1": 0.5422
+        },
+        "note": {
+          "tp": 16,
+          "n_ref": 98,
+          "n_est": 68,
+          "precision": 0.2353,
+          "recall": 0.1633,
+          "f1": 0.1928
+        }
+      }
+    },
+    {
+      "id": "fast_runs",
+      "category": "fast_runs",
+      "reason": "快速跑动",
+      "split": "validation",
+      "track": "2017/MIDI-Unprocessed_049_PIANO049_MID--AUDIO-split_07-06-17_Piano-e_2-06_wav--4.midi",
+      "start": 92.0,
+      "duration": 8.0,
+      "features": {
+        "notes": 316,
+        "notes_per_second": 39.5,
+        "median_ioi_ms": 8.3,
+        "fast_repeats": 1,
+        "arpeggio_pairs": 3,
+        "grace_notes": 227,
+        "triplet_pairs": 6,
+        "pedal_fraction": 0.47
+      },
+      "gt_notes": 316,
+      "est_notes": 249,
+      "cleaned_notes": 249,
+      "score_notes": 254,
+      "short_gt": 227,
+      "short_hit": 151,
+      "short_recall": 0.665,
+      "onset_error_ms": {
+        "median": -0.9,
+        "p90": 26.0,
+        "n": 196
+      },
+      "offset_error_ms": {
+        "median": 222.3,
+        "p90": 1062.4,
+        "n": 196
+      },
+      "quant_error_ms": {
+        "median": 35.0,
+        "p90": 62.4
+      },
+      "counts": {
+        "onset50": {
+          "tp": 196,
+          "n_ref": 316,
+          "n_est": 249,
+          "precision": 0.7871,
+          "recall": 0.6203,
+          "f1": 0.6938
+        },
+        "onset20": {
+          "tp": 170,
+          "n_ref": 316,
+          "n_est": 249,
+          "precision": 0.6827,
+          "recall": 0.538,
+          "f1": 0.6018
+        },
+        "onset10": {
+          "tp": 117,
+          "n_ref": 316,
+          "n_est": 249,
+          "precision": 0.4699,
+          "recall": 0.3703,
+          "f1": 0.4142
+        },
+        "note": {
+          "tp": 49,
+          "n_ref": 316,
+          "n_est": 249,
+          "precision": 0.1968,
+          "recall": 0.1551,
+          "f1": 0.1735
+        }
+      }
+    },
+    {
+      "id": "arpeggios",
+      "category": "arpeggios",
+      "reason": "快速琶音",
+      "split": "validation",
+      "track": "2013/ORIG-MIDI_01_7_8_13_Group__MID--AUDIO_02_R2_2013_wav--5.midi",
+      "start": 0.0,
+      "duration": 8.0,
+      "features": {
+        "notes": 102,
+        "notes_per_second": 12.75,
+        "median_ioi_ms": 72.9,
+        "fast_repeats": 0,
+        "arpeggio_pairs": 83,
+        "grace_notes": 87,
+        "triplet_pairs": 28,
+        "pedal_fraction": 0.83
+      },
+      "gt_notes": 102,
+      "est_notes": 97,
+      "cleaned_notes": 97,
+      "score_notes": 105,
+      "short_gt": 87,
+      "short_hit": 63,
+      "short_recall": 0.724,
+      "onset_error_ms": {
+        "median": 3.7,
+        "p90": 26.4,
+        "n": 76
+      },
+      "offset_error_ms": {
+        "median": 93.6,
+        "p90": 263.4,
+        "n": 76
+      },
+      "quant_error_ms": {
+        "median": 25.1,
+        "p90": 49.9
+      },
+      "counts": {
+        "onset50": {
+          "tp": 76,
+          "n_ref": 102,
+          "n_est": 97,
+          "precision": 0.7835,
+          "recall": 0.7451,
+          "f1": 0.7638
+        },
+        "onset20": {
+          "tp": 64,
+          "n_ref": 102,
+          "n_est": 97,
+          "precision": 0.6598,
+          "recall": 0.6275,
+          "f1": 0.6432
+        },
+        "onset10": {
+          "tp": 44,
+          "n_ref": 102,
+          "n_est": 97,
+          "precision": 0.4536,
+          "recall": 0.4314,
+          "f1": 0.4422
+        },
+        "note": {
+          "tp": 25,
+          "n_ref": 102,
+          "n_est": 97,
+          "precision": 0.2577,
+          "recall": 0.2451,
+          "f1": 0.2513
+        }
+      }
+    },
+    {
+      "id": "grace_notes",
+      "category": "grace_notes",
+      "reason": "短倚音/装饰音",
+      "split": "validation",
+      "track": "2006/MIDI-Unprocessed_19_R1_2006_01-07_ORIG_MID--AUDIO_19_R1_2006_07_Track07_wav.midi",
+      "start": 347.0,
+      "duration": 8.0,
+      "features": {
+        "notes": 263,
+        "notes_per_second": 32.88,
+        "median_ioi_ms": 9.1,
+        "fast_repeats": 0,
+        "arpeggio_pairs": 0,
+        "grace_notes": 259,
+        "triplet_pairs": 10,
+        "pedal_fraction": 0.91
+      },
+      "gt_notes": 263,
+      "est_notes": 255,
+      "cleaned_notes": 255,
+      "score_notes": 268,
+      "short_gt": 259,
+      "short_hit": 225,
+      "short_recall": 0.869,
+      "onset_error_ms": {
+        "median": 2.2,
+        "p90": 21.4,
+        "n": 229
+      },
+      "offset_error_ms": {
+        "median": 186.8,
+        "p90": 1005.2,
+        "n": 229
+      },
+      "quant_error_ms": {
+        "median": 31.4,
+        "p90": 49.3
+      },
+      "counts": {
+        "onset50": {
+          "tp": 229,
+          "n_ref": 263,
+          "n_est": 255,
+          "precision": 0.898,
+          "recall": 0.8707,
+          "f1": 0.8842
+        },
+        "onset20": {
+          "tp": 201,
+          "n_ref": 263,
+          "n_est": 255,
+          "precision": 0.7882,
+          "recall": 0.7643,
+          "f1": 0.7761
+        },
+        "onset10": {
+          "tp": 148,
+          "n_ref": 263,
+          "n_est": 255,
+          "precision": 0.5804,
+          "recall": 0.5627,
+          "f1": 0.5714
+        },
+        "note": {
+          "tp": 20,
+          "n_ref": 263,
+          "n_est": 255,
+          "precision": 0.0784,
+          "recall": 0.076,
+          "f1": 0.0772
+        }
+      }
+    },
+    {
+      "id": "triplets",
+      "category": "triplets",
+      "reason": "近似三连音",
+      "split": "validation",
+      "track": "2004/MIDI-Unprocessed_XP_10_R1_2004_01-02_ORIG_MID--AUDIO_10_R1_2004_02_Track02_wav.midi",
+      "start": 261.0,
+      "duration": 8.0,
+      "features": {
+        "notes": 110,
+        "notes_per_second": 13.75,
+        "median_ioi_ms": 75.0,
+        "fast_repeats": 0,
+        "arpeggio_pairs": 54,
+        "grace_notes": 94,
+        "triplet_pairs": 63,
+        "pedal_fraction": 0.0
+      },
+      "gt_notes": 110,
+      "est_notes": 106,
+      "cleaned_notes": 106,
+      "score_notes": 119,
+      "short_gt": 94,
+      "short_hit": 87,
+      "short_recall": 0.926,
+      "onset_error_ms": {
+        "median": -2.7,
+        "p90": 18.1,
+        "n": 102
+      },
+      "offset_error_ms": {
+        "median": 50.1,
+        "p90": 1181.1,
+        "n": 102
+      },
+      "quant_error_ms": {
+        "median": 27.4,
+        "p90": 49.8
+      },
+      "counts": {
+        "onset50": {
+          "tp": 102,
+          "n_ref": 110,
+          "n_est": 106,
+          "precision": 0.9623,
+          "recall": 0.9273,
+          "f1": 0.9444
+        },
+        "onset20": {
+          "tp": 96,
+          "n_ref": 110,
+          "n_est": 106,
+          "precision": 0.9057,
+          "recall": 0.8727,
+          "f1": 0.8889
+        },
+        "onset10": {
+          "tp": 73,
+          "n_ref": 110,
+          "n_est": 106,
+          "precision": 0.6887,
+          "recall": 0.6636,
+          "f1": 0.6759
+        },
+        "note": {
+          "tp": 52,
+          "n_ref": 110,
+          "n_est": 106,
+          "precision": 0.4906,
+          "recall": 0.4727,
+          "f1": 0.4815
+        }
+      }
+    },
+    {
+      "id": "pedal_dense",
+      "category": "pedal_dense",
+      "reason": "踏板密集",
+      "split": "validation",
+      "track": "2008/MIDI-Unprocessed_07_R1_2008_01-04_ORIG_MID--AUDIO_07_R1_2008_wav--3.midi",
+      "start": 99.0,
+      "duration": 8.0,
+      "features": {
+        "notes": 221,
+        "notes_per_second": 27.62,
+        "median_ioi_ms": 15.6,
+        "fast_repeats": 0,
+        "arpeggio_pairs": 8,
+        "grace_notes": 66,
+        "triplet_pairs": 6,
+        "pedal_fraction": 0.96
+      },
+      "gt_notes": 221,
+      "est_notes": 195,
+      "cleaned_notes": 195,
+      "score_notes": 209,
+      "short_gt": 71,
+      "short_hit": 34,
+      "short_recall": 0.479,
+      "onset_error_ms": {
+        "median": -0.4,
+        "p90": 23.9,
+        "n": 144
+      },
+      "offset_error_ms": {
+        "median": 76.9,
+        "p90": 517.0,
+        "n": 144
+      },
+      "quant_error_ms": {
+        "median": 24.8,
+        "p90": 40.2
+      },
+      "counts": {
+        "onset50": {
+          "tp": 144,
+          "n_ref": 221,
+          "n_est": 195,
+          "precision": 0.7385,
+          "recall": 0.6516,
+          "f1": 0.6923
+        },
+        "onset20": {
+          "tp": 127,
+          "n_ref": 221,
+          "n_est": 195,
+          "precision": 0.6513,
+          "recall": 0.5747,
+          "f1": 0.6106
+        },
+        "onset10": {
+          "tp": 88,
+          "n_ref": 221,
+          "n_est": 195,
+          "precision": 0.4513,
+          "recall": 0.3982,
+          "f1": 0.4231
+        },
+        "note": {
+          "tp": 53,
+          "n_ref": 221,
+          "n_est": 195,
+          "precision": 0.2718,
+          "recall": 0.2398,
+          "f1": 0.2548
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "fast_repeats": {
+      "n_clips": 1,
+      "gt_notes": 98,
+      "est_notes": 68,
+      "score_notes": 74,
+      "short_gt": 92,
+      "short_hit": 59
+    },
+    "fast_runs": {
+      "n_clips": 1,
+      "gt_notes": 316,
+      "est_notes": 249,
+      "score_notes": 254,
+      "short_gt": 227,
+      "short_hit": 151
+    },
+    "arpeggios": {
+      "n_clips": 1,
+      "gt_notes": 102,
+      "est_notes": 97,
+      "score_notes": 105,
+      "short_gt": 87,
+      "short_hit": 63
+    },
+    "grace_notes": {
+      "n_clips": 1,
+      "gt_notes": 263,
+      "est_notes": 255,
+      "score_notes": 268,
+      "short_gt": 259,
+      "short_hit": 225
+    },
+    "triplets": {
+      "n_clips": 1,
+      "gt_notes": 110,
+      "est_notes": 106,
+      "score_notes": 119,
+      "short_gt": 94,
+      "short_hit": 87
+    },
+    "pedal_dense": {
+      "n_clips": 1,
+      "gt_notes": 221,
+      "est_notes": 195,
+      "score_notes": 209,
+      "short_gt": 71,
+      "short_hit": 34
+    }
+  }
+}

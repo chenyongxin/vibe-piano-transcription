@@ -184,6 +184,7 @@ for the app. Full experiment details and ablations are in
 - [Installation guide](INSTALL.md)
 - [App changelog](docs/09_app_changelog.md)
 - [Model and transcription limitations](docs/10_limitations.md)
+- [Hard-passage failure report](experiments/hard_passages/report.md)
 - [Tutorial index](tutorial/README.md)
 - [Project overview](docs/01_overview.md)
 - [Data and labels](docs/02_data.md)
