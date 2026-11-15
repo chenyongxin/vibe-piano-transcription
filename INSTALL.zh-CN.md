@@ -127,7 +127,7 @@ docker compose --profile cpu up --build
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL="https://github.com/<owner>/<repo>/releases/download/v0.2.4/best.pt" \
+  --build-arg MODEL_URL="https://github.com/<owner>/<repo>/releases/download/v0.2.5/best.pt" \
   -t piano-transcription:gpu .
 ```
 
@@ -151,7 +151,7 @@ python -m pytest -q
 - 播放器可用；
 - MusicXML / PDF / MIDI 下载按钮产生文件。
 
-当前 app 版本为 0.2.4；见 [app changelog](docs/09_app_changelog.md) 和 [模型与转录局限](docs/10_limitations.md)。
+当前 app 版本为 0.2.5；见 [app changelog](docs/09_app_changelog.md) 和 [模型与转录局限](docs/10_limitations.md)。
 
 ## 7. 复现 checkpoint
 

@@ -38,6 +38,9 @@
 | `peak_distance` | 5 | 峰值最小间距（帧） |
 | `frame_off_threshold` | 0.18 | 释放阈值 |
 | `release_frames` | 3 | 连续释放帧数 |
+| `offset_threshold` | 0.7 | offset 峰阈值（启用 offset 头时） |
+| `offset_min_frames` | 2 | 起点后至少多少帧才允许结束 |
+| `offset_max_frames` | 20 | offset 搜索窗口；0.7 + 20 帧是当前 note F1 最好的组合 |
 
 ## 3. 为什么这样设计（M0/M0.5 的结论）
 

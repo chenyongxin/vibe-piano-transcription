@@ -95,7 +95,7 @@ python experiments/hard_passages/evaluate_hard_passages.py \
 
 ### 5.2 时值层：note F1 低的主因不是“没检到”
 
-- onset50 明显高于 note F1（例如 grace_notes 0.884 vs 0.077）；
+- onset50 明显高于 note F1（例如 grace_notes 0.884 vs 0.120，修复后；修复前 0.077）；
 - 说明大量音符起点检到了，但 **结束时间/offset 不匹配**；
 - offset 误差中位数约 30–148 ms，p90 仍可达数百毫秒；旧版 160 帧窗口时中位数 50–222 ms；
 - 这直接解释了为什么回放听起来“有音”，但谱面时值和量化后的节奏不对。
@@ -104,7 +104,7 @@ python experiments/hard_passages/evaluate_hard_passages.py \
 
 已在 0.2.5 把 offset 搜索窗口从 160 帧缩到 20 帧、阈值提高到 0.7；
 holdout note F1 从 0.4046 提升到 0.4533，难段落聚合从 0.212 提升到 0.293。
-完整 test split 验证进行中。
+完整 MAESTRO test split：note F1 从 0.3314 提升到 0.3788；onset50/10 保持 0.8701 / 0.6264。
 
 ### 5.3 记谱层：不是“谱面把音吃掉了”
 

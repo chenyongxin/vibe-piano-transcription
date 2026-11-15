@@ -132,7 +132,7 @@ For a zero-mount build, attach the checkpoint to a GitHub Release and pass `MODE
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL="https://github.com/<owner>/<repo>/releases/download/v0.2.4/best.pt" \
+  --build-arg MODEL_URL="https://github.com/<owner>/<repo>/releases/download/v0.2.5/best.pt" \
   -t piano-transcription:gpu .
 ```
 
@@ -156,7 +156,7 @@ Expected result: all tests pass. Then upload a short solo-piano WAV/MP3 and chec
 - the audio player works;
 - MusicXML/PDF/MIDI download buttons produce files.
 
-The app is currently at version 0.2.4; see the
+The app is currently at version 0.2.5; see the
 [app changelog](docs/09_app_changelog.md) and
 [model/transcription limitations](docs/10_limitations.md).
 

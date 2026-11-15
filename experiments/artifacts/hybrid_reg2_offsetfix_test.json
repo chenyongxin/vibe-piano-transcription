@@ -1,0 +1,4840 @@
+{
+  "summary": {
+    "onset50": {
+      "precision": 0.8918026101719394,
+      "recall": 0.849494881374678,
+      "f1": 0.8701347773317666
+    },
+    "onset30": {
+      "precision": 0.8742037021566414,
+      "recall": 0.8327308776520413,
+      "f1": 0.8529634641594256
+    },
+    "onset20": {
+      "precision": 0.8321215116172049,
+      "recall": 0.792645095156526,
+      "f1": 0.811903730674674
+    },
+    "onset10": {
+      "precision": 0.6419813745244161,
+      "recall": 0.6115253368581487,
+      "f1": 0.6263833655580402
+    },
+    "note": {
+      "precision": 0.38818555244202724,
+      "recall": 0.36976976301911224,
+      "f1": 0.37875393656050127
+    },
+    "_counts": {
+      "onset50": {
+        "tp": 629824,
+        "n_ref": 741410,
+        "n_est": 706237
+      },
+      "onset30": {
+        "tp": 617395,
+        "n_ref": 741410,
+        "n_est": 706237
+      },
+      "onset20": {
+        "tp": 587675,
+        "n_ref": 741410,
+        "n_est": 706237
+      },
+      "onset10": {
+        "tp": 453391,
+        "n_ref": 741410,
+        "n_est": 706237
+      },
+      "note": {
+        "tp": 274151,
+        "n_ref": 741410,
+        "n_est": 706237
+      }
+    },
+    "_model": "models/best.pt",
+    "_hybrid": true,
+    "_n_tracks": 177
+  },
+  "per_track": {
+    "2009/MIDI-Unprocessed_11_R1_2009_06-09_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_07_WAV.midi": {
+      "onset50": {
+        "tp": 661,
+        "n_ref": 721,
+        "n_est": 700
+      },
+      "onset30": {
+        "tp": 653,
+        "n_ref": 721,
+        "n_est": 700
+      },
+      "onset20": {
+        "tp": 636,
+        "n_ref": 721,
+        "n_est": 700
+      },
+      "onset10": {
+        "tp": 512,
+        "n_ref": 721,
+        "n_est": 700
+      },
+      "note": {
+        "tp": 198,
+        "n_ref": 721,
+        "n_est": 700
+      }
+    },
+    "2009/MIDI-Unprocessed_02_R1_2009_03-06_ORIG_MID--AUDIO_02_R1_2009_02_R1_2009_04_WAV.midi": {
+      "onset50": {
+        "tp": 720,
+        "n_ref": 783,
+        "n_est": 754
+      },
+      "onset30": {
+        "tp": 713,
+        "n_ref": 783,
+        "n_est": 754
+      },
+      "onset20": {
+        "tp": 694,
+        "n_ref": 783,
+        "n_est": 754
+      },
+      "onset10": {
+        "tp": 535,
+        "n_ref": 783,
+        "n_est": 754
+      },
+      "note": {
+        "tp": 178,
+        "n_ref": 783,
+        "n_est": 754
+      }
+    },
+    "2006/MIDI-Unprocessed_01_R1_2006_01-09_ORIG_MID--AUDIO_01_R1_2006_04_Track04_wav.midi": {
+      "onset50": {
+        "tp": 2982,
+        "n_ref": 3648,
+        "n_est": 3474
+      },
+      "onset30": {
+        "tp": 2907,
+        "n_ref": 3648,
+        "n_est": 3474
+      },
+      "onset20": {
+        "tp": 2726,
+        "n_ref": 3648,
+        "n_est": 3474
+      },
+      "onset10": {
+        "tp": 1996,
+        "n_ref": 3648,
+        "n_est": 3474
+      },
+      "note": {
+        "tp": 1078,
+        "n_ref": 3648,
+        "n_est": 3474
+      }
+    },
+    "2006/MIDI-Unprocessed_24_R1_2006_01-05_ORIG_MID--AUDIO_24_R1_2006_03_Track03_wav.midi": {
+      "onset50": {
+        "tp": 3078,
+        "n_ref": 3878,
+        "n_est": 3871
+      },
+      "onset30": {
+        "tp": 2980,
+        "n_ref": 3878,
+        "n_est": 3871
+      },
+      "onset20": {
+        "tp": 2778,
+        "n_ref": 3878,
+        "n_est": 3871
+      },
+      "onset10": {
+        "tp": 2020,
+        "n_ref": 3878,
+        "n_est": 3871
+      },
+      "note": {
+        "tp": 934,
+        "n_ref": 3878,
+        "n_est": 3871
+      }
+    },
+    "2009/MIDI-Unprocessed_11_R1_2009_06-09_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_08_WAV.midi": {
+      "onset50": {
+        "tp": 3274,
+        "n_ref": 4060,
+        "n_est": 4103
+      },
+      "onset30": {
+        "tp": 3176,
+        "n_ref": 4060,
+        "n_est": 4103
+      },
+      "onset20": {
+        "tp": 2949,
+        "n_ref": 4060,
+        "n_est": 4103
+      },
+      "onset10": {
+        "tp": 2136,
+        "n_ref": 4060,
+        "n_est": 4103
+      },
+      "note": {
+        "tp": 929,
+        "n_ref": 4060,
+        "n_est": 4103
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital13-15_MID--AUDIO_15_R1_2018_wav--1.midi": {
+      "onset50": {
+        "tp": 3034,
+        "n_ref": 3633,
+        "n_est": 3442
+      },
+      "onset30": {
+        "tp": 2975,
+        "n_ref": 3633,
+        "n_est": 3442
+      },
+      "onset20": {
+        "tp": 2833,
+        "n_ref": 3633,
+        "n_est": 3442
+      },
+      "onset10": {
+        "tp": 2195,
+        "n_ref": 3633,
+        "n_est": 3442
+      },
+      "note": {
+        "tp": 1138,
+        "n_ref": 3633,
+        "n_est": 3442
+      }
+    },
+    "2014/MIDI-UNPROCESSED_09-10_R1_2014_MID--AUDIO_09_R1_2014_wav--4.midi": {
+      "onset50": {
+        "tp": 6315,
+        "n_ref": 7732,
+        "n_est": 7595
+      },
+      "onset30": {
+        "tp": 6149,
+        "n_ref": 7732,
+        "n_est": 7595
+      },
+      "onset20": {
+        "tp": 5769,
+        "n_ref": 7732,
+        "n_est": 7595
+      },
+      "onset10": {
+        "tp": 4293,
+        "n_ref": 7732,
+        "n_est": 7595
+      },
+      "note": {
+        "tp": 1957,
+        "n_ref": 7732,
+        "n_est": 7595
+      }
+    },
+    "2009/MIDI-Unprocessed_11_R1_2009_01-05_ORIG_MID--AUDIO_11_R1_2009_11_R1_2009_04_WAV.midi": {
+      "onset50": {
+        "tp": 2299,
+        "n_ref": 2884,
+        "n_est": 2734
+      },
+      "onset30": {
+        "tp": 2218,
+        "n_ref": 2884,
+        "n_est": 2734
+      },
+      "onset20": {
+        "tp": 2048,
+        "n_ref": 2884,
+        "n_est": 2734
+      },
+      "onset10": {
+        "tp": 1446,
+        "n_ref": 2884,
+        "n_est": 2734
+      },
+      "note": {
+        "tp": 800,
+        "n_ref": 2884,
+        "n_est": 2734
+      }
+    },
+    "2004/MIDI-Unprocessed_SMF_17_R1_2004_03-06_ORIG_MID--AUDIO_20_R2_2004_12_Track12_wav--1.midi": {
+      "onset50": {
+        "tp": 1686,
+        "n_ref": 1897,
+        "n_est": 1887
+      },
+      "onset30": {
+        "tp": 1656,
+        "n_ref": 1897,
+        "n_est": 1887
+      },
+      "onset20": {
+        "tp": 1555,
+        "n_ref": 1897,
+        "n_est": 1887
+      },
+      "onset10": {
+        "tp": 1138,
+        "n_ref": 1897,
+        "n_est": 1887
+      },
+      "note": {
+        "tp": 681,
+        "n_ref": 1897,
+        "n_est": 1887
+      }
+    },
+    "2011/MIDI-Unprocessed_04_R3_2011_MID--AUDIO_R3-D2_05_Track05_wav.midi": {
+      "onset50": {
+        "tp": 2353,
+        "n_ref": 2730,
+        "n_est": 2572
+      },
+      "onset30": {
+        "tp": 2315,
+        "n_ref": 2730,
+        "n_est": 2572
+      },
+      "onset20": {
+        "tp": 2209,
+        "n_ref": 2730,
+        "n_est": 2572
+      },
+      "onset10": {
+        "tp": 1702,
+        "n_ref": 2730,
+        "n_est": 2572
+      },
+      "note": {
+        "tp": 965,
+        "n_ref": 2730,
+        "n_est": 2572
+      }
+    },
+    "2008/MIDI-Unprocessed_05_R1_2008_01-04_ORIG_MID--AUDIO_05_R1_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 2441,
+        "n_ref": 2774,
+        "n_est": 2903
+      },
+      "onset30": {
+        "tp": 2404,
+        "n_ref": 2774,
+        "n_est": 2903
+      },
+      "onset20": {
+        "tp": 2277,
+        "n_ref": 2774,
+        "n_est": 2903
+      },
+      "onset10": {
+        "tp": 1680,
+        "n_ref": 2774,
+        "n_est": 2903
+      },
+      "note": {
+        "tp": 611,
+        "n_ref": 2774,
+        "n_est": 2903
+      }
+    },
+    "2015/MIDI-Unprocessed_R2_D2-12-13-15_mid--AUDIO-from_mp3_12_R2_2015_wav--3.midi": {
+      "onset50": {
+        "tp": 7381,
+        "n_ref": 8335,
+        "n_est": 8200
+      },
+      "onset30": {
+        "tp": 7292,
+        "n_ref": 8335,
+        "n_est": 8200
+      },
+      "onset20": {
+        "tp": 7048,
+        "n_ref": 8335,
+        "n_est": 8200
+      },
+      "onset10": {
+        "tp": 5662,
+        "n_ref": 8335,
+        "n_est": 8200
+      },
+      "note": {
+        "tp": 3112,
+        "n_ref": 8335,
+        "n_est": 8200
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital16_MID--AUDIO_16_R1_2018_wav--3.midi": {
+      "onset50": {
+        "tp": 353,
+        "n_ref": 366,
+        "n_est": 363
+      },
+      "onset30": {
+        "tp": 349,
+        "n_ref": 366,
+        "n_est": 363
+      },
+      "onset20": {
+        "tp": 334,
+        "n_ref": 366,
+        "n_est": 363
+      },
+      "onset10": {
+        "tp": 266,
+        "n_ref": 366,
+        "n_est": 363
+      },
+      "note": {
+        "tp": 72,
+        "n_ref": 366,
+        "n_est": 363
+      }
+    },
+    "2006/MIDI-Unprocessed_03_R1_2006_01-05_ORIG_MID--AUDIO_03_R1_2006_04_Track04_wav.midi": {
+      "onset50": {
+        "tp": 7128,
+        "n_ref": 7716,
+        "n_est": 7588
+      },
+      "onset30": {
+        "tp": 7031,
+        "n_ref": 7716,
+        "n_est": 7588
+      },
+      "onset20": {
+        "tp": 6780,
+        "n_ref": 7716,
+        "n_est": 7588
+      },
+      "onset10": {
+        "tp": 5343,
+        "n_ref": 7716,
+        "n_est": 7588
+      },
+      "note": {
+        "tp": 2666,
+        "n_ref": 7716,
+        "n_est": 7588
+      }
+    },
+    "2008/MIDI-Unprocessed_09_R3_2008_01-07_ORIG_MID--AUDIO_09_R3_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 729,
+        "n_ref": 882,
+        "n_est": 800
+      },
+      "onset30": {
+        "tp": 716,
+        "n_ref": 882,
+        "n_est": 800
+      },
+      "onset20": {
+        "tp": 676,
+        "n_ref": 882,
+        "n_est": 800
+      },
+      "onset10": {
+        "tp": 515,
+        "n_ref": 882,
+        "n_est": 800
+      },
+      "note": {
+        "tp": 309,
+        "n_ref": 882,
+        "n_est": 800
+      }
+    },
+    "2008/MIDI-Unprocessed_09_R3_2008_01-07_ORIG_MID--AUDIO_09_R3_2008_wav--1.midi": {
+      "onset50": {
+        "tp": 1066,
+        "n_ref": 1113,
+        "n_est": 1107
+      },
+      "onset30": {
+        "tp": 1063,
+        "n_ref": 1113,
+        "n_est": 1107
+      },
+      "onset20": {
+        "tp": 1046,
+        "n_ref": 1113,
+        "n_est": 1107
+      },
+      "onset10": {
+        "tp": 894,
+        "n_ref": 1113,
+        "n_est": 1107
+      },
+      "note": {
+        "tp": 472,
+        "n_ref": 1113,
+        "n_est": 1107
+      }
+    },
+    "2014/MIDI-UNPROCESSED_01-03_R1_2014_MID--AUDIO_01_R1_2014_wav--2.midi": {
+      "onset50": {
+        "tp": 482,
+        "n_ref": 505,
+        "n_est": 504
+      },
+      "onset30": {
+        "tp": 479,
+        "n_ref": 505,
+        "n_est": 504
+      },
+      "onset20": {
+        "tp": 470,
+        "n_ref": 505,
+        "n_est": 504
+      },
+      "onset10": {
+        "tp": 398,
+        "n_ref": 505,
+        "n_est": 504
+      },
+      "note": {
+        "tp": 153,
+        "n_ref": 505,
+        "n_est": 504
+      }
+    },
+    "2014/MIDI-UNPROCESSED_19-21_R3_2014_MID--AUDIO_21_R3_2014_wav--1.midi": {
+      "onset50": {
+        "tp": 1352,
+        "n_ref": 1864,
+        "n_est": 1434
+      },
+      "onset30": {
+        "tp": 1298,
+        "n_ref": 1864,
+        "n_est": 1434
+      },
+      "onset20": {
+        "tp": 1133,
+        "n_ref": 1864,
+        "n_est": 1434
+      },
+      "onset10": {
+        "tp": 750,
+        "n_ref": 1864,
+        "n_est": 1434
+      },
+      "note": {
+        "tp": 480,
+        "n_ref": 1864,
+        "n_est": 1434
+      }
+    },
+    "2014/MIDI-UNPROCESSED_01-03_R1_2014_MID--AUDIO_01_R1_2014_wav--1.midi": {
+      "onset50": {
+        "tp": 1265,
+        "n_ref": 1376,
+        "n_est": 1334
+      },
+      "onset30": {
+        "tp": 1259,
+        "n_ref": 1376,
+        "n_est": 1334
+      },
+      "onset20": {
+        "tp": 1231,
+        "n_ref": 1376,
+        "n_est": 1334
+      },
+      "onset10": {
+        "tp": 998,
+        "n_ref": 1376,
+        "n_est": 1334
+      },
+      "note": {
+        "tp": 812,
+        "n_ref": 1376,
+        "n_est": 1334
+      }
+    },
+    "2008/MIDI-Unprocessed_10_R2_2008_01-05_ORIG_MID--AUDIO_10_R2_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 1523,
+        "n_ref": 1770,
+        "n_est": 1656
+      },
+      "onset30": {
+        "tp": 1507,
+        "n_ref": 1770,
+        "n_est": 1656
+      },
+      "onset20": {
+        "tp": 1448,
+        "n_ref": 1770,
+        "n_est": 1656
+      },
+      "onset10": {
+        "tp": 1107,
+        "n_ref": 1770,
+        "n_est": 1656
+      },
+      "note": {
+        "tp": 707,
+        "n_ref": 1770,
+        "n_est": 1656
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital17-19_MID--AUDIO_18_R1_2018_wav--3.midi": {
+      "onset50": {
+        "tp": 1526,
+        "n_ref": 1732,
+        "n_est": 1699
+      },
+      "onset30": {
+        "tp": 1504,
+        "n_ref": 1732,
+        "n_est": 1699
+      },
+      "onset20": {
+        "tp": 1463,
+        "n_ref": 1732,
+        "n_est": 1699
+      },
+      "onset10": {
+        "tp": 1175,
+        "n_ref": 1732,
+        "n_est": 1699
+      },
+      "note": {
+        "tp": 839,
+        "n_ref": 1732,
+        "n_est": 1699
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital9-11_MID--AUDIO_09_R1_2018_wav--5.midi": {
+      "onset50": {
+        "tp": 1036,
+        "n_ref": 1095,
+        "n_est": 1068
+      },
+      "onset30": {
+        "tp": 1029,
+        "n_ref": 1095,
+        "n_est": 1068
+      },
+      "onset20": {
+        "tp": 1018,
+        "n_ref": 1095,
+        "n_est": 1068
+      },
+      "onset10": {
+        "tp": 860,
+        "n_ref": 1095,
+        "n_est": 1068
+      },
+      "note": {
+        "tp": 387,
+        "n_ref": 1095,
+        "n_est": 1068
+      }
+    },
+    "2014/MIDI-UNPROCESSED_11-13_R1_2014_MID--AUDIO_11_R1_2014_wav--1.midi": {
+      "onset50": {
+        "tp": 1520,
+        "n_ref": 1701,
+        "n_est": 1687
+      },
+      "onset30": {
+        "tp": 1502,
+        "n_ref": 1701,
+        "n_est": 1687
+      },
+      "onset20": {
+        "tp": 1456,
+        "n_ref": 1701,
+        "n_est": 1687
+      },
+      "onset10": {
+        "tp": 1175,
+        "n_ref": 1701,
+        "n_est": 1687
+      },
+      "note": {
+        "tp": 754,
+        "n_ref": 1701,
+        "n_est": 1687
+      }
+    },
+    "2008/MIDI-Unprocessed_10_R2_2008_01-05_ORIG_MID--AUDIO_10_R2_2008_wav--1.midi": {
+      "onset50": {
+        "tp": 776,
+        "n_ref": 860,
+        "n_est": 815
+      },
+      "onset30": {
+        "tp": 769,
+        "n_ref": 860,
+        "n_est": 815
+      },
+      "onset20": {
+        "tp": 747,
+        "n_ref": 860,
+        "n_est": 815
+      },
+      "onset10": {
+        "tp": 606,
+        "n_ref": 860,
+        "n_est": 815
+      },
+      "note": {
+        "tp": 422,
+        "n_ref": 860,
+        "n_est": 815
+      }
+    },
+    "2017/MIDI-Unprocessed_083_PIANO083_MID--AUDIO-split_07-09-17_Piano-e_2_-06_wav--1.midi": {
+      "onset50": {
+        "tp": 1086,
+        "n_ref": 1129,
+        "n_est": 1099
+      },
+      "onset30": {
+        "tp": 1085,
+        "n_ref": 1129,
+        "n_est": 1099
+      },
+      "onset20": {
+        "tp": 1071,
+        "n_ref": 1129,
+        "n_est": 1099
+      },
+      "onset10": {
+        "tp": 964,
+        "n_ref": 1129,
+        "n_est": 1099
+      },
+      "note": {
+        "tp": 620,
+        "n_ref": 1129,
+        "n_est": 1099
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_04_R1_2004_03-05_ORIG_MID--AUDIO_04_R1_2004_06_Track06_wav.midi": {
+      "onset50": {
+        "tp": 1696,
+        "n_ref": 1820,
+        "n_est": 1760
+      },
+      "onset30": {
+        "tp": 1692,
+        "n_ref": 1820,
+        "n_est": 1760
+      },
+      "onset20": {
+        "tp": 1661,
+        "n_ref": 1820,
+        "n_est": 1760
+      },
+      "onset10": {
+        "tp": 1352,
+        "n_ref": 1820,
+        "n_est": 1760
+      },
+      "note": {
+        "tp": 887,
+        "n_ref": 1820,
+        "n_est": 1760
+      }
+    },
+    "2006/MIDI-Unprocessed_01_R1_2006_01-09_ORIG_MID--AUDIO_01_R1_2006_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 3812,
+        "n_ref": 4154,
+        "n_est": 3907
+      },
+      "onset30": {
+        "tp": 3798,
+        "n_ref": 4154,
+        "n_est": 3907
+      },
+      "onset20": {
+        "tp": 3720,
+        "n_ref": 4154,
+        "n_est": 3907
+      },
+      "onset10": {
+        "tp": 3077,
+        "n_ref": 4154,
+        "n_est": 3907
+      },
+      "note": {
+        "tp": 2334,
+        "n_ref": 4154,
+        "n_est": 3907
+      }
+    },
+    "2017/MIDI-Unprocessed_059_PIANO059_MID--AUDIO-split_07-07-17_Piano-e_2-03_wav--4.midi": {
+      "onset50": {
+        "tp": 7470,
+        "n_ref": 8277,
+        "n_est": 8016
+      },
+      "onset30": {
+        "tp": 7363,
+        "n_ref": 8277,
+        "n_est": 8016
+      },
+      "onset20": {
+        "tp": 7109,
+        "n_ref": 8277,
+        "n_est": 8016
+      },
+      "onset10": {
+        "tp": 5700,
+        "n_ref": 8277,
+        "n_est": 8016
+      },
+      "note": {
+        "tp": 3710,
+        "n_ref": 8277,
+        "n_est": 8016
+      }
+    },
+    "2013/ORIG-MIDI_02_7_6_13_Group__MID--AUDIO_08_R1_2013_wav--4.midi": {
+      "onset50": {
+        "tp": 2406,
+        "n_ref": 2787,
+        "n_est": 2667
+      },
+      "onset30": {
+        "tp": 2388,
+        "n_ref": 2787,
+        "n_est": 2667
+      },
+      "onset20": {
+        "tp": 2329,
+        "n_ref": 2787,
+        "n_est": 2667
+      },
+      "onset10": {
+        "tp": 1886,
+        "n_ref": 2787,
+        "n_est": 2667
+      },
+      "note": {
+        "tp": 986,
+        "n_ref": 2787,
+        "n_est": 2667
+      }
+    },
+    "2008/MIDI-Unprocessed_14_R1_2008_01-05_ORIG_MID--AUDIO_14_R1_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 2229,
+        "n_ref": 3097,
+        "n_est": 2727
+      },
+      "onset30": {
+        "tp": 2164,
+        "n_ref": 3097,
+        "n_est": 2727
+      },
+      "onset20": {
+        "tp": 2040,
+        "n_ref": 3097,
+        "n_est": 2727
+      },
+      "onset10": {
+        "tp": 1525,
+        "n_ref": 3097,
+        "n_est": 2727
+      },
+      "note": {
+        "tp": 682,
+        "n_ref": 3097,
+        "n_est": 2727
+      }
+    },
+    "2008/MIDI-Unprocessed_06_R1_2008_01-04_ORIG_MID--AUDIO_06_R1_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 2712,
+        "n_ref": 3297,
+        "n_est": 3185
+      },
+      "onset30": {
+        "tp": 2662,
+        "n_ref": 3297,
+        "n_est": 3185
+      },
+      "onset20": {
+        "tp": 2503,
+        "n_ref": 3297,
+        "n_est": 3185
+      },
+      "onset10": {
+        "tp": 1878,
+        "n_ref": 3297,
+        "n_est": 3185
+      },
+      "note": {
+        "tp": 1105,
+        "n_ref": 3297,
+        "n_est": 3185
+      }
+    },
+    "2008/MIDI-Unprocessed_17_R1_2008_01-04_ORIG_MID--AUDIO_17_R1_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 2668,
+        "n_ref": 3369,
+        "n_est": 3082
+      },
+      "onset30": {
+        "tp": 2626,
+        "n_ref": 3369,
+        "n_est": 3082
+      },
+      "onset20": {
+        "tp": 2496,
+        "n_ref": 3369,
+        "n_est": 3082
+      },
+      "onset10": {
+        "tp": 1860,
+        "n_ref": 3369,
+        "n_est": 3082
+      },
+      "note": {
+        "tp": 1065,
+        "n_ref": 3369,
+        "n_est": 3082
+      }
+    },
+    "2013/ORIG-MIDI_02_7_6_13_Group__MID--AUDIO_08_R1_2013_wav--5.midi": {
+      "onset50": {
+        "tp": 2440,
+        "n_ref": 3105,
+        "n_est": 2809
+      },
+      "onset30": {
+        "tp": 2407,
+        "n_ref": 3105,
+        "n_est": 2809
+      },
+      "onset20": {
+        "tp": 2311,
+        "n_ref": 3105,
+        "n_est": 2809
+      },
+      "onset10": {
+        "tp": 1803,
+        "n_ref": 3105,
+        "n_est": 2809
+      },
+      "note": {
+        "tp": 989,
+        "n_ref": 3105,
+        "n_est": 2809
+      }
+    },
+    "2011/MIDI-Unprocessed_02_R1_2011_MID--AUDIO_R1-D1_10_Track10_wav.midi": {
+      "onset50": {
+        "tp": 2274,
+        "n_ref": 3126,
+        "n_est": 2662
+      },
+      "onset30": {
+        "tp": 2230,
+        "n_ref": 3126,
+        "n_est": 2662
+      },
+      "onset20": {
+        "tp": 2137,
+        "n_ref": 3126,
+        "n_est": 2662
+      },
+      "onset10": {
+        "tp": 1662,
+        "n_ref": 3126,
+        "n_est": 2662
+      },
+      "note": {
+        "tp": 741,
+        "n_ref": 3126,
+        "n_est": 2662
+      }
+    },
+    "2008/MIDI-Unprocessed_04_R1_2008_01-04_ORIG_MID--AUDIO_04_R1_2008_wav--4.midi": {
+      "onset50": {
+        "tp": 6794,
+        "n_ref": 8649,
+        "n_est": 8302
+      },
+      "onset30": {
+        "tp": 6662,
+        "n_ref": 8649,
+        "n_est": 8302
+      },
+      "onset20": {
+        "tp": 6338,
+        "n_ref": 8649,
+        "n_est": 8302
+      },
+      "onset10": {
+        "tp": 4713,
+        "n_ref": 8649,
+        "n_est": 8302
+      },
+      "note": {
+        "tp": 2174,
+        "n_ref": 8649,
+        "n_est": 8302
+      }
+    },
+    "2015/MIDI-Unprocessed_R2_D2-12-13-15_mid--AUDIO-from_mp3_13_R2_2015_wav--4.midi": {
+      "onset50": {
+        "tp": 7136,
+        "n_ref": 8775,
+        "n_est": 8127
+      },
+      "onset30": {
+        "tp": 7016,
+        "n_ref": 8775,
+        "n_est": 8127
+      },
+      "onset20": {
+        "tp": 6748,
+        "n_ref": 8775,
+        "n_est": 8127
+      },
+      "onset10": {
+        "tp": 5360,
+        "n_ref": 8775,
+        "n_est": 8127
+      },
+      "note": {
+        "tp": 3244,
+        "n_ref": 8775,
+        "n_est": 8127
+      }
+    },
+    "2006/MIDI-Unprocessed_07_R1_2006_01-04_ORIG_MID--AUDIO_07_R1_2006_04_Track04_wav.midi": {
+      "onset50": {
+        "tp": 12338,
+        "n_ref": 16966,
+        "n_est": 15113
+      },
+      "onset30": {
+        "tp": 11842,
+        "n_ref": 16966,
+        "n_est": 15113
+      },
+      "onset20": {
+        "tp": 10951,
+        "n_ref": 16966,
+        "n_est": 15113
+      },
+      "onset10": {
+        "tp": 7821,
+        "n_ref": 16966,
+        "n_est": 15113
+      },
+      "note": {
+        "tp": 3701,
+        "n_ref": 16966,
+        "n_est": 15113
+      }
+    },
+    "2014/MIDI-UNPROCESSED_11-13_R1_2014_MID--AUDIO_13_R1_2014_wav--6.midi": {
+      "onset50": {
+        "tp": 11413,
+        "n_ref": 15564,
+        "n_est": 14830
+      },
+      "onset30": {
+        "tp": 10707,
+        "n_ref": 15564,
+        "n_est": 14830
+      },
+      "onset20": {
+        "tp": 9542,
+        "n_ref": 15564,
+        "n_est": 14830
+      },
+      "onset10": {
+        "tp": 6435,
+        "n_ref": 15564,
+        "n_est": 14830
+      },
+      "note": {
+        "tp": 3376,
+        "n_ref": 15564,
+        "n_est": 14830
+      }
+    },
+    "2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_13_R1_2013_wav--3.midi": {
+      "onset50": {
+        "tp": 3622,
+        "n_ref": 4869,
+        "n_est": 4664
+      },
+      "onset30": {
+        "tp": 3513,
+        "n_ref": 4869,
+        "n_est": 4664
+      },
+      "onset20": {
+        "tp": 3278,
+        "n_ref": 4869,
+        "n_est": 4664
+      },
+      "onset10": {
+        "tp": 2440,
+        "n_ref": 4869,
+        "n_est": 4664
+      },
+      "note": {
+        "tp": 1429,
+        "n_ref": 4869,
+        "n_est": 4664
+      }
+    },
+    "2008/MIDI-Unprocessed_04_R3_2008_01-07_ORIG_MID--AUDIO_04_R3_2008_wav--6.midi": {
+      "onset50": {
+        "tp": 3382,
+        "n_ref": 4057,
+        "n_est": 3933
+      },
+      "onset30": {
+        "tp": 3298,
+        "n_ref": 4057,
+        "n_est": 3933
+      },
+      "onset20": {
+        "tp": 3073,
+        "n_ref": 4057,
+        "n_est": 3933
+      },
+      "onset10": {
+        "tp": 2194,
+        "n_ref": 4057,
+        "n_est": 3933
+      },
+      "note": {
+        "tp": 1132,
+        "n_ref": 4057,
+        "n_est": 3933
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital17-19_MID--AUDIO_19_R1_2018_wav--3.midi": {
+      "onset50": {
+        "tp": 3237,
+        "n_ref": 4169,
+        "n_est": 4243
+      },
+      "onset30": {
+        "tp": 3118,
+        "n_ref": 4169,
+        "n_est": 4243
+      },
+      "onset20": {
+        "tp": 2850,
+        "n_ref": 4169,
+        "n_est": 4243
+      },
+      "onset10": {
+        "tp": 2013,
+        "n_ref": 4169,
+        "n_est": 4243
+      },
+      "note": {
+        "tp": 1045,
+        "n_ref": 4169,
+        "n_est": 4243
+      }
+    },
+    "2008/MIDI-Unprocessed_04_R3_2008_01-07_ORIG_MID--AUDIO_04_R3_2008_wav--7.midi": {
+      "onset50": {
+        "tp": 4115,
+        "n_ref": 5112,
+        "n_est": 4754
+      },
+      "onset30": {
+        "tp": 3990,
+        "n_ref": 5112,
+        "n_est": 4754
+      },
+      "onset20": {
+        "tp": 3712,
+        "n_ref": 5112,
+        "n_est": 4754
+      },
+      "onset10": {
+        "tp": 2704,
+        "n_ref": 5112,
+        "n_est": 4754
+      },
+      "note": {
+        "tp": 1150,
+        "n_ref": 5112,
+        "n_est": 4754
+      }
+    },
+    "2008/MIDI-Unprocessed_04_R3_2008_01-07_ORIG_MID--AUDIO_04_R3_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 1725,
+        "n_ref": 1911,
+        "n_est": 1909
+      },
+      "onset30": {
+        "tp": 1682,
+        "n_ref": 1911,
+        "n_est": 1909
+      },
+      "onset20": {
+        "tp": 1579,
+        "n_ref": 1911,
+        "n_est": 1909
+      },
+      "onset10": {
+        "tp": 1157,
+        "n_ref": 1911,
+        "n_est": 1909
+      },
+      "note": {
+        "tp": 626,
+        "n_ref": 1911,
+        "n_est": 1909
+      }
+    },
+    "2013/ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_01_R1_2013_wav--4.midi": {
+      "onset50": {
+        "tp": 4467,
+        "n_ref": 6104,
+        "n_est": 5721
+      },
+      "onset30": {
+        "tp": 4334,
+        "n_ref": 6104,
+        "n_est": 5721
+      },
+      "onset20": {
+        "tp": 4050,
+        "n_ref": 6104,
+        "n_est": 5721
+      },
+      "onset10": {
+        "tp": 2989,
+        "n_ref": 6104,
+        "n_est": 5721
+      },
+      "note": {
+        "tp": 1398,
+        "n_ref": 6104,
+        "n_est": 5721
+      }
+    },
+    "2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_11_R1_2013_wav--4.midi": {
+      "onset50": {
+        "tp": 4344,
+        "n_ref": 6143,
+        "n_est": 5543
+      },
+      "onset30": {
+        "tp": 4176,
+        "n_ref": 6143,
+        "n_est": 5543
+      },
+      "onset20": {
+        "tp": 3867,
+        "n_ref": 6143,
+        "n_est": 5543
+      },
+      "onset10": {
+        "tp": 2778,
+        "n_ref": 6143,
+        "n_est": 5543
+      },
+      "note": {
+        "tp": 1711,
+        "n_ref": 6143,
+        "n_est": 5543
+      }
+    },
+    "2011/MIDI-Unprocessed_14_R1_2011_MID--AUDIO_R1-D6_04_Track04_wav.midi": {
+      "onset50": {
+        "tp": 4793,
+        "n_ref": 6391,
+        "n_est": 5627
+      },
+      "onset30": {
+        "tp": 4681,
+        "n_ref": 6391,
+        "n_est": 5627
+      },
+      "onset20": {
+        "tp": 4376,
+        "n_ref": 6391,
+        "n_est": 5627
+      },
+      "onset10": {
+        "tp": 3251,
+        "n_ref": 6391,
+        "n_est": 5627
+      },
+      "note": {
+        "tp": 1767,
+        "n_ref": 6391,
+        "n_est": 5627
+      }
+    },
+    "2017/MIDI-Unprocessed_075_PIANO075_MID--AUDIO-split_07-08-17_Piano-e_2-06_wav--3.midi": {
+      "onset50": {
+        "tp": 3276,
+        "n_ref": 4163,
+        "n_est": 3596
+      },
+      "onset30": {
+        "tp": 3216,
+        "n_ref": 4163,
+        "n_est": 3596
+      },
+      "onset20": {
+        "tp": 3069,
+        "n_ref": 4163,
+        "n_est": 3596
+      },
+      "onset10": {
+        "tp": 2419,
+        "n_ref": 4163,
+        "n_est": 3596
+      },
+      "note": {
+        "tp": 1124,
+        "n_ref": 4163,
+        "n_est": 3596
+      }
+    },
+    "2017/MIDI-Unprocessed_065_PIANO065_MID--AUDIO-split_07-07-17_Piano-e_3-01_wav--3.midi": {
+      "onset50": {
+        "tp": 3419,
+        "n_ref": 4095,
+        "n_est": 3720
+      },
+      "onset30": {
+        "tp": 3375,
+        "n_ref": 4095,
+        "n_est": 3720
+      },
+      "onset20": {
+        "tp": 3228,
+        "n_ref": 4095,
+        "n_est": 3720
+      },
+      "onset10": {
+        "tp": 2510,
+        "n_ref": 4095,
+        "n_est": 3720
+      },
+      "note": {
+        "tp": 1341,
+        "n_ref": 4095,
+        "n_est": 3720
+      }
+    },
+    "2009/MIDI-Unprocessed_08_R1_2009_01-04_ORIG_MID--AUDIO_08_R1_2009_08_R1_2009_04_WAV.midi": {
+      "onset50": {
+        "tp": 3206,
+        "n_ref": 5000,
+        "n_est": 4011
+      },
+      "onset30": {
+        "tp": 3069,
+        "n_ref": 5000,
+        "n_est": 4011
+      },
+      "onset20": {
+        "tp": 2814,
+        "n_ref": 5000,
+        "n_est": 4011
+      },
+      "onset10": {
+        "tp": 1943,
+        "n_ref": 5000,
+        "n_est": 4011
+      },
+      "note": {
+        "tp": 875,
+        "n_ref": 5000,
+        "n_est": 4011
+      }
+    },
+    "2009/MIDI-Unprocessed_08_R1_2009_01-04_ORIG_MID--AUDIO_08_R1_2009_08_R1_2009_03_WAV.midi": {
+      "onset50": {
+        "tp": 2492,
+        "n_ref": 2868,
+        "n_est": 2832
+      },
+      "onset30": {
+        "tp": 2428,
+        "n_ref": 2868,
+        "n_est": 2832
+      },
+      "onset20": {
+        "tp": 2255,
+        "n_ref": 2868,
+        "n_est": 2832
+      },
+      "onset10": {
+        "tp": 1606,
+        "n_ref": 2868,
+        "n_est": 2832
+      },
+      "note": {
+        "tp": 1074,
+        "n_ref": 2868,
+        "n_est": 2832
+      }
+    },
+    "2017/MIDI-Unprocessed_080_PIANO080_MID--AUDIO-split_07-09-17_Piano-e_1-06_wav--3.midi": {
+      "onset50": {
+        "tp": 13193,
+        "n_ref": 15840,
+        "n_est": 14293
+      },
+      "onset30": {
+        "tp": 12957,
+        "n_ref": 15840,
+        "n_est": 14293
+      },
+      "onset20": {
+        "tp": 12380,
+        "n_ref": 15840,
+        "n_est": 14293
+      },
+      "onset10": {
+        "tp": 9669,
+        "n_ref": 15840,
+        "n_est": 14293
+      },
+      "note": {
+        "tp": 5626,
+        "n_ref": 15840,
+        "n_est": 14293
+      }
+    },
+    "2017/MIDI-Unprocessed_072_PIANO072_MID--AUDIO-split_07-08-17_Piano-e_1-06_wav--2.midi": {
+      "onset50": {
+        "tp": 4046,
+        "n_ref": 4552,
+        "n_est": 4182
+      },
+      "onset30": {
+        "tp": 4022,
+        "n_ref": 4552,
+        "n_est": 4182
+      },
+      "onset20": {
+        "tp": 3923,
+        "n_ref": 4552,
+        "n_est": 4182
+      },
+      "onset10": {
+        "tp": 3239,
+        "n_ref": 4552,
+        "n_est": 4182
+      },
+      "note": {
+        "tp": 2163,
+        "n_ref": 4552,
+        "n_est": 4182
+      }
+    },
+    "2011/MIDI-Unprocessed_02_R2_2011_MID--AUDIO_R2-D1_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 3868,
+        "n_ref": 4577,
+        "n_est": 4068
+      },
+      "onset30": {
+        "tp": 3806,
+        "n_ref": 4577,
+        "n_est": 4068
+      },
+      "onset20": {
+        "tp": 3655,
+        "n_ref": 4577,
+        "n_est": 4068
+      },
+      "onset10": {
+        "tp": 2945,
+        "n_ref": 4577,
+        "n_est": 4068
+      },
+      "note": {
+        "tp": 1841,
+        "n_ref": 4577,
+        "n_est": 4068
+      }
+    },
+    "2008/MIDI-Unprocessed_04_R2_2008_01-04_ORIG_MID--AUDIO_04_R2_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 3630,
+        "n_ref": 4282,
+        "n_est": 3925
+      },
+      "onset30": {
+        "tp": 3540,
+        "n_ref": 4282,
+        "n_est": 3925
+      },
+      "onset20": {
+        "tp": 3387,
+        "n_ref": 4282,
+        "n_est": 3925
+      },
+      "onset10": {
+        "tp": 2639,
+        "n_ref": 4282,
+        "n_est": 3925
+      },
+      "note": {
+        "tp": 1507,
+        "n_ref": 4282,
+        "n_est": 3925
+      }
+    },
+    "2008/MIDI-Unprocessed_10_R2_2008_01-05_ORIG_MID--AUDIO_10_R2_2008_wav--4.midi": {
+      "onset50": {
+        "tp": 3482,
+        "n_ref": 4239,
+        "n_est": 3904
+      },
+      "onset30": {
+        "tp": 3400,
+        "n_ref": 4239,
+        "n_est": 3904
+      },
+      "onset20": {
+        "tp": 3200,
+        "n_ref": 4239,
+        "n_est": 3904
+      },
+      "onset10": {
+        "tp": 2458,
+        "n_ref": 4239,
+        "n_est": 3904
+      },
+      "note": {
+        "tp": 1269,
+        "n_ref": 4239,
+        "n_est": 3904
+      }
+    },
+    "2015/MIDI-Unprocessed_R2_D1-2-3-6-7-8-11_mid--AUDIO-from_mp3_03_R2_2015_wav--1.midi": {
+      "onset50": {
+        "tp": 973,
+        "n_ref": 1110,
+        "n_est": 1050
+      },
+      "onset30": {
+        "tp": 968,
+        "n_ref": 1110,
+        "n_est": 1050
+      },
+      "onset20": {
+        "tp": 954,
+        "n_ref": 1110,
+        "n_est": 1050
+      },
+      "onset10": {
+        "tp": 782,
+        "n_ref": 1110,
+        "n_est": 1050
+      },
+      "note": {
+        "tp": 467,
+        "n_ref": 1110,
+        "n_est": 1050
+      }
+    },
+    "2015/MIDI-Unprocessed_R2_D1-2-3-6-7-8-11_mid--AUDIO-from_mp3_06_R2_2015_wav--1.midi": {
+      "onset50": {
+        "tp": 3722,
+        "n_ref": 4310,
+        "n_est": 4068
+      },
+      "onset30": {
+        "tp": 3670,
+        "n_ref": 4310,
+        "n_est": 4068
+      },
+      "onset20": {
+        "tp": 3556,
+        "n_ref": 4310,
+        "n_est": 4068
+      },
+      "onset10": {
+        "tp": 2912,
+        "n_ref": 4310,
+        "n_est": 4068
+      },
+      "note": {
+        "tp": 1598,
+        "n_ref": 4310,
+        "n_est": 4068
+      }
+    },
+    "2015/MIDI-Unprocessed_R2_D2-19-21-22_mid--AUDIO-from_mp3_19_R2_2015_wav--3.midi": {
+      "onset50": {
+        "tp": 3841,
+        "n_ref": 4425,
+        "n_est": 4244
+      },
+      "onset30": {
+        "tp": 3783,
+        "n_ref": 4425,
+        "n_est": 4244
+      },
+      "onset20": {
+        "tp": 3646,
+        "n_ref": 4425,
+        "n_est": 4244
+      },
+      "onset10": {
+        "tp": 2992,
+        "n_ref": 4425,
+        "n_est": 4244
+      },
+      "note": {
+        "tp": 1700,
+        "n_ref": 4425,
+        "n_est": 4244
+      }
+    },
+    "2013/ORIG-MIDI_01_7_8_13_Group__MID--AUDIO_07_R2_2013_wav--2.midi": {
+      "onset50": {
+        "tp": 2492,
+        "n_ref": 2642,
+        "n_est": 2677
+      },
+      "onset30": {
+        "tp": 2468,
+        "n_ref": 2642,
+        "n_est": 2677
+      },
+      "onset20": {
+        "tp": 2393,
+        "n_ref": 2642,
+        "n_est": 2677
+      },
+      "onset10": {
+        "tp": 1927,
+        "n_ref": 2642,
+        "n_est": 2677
+      },
+      "note": {
+        "tp": 1420,
+        "n_ref": 2642,
+        "n_est": 2677
+      }
+    },
+    "2011/MIDI-Unprocessed_23_R2_2011_MID--AUDIO_R2-D6_03_Track03_wav.midi": {
+      "onset50": {
+        "tp": 2424,
+        "n_ref": 2625,
+        "n_est": 2554
+      },
+      "onset30": {
+        "tp": 2388,
+        "n_ref": 2625,
+        "n_est": 2554
+      },
+      "onset20": {
+        "tp": 2302,
+        "n_ref": 2625,
+        "n_est": 2554
+      },
+      "onset10": {
+        "tp": 1827,
+        "n_ref": 2625,
+        "n_est": 2554
+      },
+      "note": {
+        "tp": 1302,
+        "n_ref": 2625,
+        "n_est": 2554
+      }
+    },
+    "2017/MIDI-Unprocessed_078_PIANO078_MID--AUDIO-split_07-09-17_Piano-e_1-02_wav--2.midi": {
+      "onset50": {
+        "tp": 6580,
+        "n_ref": 7097,
+        "n_est": 6983
+      },
+      "onset30": {
+        "tp": 6502,
+        "n_ref": 7097,
+        "n_est": 6983
+      },
+      "onset20": {
+        "tp": 6332,
+        "n_ref": 7097,
+        "n_est": 6983
+      },
+      "onset10": {
+        "tp": 5257,
+        "n_ref": 7097,
+        "n_est": 6983
+      },
+      "note": {
+        "tp": 3137,
+        "n_ref": 7097,
+        "n_est": 6983
+      }
+    },
+    "2017/MIDI-Unprocessed_071_PIANO071_MID--AUDIO-split_07-08-17_Piano-e_1-04_wav--2.midi": {
+      "onset50": {
+        "tp": 2225,
+        "n_ref": 2363,
+        "n_est": 2364
+      },
+      "onset30": {
+        "tp": 2202,
+        "n_ref": 2363,
+        "n_est": 2364
+      },
+      "onset20": {
+        "tp": 2151,
+        "n_ref": 2363,
+        "n_est": 2364
+      },
+      "onset10": {
+        "tp": 1781,
+        "n_ref": 2363,
+        "n_est": 2364
+      },
+      "note": {
+        "tp": 964,
+        "n_ref": 2363,
+        "n_est": 2364
+      }
+    },
+    "2013/ORIG-MIDI_02_7_10_13_Group_MID--AUDIO_12_R3_2013_wav--2.midi": {
+      "onset50": {
+        "tp": 2153,
+        "n_ref": 2372,
+        "n_est": 2375
+      },
+      "onset30": {
+        "tp": 2111,
+        "n_ref": 2372,
+        "n_est": 2375
+      },
+      "onset20": {
+        "tp": 2041,
+        "n_ref": 2372,
+        "n_est": 2375
+      },
+      "onset10": {
+        "tp": 1644,
+        "n_ref": 2372,
+        "n_est": 2375
+      },
+      "note": {
+        "tp": 710,
+        "n_ref": 2372,
+        "n_est": 2375
+      }
+    },
+    "2017/MIDI-Unprocessed_083_PIANO083_MID--AUDIO-split_07-09-17_Piano-e_2_-06_wav--3.midi": {
+      "onset50": {
+        "tp": 2684,
+        "n_ref": 3066,
+        "n_est": 2869
+      },
+      "onset30": {
+        "tp": 2655,
+        "n_ref": 3066,
+        "n_est": 2869
+      },
+      "onset20": {
+        "tp": 2545,
+        "n_ref": 3066,
+        "n_est": 2869
+      },
+      "onset10": {
+        "tp": 2056,
+        "n_ref": 3066,
+        "n_est": 2869
+      },
+      "note": {
+        "tp": 1061,
+        "n_ref": 3066,
+        "n_est": 2869
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital9-11_MID--AUDIO_09_R1_2018_wav--1.midi": {
+      "onset50": {
+        "tp": 8261,
+        "n_ref": 9786,
+        "n_est": 9210
+      },
+      "onset30": {
+        "tp": 8085,
+        "n_ref": 9786,
+        "n_est": 9210
+      },
+      "onset20": {
+        "tp": 7639,
+        "n_ref": 9786,
+        "n_est": 9210
+      },
+      "onset10": {
+        "tp": 5764,
+        "n_ref": 9786,
+        "n_est": 9210
+      },
+      "note": {
+        "tp": 2929,
+        "n_ref": 9786,
+        "n_est": 9210
+      }
+    },
+    "2009/MIDI-Unprocessed_16_R2_2009_01_ORIG_MID--AUDIO_16_R2_2009_16_R2_2009_01_WAV.midi": {
+      "onset50": {
+        "tp": 4647,
+        "n_ref": 5498,
+        "n_est": 5336
+      },
+      "onset30": {
+        "tp": 4562,
+        "n_ref": 5498,
+        "n_est": 5336
+      },
+      "onset20": {
+        "tp": 4355,
+        "n_ref": 5498,
+        "n_est": 5336
+      },
+      "onset10": {
+        "tp": 3305,
+        "n_ref": 5498,
+        "n_est": 5336
+      },
+      "note": {
+        "tp": 1721,
+        "n_ref": 5498,
+        "n_est": 5336
+      }
+    },
+    "2009/MIDI-Unprocessed_16_R2_2009_01_ORIG_MID--AUDIO_16_R2_2009_16_R2_2009_02_WAV.midi": {
+      "onset50": {
+        "tp": 3127,
+        "n_ref": 3569,
+        "n_est": 3456
+      },
+      "onset30": {
+        "tp": 3072,
+        "n_ref": 3569,
+        "n_est": 3456
+      },
+      "onset20": {
+        "tp": 2926,
+        "n_ref": 3569,
+        "n_est": 3456
+      },
+      "onset10": {
+        "tp": 2254,
+        "n_ref": 3569,
+        "n_est": 3456
+      },
+      "note": {
+        "tp": 1350,
+        "n_ref": 3569,
+        "n_est": 3456
+      }
+    },
+    "2009/MIDI-Unprocessed_16_R2_2009_01_ORIG_MID--AUDIO_16_R2_2009_16_R2_2009_04_WAV.midi": {
+      "onset50": {
+        "tp": 5972,
+        "n_ref": 7273,
+        "n_est": 6951
+      },
+      "onset30": {
+        "tp": 5862,
+        "n_ref": 7273,
+        "n_est": 6951
+      },
+      "onset20": {
+        "tp": 5600,
+        "n_ref": 7273,
+        "n_est": 6951
+      },
+      "onset10": {
+        "tp": 4232,
+        "n_ref": 7273,
+        "n_est": 6951
+      },
+      "note": {
+        "tp": 2192,
+        "n_ref": 7273,
+        "n_est": 6951
+      }
+    },
+    "2014/MIDI-UNPROCESSED_19-20-21_R2_2014_MID--AUDIO_20_R2_2014_wav.midi": {
+      "onset50": {
+        "tp": 9692,
+        "n_ref": 10874,
+        "n_est": 10647
+      },
+      "onset30": {
+        "tp": 9329,
+        "n_ref": 10874,
+        "n_est": 10647
+      },
+      "onset20": {
+        "tp": 8457,
+        "n_ref": 10874,
+        "n_est": 10647
+      },
+      "onset10": {
+        "tp": 5785,
+        "n_ref": 10874,
+        "n_est": 10647
+      },
+      "note": {
+        "tp": 3319,
+        "n_ref": 10874,
+        "n_est": 10647
+      }
+    },
+    "2009/MIDI-Unprocessed_03_R1_2009_03-08_ORIG_MID--AUDIO_03_R1_2009_03_R1_2009_03_WAV.midi": {
+      "onset50": {
+        "tp": 3862,
+        "n_ref": 4530,
+        "n_est": 4264
+      },
+      "onset30": {
+        "tp": 3815,
+        "n_ref": 4530,
+        "n_est": 4264
+      },
+      "onset20": {
+        "tp": 3659,
+        "n_ref": 4530,
+        "n_est": 4264
+      },
+      "onset10": {
+        "tp": 2829,
+        "n_ref": 4530,
+        "n_est": 4264
+      },
+      "note": {
+        "tp": 1485,
+        "n_ref": 4530,
+        "n_est": 4264
+      }
+    },
+    "2006/MIDI-Unprocessed_10_R1_2006_01-04_ORIG_MID--AUDIO_10_R1_2006_03_Track03_wav.midi": {
+      "onset50": {
+        "tp": 12997,
+        "n_ref": 15733,
+        "n_est": 14181
+      },
+      "onset30": {
+        "tp": 12786,
+        "n_ref": 15733,
+        "n_est": 14181
+      },
+      "onset20": {
+        "tp": 12219,
+        "n_ref": 15733,
+        "n_est": 14181
+      },
+      "onset10": {
+        "tp": 9353,
+        "n_ref": 15733,
+        "n_est": 14181
+      },
+      "note": {
+        "tp": 4681,
+        "n_ref": 15733,
+        "n_est": 14181
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital9-11_MID--AUDIO_09_R1_2018_wav--2.midi": {
+      "onset50": {
+        "tp": 2269,
+        "n_ref": 2644,
+        "n_est": 2546
+      },
+      "onset30": {
+        "tp": 2216,
+        "n_ref": 2644,
+        "n_est": 2546
+      },
+      "onset20": {
+        "tp": 2079,
+        "n_ref": 2644,
+        "n_est": 2546
+      },
+      "onset10": {
+        "tp": 1505,
+        "n_ref": 2644,
+        "n_est": 2546
+      },
+      "note": {
+        "tp": 940,
+        "n_ref": 2644,
+        "n_est": 2546
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_18_R1_2004_01-02_ORIG_MID--AUDIO_18_R1_2004_03_Track03_wav.midi": {
+      "onset50": {
+        "tp": 2291,
+        "n_ref": 2655,
+        "n_est": 2597
+      },
+      "onset30": {
+        "tp": 2209,
+        "n_ref": 2655,
+        "n_est": 2597
+      },
+      "onset20": {
+        "tp": 2063,
+        "n_ref": 2655,
+        "n_est": 2597
+      },
+      "onset10": {
+        "tp": 1477,
+        "n_ref": 2655,
+        "n_est": 2597
+      },
+      "note": {
+        "tp": 1095,
+        "n_ref": 2655,
+        "n_est": 2597
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_18_R1_2004_01-02_ORIG_MID--AUDIO_18_R1_2004_05_Track05_wav.midi": {
+      "onset50": {
+        "tp": 2646,
+        "n_ref": 4435,
+        "n_est": 3120
+      },
+      "onset30": {
+        "tp": 2522,
+        "n_ref": 4435,
+        "n_est": 3120
+      },
+      "onset20": {
+        "tp": 2307,
+        "n_ref": 4435,
+        "n_est": 3120
+      },
+      "onset10": {
+        "tp": 1600,
+        "n_ref": 4435,
+        "n_est": 3120
+      },
+      "note": {
+        "tp": 726,
+        "n_ref": 4435,
+        "n_est": 3120
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_05_R1_2015_wav--4.midi": {
+      "onset50": {
+        "tp": 1861,
+        "n_ref": 2111,
+        "n_est": 2003
+      },
+      "onset30": {
+        "tp": 1837,
+        "n_ref": 2111,
+        "n_est": 2003
+      },
+      "onset20": {
+        "tp": 1783,
+        "n_ref": 2111,
+        "n_est": 2003
+      },
+      "onset10": {
+        "tp": 1423,
+        "n_ref": 2111,
+        "n_est": 2003
+      },
+      "note": {
+        "tp": 1107,
+        "n_ref": 2111,
+        "n_est": 2003
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_06_R1_2015_wav--6.midi": {
+      "onset50": {
+        "tp": 1801,
+        "n_ref": 2124,
+        "n_est": 1979
+      },
+      "onset30": {
+        "tp": 1773,
+        "n_ref": 2124,
+        "n_est": 1979
+      },
+      "onset20": {
+        "tp": 1705,
+        "n_ref": 2124,
+        "n_est": 1979
+      },
+      "onset10": {
+        "tp": 1354,
+        "n_ref": 2124,
+        "n_est": 1979
+      },
+      "note": {
+        "tp": 930,
+        "n_ref": 2124,
+        "n_est": 1979
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_11_R1_2015_wav--3.midi": {
+      "onset50": {
+        "tp": 1781,
+        "n_ref": 2089,
+        "n_est": 1917
+      },
+      "onset30": {
+        "tp": 1768,
+        "n_ref": 2089,
+        "n_est": 1917
+      },
+      "onset20": {
+        "tp": 1715,
+        "n_ref": 2089,
+        "n_est": 1917
+      },
+      "onset10": {
+        "tp": 1421,
+        "n_ref": 2089,
+        "n_est": 1917
+      },
+      "note": {
+        "tp": 995,
+        "n_ref": 2089,
+        "n_est": 1917
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D2-21-22_mid--AUDIO-from_mp3_22_R1_2015_wav--3.midi": {
+      "onset50": {
+        "tp": 1856,
+        "n_ref": 2124,
+        "n_est": 2005
+      },
+      "onset30": {
+        "tp": 1832,
+        "n_ref": 2124,
+        "n_est": 2005
+      },
+      "onset20": {
+        "tp": 1780,
+        "n_ref": 2124,
+        "n_est": 2005
+      },
+      "onset10": {
+        "tp": 1454,
+        "n_ref": 2124,
+        "n_est": 2005
+      },
+      "note": {
+        "tp": 1032,
+        "n_ref": 2124,
+        "n_est": 2005
+      }
+    },
+    "2011/MIDI-Unprocessed_07_R1_2011_MID--AUDIO_R1-D3_03_Track03_wav.midi": {
+      "onset50": {
+        "tp": 1756,
+        "n_ref": 2134,
+        "n_est": 1903
+      },
+      "onset30": {
+        "tp": 1723,
+        "n_ref": 2134,
+        "n_est": 1903
+      },
+      "onset20": {
+        "tp": 1623,
+        "n_ref": 2134,
+        "n_est": 1903
+      },
+      "onset10": {
+        "tp": 1210,
+        "n_ref": 2134,
+        "n_est": 1903
+      },
+      "note": {
+        "tp": 934,
+        "n_ref": 2134,
+        "n_est": 1903
+      }
+    },
+    "2011/MIDI-Unprocessed_24_R1_2011_MID--AUDIO_R1-D9_11_Track11_wav.midi": {
+      "onset50": {
+        "tp": 1117,
+        "n_ref": 1256,
+        "n_est": 1167
+      },
+      "onset30": {
+        "tp": 1106,
+        "n_ref": 1256,
+        "n_est": 1167
+      },
+      "onset20": {
+        "tp": 1078,
+        "n_ref": 1256,
+        "n_est": 1167
+      },
+      "onset10": {
+        "tp": 848,
+        "n_ref": 1256,
+        "n_est": 1167
+      },
+      "note": {
+        "tp": 604,
+        "n_ref": 1256,
+        "n_est": 1167
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_12_R1_2015_wav--3.midi": {
+      "onset50": {
+        "tp": 1613,
+        "n_ref": 1780,
+        "n_est": 1783
+      },
+      "onset30": {
+        "tp": 1592,
+        "n_ref": 1780,
+        "n_est": 1783
+      },
+      "onset20": {
+        "tp": 1526,
+        "n_ref": 1780,
+        "n_est": 1783
+      },
+      "onset10": {
+        "tp": 1244,
+        "n_ref": 1780,
+        "n_est": 1783
+      },
+      "note": {
+        "tp": 665,
+        "n_ref": 1780,
+        "n_est": 1783
+      }
+    },
+    "2011/MIDI-Unprocessed_22_R2_2011_MID--AUDIO_R2-D5_10_Track10_wav.midi": {
+      "onset50": {
+        "tp": 1470,
+        "n_ref": 1647,
+        "n_est": 1561
+      },
+      "onset30": {
+        "tp": 1468,
+        "n_ref": 1647,
+        "n_est": 1561
+      },
+      "onset20": {
+        "tp": 1428,
+        "n_ref": 1647,
+        "n_est": 1561
+      },
+      "onset10": {
+        "tp": 1136,
+        "n_ref": 1647,
+        "n_est": 1561
+      },
+      "note": {
+        "tp": 508,
+        "n_ref": 1647,
+        "n_est": 1561
+      }
+    },
+    "2009/MIDI-Unprocessed_02_R1_2009_03-06_ORIG_MID--AUDIO_02_R1_2009_02_R1_2009_03_WAV.midi": {
+      "onset50": {
+        "tp": 2138,
+        "n_ref": 2367,
+        "n_est": 2194
+      },
+      "onset30": {
+        "tp": 2120,
+        "n_ref": 2367,
+        "n_est": 2194
+      },
+      "onset20": {
+        "tp": 2044,
+        "n_ref": 2367,
+        "n_est": 2194
+      },
+      "onset10": {
+        "tp": 1647,
+        "n_ref": 2367,
+        "n_est": 2194
+      },
+      "note": {
+        "tp": 839,
+        "n_ref": 2367,
+        "n_est": 2194
+      }
+    },
+    "2014/MIDI-UNPROCESSED_01-03_R1_2014_MID--AUDIO_03_R1_2014_wav--4.midi": {
+      "onset50": {
+        "tp": 2131,
+        "n_ref": 2401,
+        "n_est": 2217
+      },
+      "onset30": {
+        "tp": 2109,
+        "n_ref": 2401,
+        "n_est": 2217
+      },
+      "onset20": {
+        "tp": 2038,
+        "n_ref": 2401,
+        "n_est": 2217
+      },
+      "onset10": {
+        "tp": 1674,
+        "n_ref": 2401,
+        "n_est": 2217
+      },
+      "note": {
+        "tp": 895,
+        "n_ref": 2401,
+        "n_est": 2217
+      }
+    },
+    "2017/MIDI-Unprocessed_057_PIANO057_MID--AUDIO-split_07-07-17_Piano-e_1-07_wav--3.midi": {
+      "onset50": {
+        "tp": 1455,
+        "n_ref": 1592,
+        "n_est": 1525
+      },
+      "onset30": {
+        "tp": 1444,
+        "n_ref": 1592,
+        "n_est": 1525
+      },
+      "onset20": {
+        "tp": 1410,
+        "n_ref": 1592,
+        "n_est": 1525
+      },
+      "onset10": {
+        "tp": 1184,
+        "n_ref": 1592,
+        "n_est": 1525
+      },
+      "note": {
+        "tp": 515,
+        "n_ref": 1592,
+        "n_est": 1525
+      }
+    },
+    "2008/MIDI-Unprocessed_17_R2_2008_01-04_ORIG_MID--AUDIO_17_R2_2008_wav--1.midi": {
+      "onset50": {
+        "tp": 1044,
+        "n_ref": 1133,
+        "n_est": 1124
+      },
+      "onset30": {
+        "tp": 1031,
+        "n_ref": 1133,
+        "n_est": 1124
+      },
+      "onset20": {
+        "tp": 991,
+        "n_ref": 1133,
+        "n_est": 1124
+      },
+      "onset10": {
+        "tp": 793,
+        "n_ref": 1133,
+        "n_est": 1124
+      },
+      "note": {
+        "tp": 350,
+        "n_ref": 1133,
+        "n_est": 1124
+      }
+    },
+    "2008/MIDI-Unprocessed_09_R2_2008_01-05_ORIG_MID--AUDIO_09_R2_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 3709,
+        "n_ref": 4651,
+        "n_est": 4293
+      },
+      "onset30": {
+        "tp": 3587,
+        "n_ref": 4651,
+        "n_est": 4293
+      },
+      "onset20": {
+        "tp": 3328,
+        "n_ref": 4651,
+        "n_est": 4293
+      },
+      "onset10": {
+        "tp": 2389,
+        "n_ref": 4651,
+        "n_est": 4293
+      },
+      "note": {
+        "tp": 1383,
+        "n_ref": 4651,
+        "n_est": 4293
+      }
+    },
+    "2006/MIDI-Unprocessed_15_R1_2006_01-05_ORIG_MID--AUDIO_15_R1_2006_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 6138,
+        "n_ref": 7652,
+        "n_est": 7052
+      },
+      "onset30": {
+        "tp": 5993,
+        "n_ref": 7652,
+        "n_est": 7052
+      },
+      "onset20": {
+        "tp": 5577,
+        "n_ref": 7652,
+        "n_est": 7052
+      },
+      "onset10": {
+        "tp": 4004,
+        "n_ref": 7652,
+        "n_est": 7052
+      },
+      "note": {
+        "tp": 2056,
+        "n_ref": 7652,
+        "n_est": 7052
+      }
+    },
+    "2013/ORIG-MIDI_03_7_8_13_Group__MID--AUDIO_19_R2_2013_wav--4.midi": {
+      "onset50": {
+        "tp": 5118,
+        "n_ref": 6146,
+        "n_est": 6276
+      },
+      "onset30": {
+        "tp": 4935,
+        "n_ref": 6146,
+        "n_est": 6276
+      },
+      "onset20": {
+        "tp": 4615,
+        "n_ref": 6146,
+        "n_est": 6276
+      },
+      "onset10": {
+        "tp": 3375,
+        "n_ref": 6146,
+        "n_est": 6276
+      },
+      "note": {
+        "tp": 2052,
+        "n_ref": 6146,
+        "n_est": 6276
+      }
+    },
+    "2011/MIDI-Unprocessed_22_R2_2011_MID--AUDIO_R2-D5_11_Track11_wav.midi": {
+      "onset50": {
+        "tp": 4953,
+        "n_ref": 6277,
+        "n_est": 5839
+      },
+      "onset30": {
+        "tp": 4800,
+        "n_ref": 6277,
+        "n_est": 5839
+      },
+      "onset20": {
+        "tp": 4493,
+        "n_ref": 6277,
+        "n_est": 5839
+      },
+      "onset10": {
+        "tp": 3241,
+        "n_ref": 6277,
+        "n_est": 5839
+      },
+      "note": {
+        "tp": 1977,
+        "n_ref": 6277,
+        "n_est": 5839
+      }
+    },
+    "2006/MIDI-Unprocessed_17_R1_2006_01-06_ORIG_MID--AUDIO_17_R1_2006_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 5430,
+        "n_ref": 6391,
+        "n_est": 6030
+      },
+      "onset30": {
+        "tp": 5319,
+        "n_ref": 6391,
+        "n_est": 6030
+      },
+      "onset20": {
+        "tp": 5032,
+        "n_ref": 6391,
+        "n_est": 6030
+      },
+      "onset10": {
+        "tp": 3754,
+        "n_ref": 6391,
+        "n_est": 6030
+      },
+      "note": {
+        "tp": 1975,
+        "n_ref": 6391,
+        "n_est": 6030
+      }
+    },
+    "2008/MIDI-Unprocessed_12_R1_2008_01-04_ORIG_MID--AUDIO_12_R1_2008_wav--4.midi": {
+      "onset50": {
+        "tp": 5263,
+        "n_ref": 6004,
+        "n_est": 6064
+      },
+      "onset30": {
+        "tp": 5148,
+        "n_ref": 6004,
+        "n_est": 6064
+      },
+      "onset20": {
+        "tp": 4883,
+        "n_ref": 6004,
+        "n_est": 6064
+      },
+      "onset10": {
+        "tp": 3666,
+        "n_ref": 6004,
+        "n_est": 6064
+      },
+      "note": {
+        "tp": 2038,
+        "n_ref": 6004,
+        "n_est": 6064
+      }
+    },
+    "2009/MIDI-Unprocessed_01_R1_2009_01-04_ORIG_MID--AUDIO_01_R1_2009_01_R1_2009_04_WAV.midi": {
+      "onset50": {
+        "tp": 5333,
+        "n_ref": 6382,
+        "n_est": 6058
+      },
+      "onset30": {
+        "tp": 5195,
+        "n_ref": 6382,
+        "n_est": 6058
+      },
+      "onset20": {
+        "tp": 4916,
+        "n_ref": 6382,
+        "n_est": 6058
+      },
+      "onset10": {
+        "tp": 3656,
+        "n_ref": 6382,
+        "n_est": 6058
+      },
+      "note": {
+        "tp": 1841,
+        "n_ref": 6382,
+        "n_est": 6058
+      }
+    },
+    "2009/MIDI-Unprocessed_07_R1_2009_01-03_ORIG_MID--AUDIO_07_R1_2009_07_R1_2009_03_WAV.midi": {
+      "onset50": {
+        "tp": 5438,
+        "n_ref": 6392,
+        "n_est": 6291
+      },
+      "onset30": {
+        "tp": 5317,
+        "n_ref": 6392,
+        "n_est": 6291
+      },
+      "onset20": {
+        "tp": 5036,
+        "n_ref": 6392,
+        "n_est": 6291
+      },
+      "onset10": {
+        "tp": 3779,
+        "n_ref": 6392,
+        "n_est": 6291
+      },
+      "note": {
+        "tp": 1810,
+        "n_ref": 6392,
+        "n_est": 6291
+      }
+    },
+    "2011/MIDI-Unprocessed_19_R1_2011_MID--AUDIO_R1-D7_15_Track15_wav.midi": {
+      "onset50": {
+        "tp": 4886,
+        "n_ref": 5495,
+        "n_est": 5158
+      },
+      "onset30": {
+        "tp": 4857,
+        "n_ref": 5495,
+        "n_est": 5158
+      },
+      "onset20": {
+        "tp": 4749,
+        "n_ref": 5495,
+        "n_est": 5158
+      },
+      "onset10": {
+        "tp": 3924,
+        "n_ref": 5495,
+        "n_est": 5158
+      },
+      "note": {
+        "tp": 2436,
+        "n_ref": 5495,
+        "n_est": 5158
+      }
+    },
+    "2013/ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_04_R1_2013_wav--4.midi": {
+      "onset50": {
+        "tp": 4844,
+        "n_ref": 5525,
+        "n_est": 5342
+      },
+      "onset30": {
+        "tp": 4804,
+        "n_ref": 5525,
+        "n_est": 5342
+      },
+      "onset20": {
+        "tp": 4676,
+        "n_ref": 5525,
+        "n_est": 5342
+      },
+      "onset10": {
+        "tp": 3806,
+        "n_ref": 5525,
+        "n_est": 5342
+      },
+      "note": {
+        "tp": 2458,
+        "n_ref": 5525,
+        "n_est": 5342
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital5-7_MID--AUDIO_06_R1_2018_wav--3.midi": {
+      "onset50": {
+        "tp": 11750,
+        "n_ref": 14160,
+        "n_est": 13768
+      },
+      "onset30": {
+        "tp": 11377,
+        "n_ref": 14160,
+        "n_est": 13768
+      },
+      "onset20": {
+        "tp": 10559,
+        "n_ref": 14160,
+        "n_est": 13768
+      },
+      "onset10": {
+        "tp": 7612,
+        "n_ref": 14160,
+        "n_est": 13768
+      },
+      "note": {
+        "tp": 4085,
+        "n_ref": 14160,
+        "n_est": 13768
+      }
+    },
+    "2013/ORIG-MIDI_02_7_10_13_Group_MID--AUDIO_14_R3_2013_wav--2.midi": {
+      "onset50": {
+        "tp": 10082,
+        "n_ref": 11826,
+        "n_est": 12091
+      },
+      "onset30": {
+        "tp": 9835,
+        "n_ref": 11826,
+        "n_est": 12091
+      },
+      "onset20": {
+        "tp": 9220,
+        "n_ref": 11826,
+        "n_est": 12091
+      },
+      "onset10": {
+        "tp": 6747,
+        "n_ref": 11826,
+        "n_est": 12091
+      },
+      "note": {
+        "tp": 3728,
+        "n_ref": 11826,
+        "n_est": 12091
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D2-13-20_mid--AUDIO-from_mp3_15_R1_2015_wav--4.midi": {
+      "onset50": {
+        "tp": 3170,
+        "n_ref": 3601,
+        "n_est": 3475
+      },
+      "onset30": {
+        "tp": 3148,
+        "n_ref": 3601,
+        "n_est": 3475
+      },
+      "onset20": {
+        "tp": 3062,
+        "n_ref": 3601,
+        "n_est": 3475
+      },
+      "onset10": {
+        "tp": 2519,
+        "n_ref": 3601,
+        "n_est": 3475
+      },
+      "note": {
+        "tp": 1269,
+        "n_ref": 3601,
+        "n_est": 3475
+      }
+    },
+    "2013/ORIG-MIDI_01_7_10_13_Group_MID--AUDIO_07_R3_2013_wav--1.midi": {
+      "onset50": {
+        "tp": 3127,
+        "n_ref": 3271,
+        "n_est": 3348
+      },
+      "onset30": {
+        "tp": 3113,
+        "n_ref": 3271,
+        "n_est": 3348
+      },
+      "onset20": {
+        "tp": 3046,
+        "n_ref": 3271,
+        "n_est": 3348
+      },
+      "onset10": {
+        "tp": 2505,
+        "n_ref": 3271,
+        "n_est": 3348
+      },
+      "note": {
+        "tp": 2336,
+        "n_ref": 3271,
+        "n_est": 3348
+      }
+    },
+    "2011/MIDI-Unprocessed_11_R1_2011_MID--AUDIO_R1-D4_07_Track07_wav.midi": {
+      "onset50": {
+        "tp": 1334,
+        "n_ref": 1363,
+        "n_est": 1364
+      },
+      "onset30": {
+        "tp": 1331,
+        "n_ref": 1363,
+        "n_est": 1364
+      },
+      "onset20": {
+        "tp": 1318,
+        "n_ref": 1363,
+        "n_est": 1364
+      },
+      "onset10": {
+        "tp": 1118,
+        "n_ref": 1363,
+        "n_est": 1364
+      },
+      "note": {
+        "tp": 908,
+        "n_ref": 1363,
+        "n_est": 1364
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_02_R1_2015_wav--1.midi": {
+      "onset50": {
+        "tp": 1276,
+        "n_ref": 1314,
+        "n_est": 1310
+      },
+      "onset30": {
+        "tp": 1274,
+        "n_ref": 1314,
+        "n_est": 1310
+      },
+      "onset20": {
+        "tp": 1263,
+        "n_ref": 1314,
+        "n_est": 1310
+      },
+      "onset10": {
+        "tp": 1146,
+        "n_ref": 1314,
+        "n_est": 1310
+      },
+      "note": {
+        "tp": 1011,
+        "n_ref": 1314,
+        "n_est": 1310
+      }
+    },
+    "2008/MIDI-Unprocessed_13_R1_2008_01-04_ORIG_MID--AUDIO_13_R1_2008_wav--1.midi": {
+      "onset50": {
+        "tp": 1468,
+        "n_ref": 1543,
+        "n_est": 1496
+      },
+      "onset30": {
+        "tp": 1461,
+        "n_ref": 1543,
+        "n_est": 1496
+      },
+      "onset20": {
+        "tp": 1437,
+        "n_ref": 1543,
+        "n_est": 1496
+      },
+      "onset10": {
+        "tp": 1188,
+        "n_ref": 1543,
+        "n_est": 1496
+      },
+      "note": {
+        "tp": 850,
+        "n_ref": 1543,
+        "n_est": 1496
+      }
+    },
+    "2013/ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_04_R1_2013_wav--1.midi": {
+      "onset50": {
+        "tp": 1503,
+        "n_ref": 1559,
+        "n_est": 1577
+      },
+      "onset30": {
+        "tp": 1495,
+        "n_ref": 1559,
+        "n_est": 1577
+      },
+      "onset20": {
+        "tp": 1463,
+        "n_ref": 1559,
+        "n_est": 1577
+      },
+      "onset10": {
+        "tp": 1158,
+        "n_ref": 1559,
+        "n_est": 1577
+      },
+      "note": {
+        "tp": 1288,
+        "n_ref": 1559,
+        "n_est": 1577
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_03_R1_2004_01-02_ORIG_MID--AUDIO_03_R1_2004_01_Track01_wav.midi": {
+      "onset50": {
+        "tp": 2698,
+        "n_ref": 2809,
+        "n_est": 2753
+      },
+      "onset30": {
+        "tp": 2683,
+        "n_ref": 2809,
+        "n_est": 2753
+      },
+      "onset20": {
+        "tp": 2617,
+        "n_ref": 2809,
+        "n_est": 2753
+      },
+      "onset10": {
+        "tp": 2079,
+        "n_ref": 2809,
+        "n_est": 2753
+      },
+      "note": {
+        "tp": 1848,
+        "n_ref": 2809,
+        "n_est": 2753
+      }
+    },
+    "2008/MIDI-Unprocessed_03_R1_2008_01-04_ORIG_MID--AUDIO_03_R1_2008_wav--1.midi": {
+      "onset50": {
+        "tp": 2851,
+        "n_ref": 2945,
+        "n_est": 2967
+      },
+      "onset30": {
+        "tp": 2831,
+        "n_ref": 2945,
+        "n_est": 2967
+      },
+      "onset20": {
+        "tp": 2774,
+        "n_ref": 2945,
+        "n_est": 2967
+      },
+      "onset10": {
+        "tp": 2294,
+        "n_ref": 2945,
+        "n_est": 2967
+      },
+      "note": {
+        "tp": 1744,
+        "n_ref": 2945,
+        "n_est": 2967
+      }
+    },
+    "2008/MIDI-Unprocessed_11_R3_2008_01-04_ORIG_MID--AUDIO_11_R3_2008_wav--1.midi": {
+      "onset50": {
+        "tp": 2533,
+        "n_ref": 2738,
+        "n_est": 2592
+      },
+      "onset30": {
+        "tp": 2518,
+        "n_ref": 2738,
+        "n_est": 2592
+      },
+      "onset20": {
+        "tp": 2455,
+        "n_ref": 2738,
+        "n_est": 2592
+      },
+      "onset10": {
+        "tp": 2017,
+        "n_ref": 2738,
+        "n_est": 2592
+      },
+      "note": {
+        "tp": 1862,
+        "n_ref": 2738,
+        "n_est": 2592
+      }
+    },
+    "2011/MIDI-Unprocessed_18_R1_2011_MID--AUDIO_R1-D7_07_Track07_wav.midi": {
+      "onset50": {
+        "tp": 1451,
+        "n_ref": 1498,
+        "n_est": 1483
+      },
+      "onset30": {
+        "tp": 1446,
+        "n_ref": 1498,
+        "n_est": 1483
+      },
+      "onset20": {
+        "tp": 1435,
+        "n_ref": 1498,
+        "n_est": 1483
+      },
+      "onset10": {
+        "tp": 1233,
+        "n_ref": 1498,
+        "n_est": 1483
+      },
+      "note": {
+        "tp": 977,
+        "n_ref": 1498,
+        "n_est": 1483
+      }
+    },
+    "2017/MIDI-Unprocessed_053_PIANO053_MID--AUDIO-split_07-06-17_Piano-e_3-04_wav--1.midi": {
+      "onset50": {
+        "tp": 1467,
+        "n_ref": 1514,
+        "n_est": 1521
+      },
+      "onset30": {
+        "tp": 1464,
+        "n_ref": 1514,
+        "n_est": 1521
+      },
+      "onset20": {
+        "tp": 1452,
+        "n_ref": 1514,
+        "n_est": 1521
+      },
+      "onset10": {
+        "tp": 1251,
+        "n_ref": 1514,
+        "n_est": 1521
+      },
+      "note": {
+        "tp": 1043,
+        "n_ref": 1514,
+        "n_est": 1521
+      }
+    },
+    "2008/MIDI-Unprocessed_14_R1_2008_01-05_ORIG_MID--AUDIO_14_R1_2008_wav--1.midi": {
+      "onset50": {
+        "tp": 1728,
+        "n_ref": 1824,
+        "n_est": 1782
+      },
+      "onset30": {
+        "tp": 1724,
+        "n_ref": 1824,
+        "n_est": 1782
+      },
+      "onset20": {
+        "tp": 1695,
+        "n_ref": 1824,
+        "n_est": 1782
+      },
+      "onset10": {
+        "tp": 1413,
+        "n_ref": 1824,
+        "n_est": 1782
+      },
+      "note": {
+        "tp": 1163,
+        "n_ref": 1824,
+        "n_est": 1782
+      }
+    },
+    "2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_11_R1_2013_wav--1.midi": {
+      "onset50": {
+        "tp": 1965,
+        "n_ref": 2006,
+        "n_est": 2124
+      },
+      "onset30": {
+        "tp": 1954,
+        "n_ref": 2006,
+        "n_est": 2124
+      },
+      "onset20": {
+        "tp": 1927,
+        "n_ref": 2006,
+        "n_est": 2124
+      },
+      "onset10": {
+        "tp": 1591,
+        "n_ref": 2006,
+        "n_est": 2124
+      },
+      "note": {
+        "tp": 1201,
+        "n_ref": 2006,
+        "n_est": 2124
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_11_R1_2015_wav--2.midi": {
+      "onset50": {
+        "tp": 1972,
+        "n_ref": 2022,
+        "n_est": 2045
+      },
+      "onset30": {
+        "tp": 1968,
+        "n_ref": 2022,
+        "n_est": 2045
+      },
+      "onset20": {
+        "tp": 1947,
+        "n_ref": 2022,
+        "n_est": 2045
+      },
+      "onset10": {
+        "tp": 1659,
+        "n_ref": 2022,
+        "n_est": 2045
+      },
+      "note": {
+        "tp": 1609,
+        "n_ref": 2022,
+        "n_est": 2045
+      }
+    },
+    "2011/MIDI-Unprocessed_07_R1_2011_MID--AUDIO_R1-D3_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 1297,
+        "n_ref": 1374,
+        "n_est": 1309
+      },
+      "onset30": {
+        "tp": 1295,
+        "n_ref": 1374,
+        "n_est": 1309
+      },
+      "onset20": {
+        "tp": 1281,
+        "n_ref": 1374,
+        "n_est": 1309
+      },
+      "onset10": {
+        "tp": 1126,
+        "n_ref": 1374,
+        "n_est": 1309
+      },
+      "note": {
+        "tp": 960,
+        "n_ref": 1374,
+        "n_est": 1309
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_07_R1_2015_wav--1.midi": {
+      "onset50": {
+        "tp": 1326,
+        "n_ref": 1354,
+        "n_est": 1383
+      },
+      "onset30": {
+        "tp": 1325,
+        "n_ref": 1354,
+        "n_est": 1383
+      },
+      "onset20": {
+        "tp": 1311,
+        "n_ref": 1354,
+        "n_est": 1383
+      },
+      "onset10": {
+        "tp": 1168,
+        "n_ref": 1354,
+        "n_est": 1383
+      },
+      "note": {
+        "tp": 991,
+        "n_ref": 1354,
+        "n_est": 1383
+      }
+    },
+    "2013/ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_03_R1_2013_wav--1.midi": {
+      "onset50": {
+        "tp": 1309,
+        "n_ref": 1359,
+        "n_est": 1412
+      },
+      "onset30": {
+        "tp": 1303,
+        "n_ref": 1359,
+        "n_est": 1412
+      },
+      "onset20": {
+        "tp": 1280,
+        "n_ref": 1359,
+        "n_est": 1412
+      },
+      "onset10": {
+        "tp": 1052,
+        "n_ref": 1359,
+        "n_est": 1412
+      },
+      "note": {
+        "tp": 1133,
+        "n_ref": 1359,
+        "n_est": 1412
+      }
+    },
+    "2017/MIDI-Unprocessed_056_PIANO056_MID--AUDIO-split_07-07-17_Piano-e_1-05_wav--1.midi": {
+      "onset50": {
+        "tp": 1337,
+        "n_ref": 1367,
+        "n_est": 1372
+      },
+      "onset30": {
+        "tp": 1334,
+        "n_ref": 1367,
+        "n_est": 1372
+      },
+      "onset20": {
+        "tp": 1322,
+        "n_ref": 1367,
+        "n_est": 1372
+      },
+      "onset10": {
+        "tp": 1145,
+        "n_ref": 1367,
+        "n_est": 1372
+      },
+      "note": {
+        "tp": 929,
+        "n_ref": 1367,
+        "n_est": 1372
+      }
+    },
+    "2009/MIDI-Unprocessed_15_R1_2009_01-02_ORIG_MID--AUDIO_15_R1_2009_15_R1_2009_02_WAV.midi": {
+      "onset50": {
+        "tp": 10906,
+        "n_ref": 13316,
+        "n_est": 12144
+      },
+      "onset30": {
+        "tp": 10667,
+        "n_ref": 13316,
+        "n_est": 12144
+      },
+      "onset20": {
+        "tp": 10117,
+        "n_ref": 13316,
+        "n_est": 12144
+      },
+      "onset10": {
+        "tp": 7697,
+        "n_ref": 13316,
+        "n_est": 12144
+      },
+      "note": {
+        "tp": 3535,
+        "n_ref": 13316,
+        "n_est": 12144
+      }
+    },
+    "2011/MIDI-Unprocessed_04_R1_2011_MID--AUDIO_R1-D2_03_Track03_wav.midi": {
+      "onset50": {
+        "tp": 2467,
+        "n_ref": 2622,
+        "n_est": 2512
+      },
+      "onset30": {
+        "tp": 2459,
+        "n_ref": 2622,
+        "n_est": 2512
+      },
+      "onset20": {
+        "tp": 2420,
+        "n_ref": 2622,
+        "n_est": 2512
+      },
+      "onset10": {
+        "tp": 2024,
+        "n_ref": 2622,
+        "n_est": 2512
+      },
+      "note": {
+        "tp": 1523,
+        "n_ref": 2622,
+        "n_est": 2512
+      }
+    },
+    "2008/MIDI-Unprocessed_12_R1_2008_01-04_ORIG_MID--AUDIO_12_R1_2008_wav--1.midi": {
+      "onset50": {
+        "tp": 2132,
+        "n_ref": 2244,
+        "n_est": 2184
+      },
+      "onset30": {
+        "tp": 2116,
+        "n_ref": 2244,
+        "n_est": 2184
+      },
+      "onset20": {
+        "tp": 2069,
+        "n_ref": 2244,
+        "n_est": 2184
+      },
+      "onset10": {
+        "tp": 1738,
+        "n_ref": 2244,
+        "n_est": 2184
+      },
+      "note": {
+        "tp": 1456,
+        "n_ref": 2244,
+        "n_est": 2184
+      }
+    },
+    "2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_14_R1_2013_wav--2.midi": {
+      "onset50": {
+        "tp": 2145,
+        "n_ref": 2273,
+        "n_est": 2229
+      },
+      "onset30": {
+        "tp": 2139,
+        "n_ref": 2273,
+        "n_est": 2229
+      },
+      "onset20": {
+        "tp": 2104,
+        "n_ref": 2273,
+        "n_est": 2229
+      },
+      "onset10": {
+        "tp": 1793,
+        "n_ref": 2273,
+        "n_est": 2229
+      },
+      "note": {
+        "tp": 1477,
+        "n_ref": 2273,
+        "n_est": 2229
+      }
+    },
+    "2013/ORIG-MIDI_02_7_7_13_Group__MID--AUDIO_19_R1_2013_wav--2.midi": {
+      "onset50": {
+        "tp": 2175,
+        "n_ref": 2266,
+        "n_est": 2238
+      },
+      "onset30": {
+        "tp": 2172,
+        "n_ref": 2266,
+        "n_est": 2238
+      },
+      "onset20": {
+        "tp": 2126,
+        "n_ref": 2266,
+        "n_est": 2238
+      },
+      "onset10": {
+        "tp": 1792,
+        "n_ref": 2266,
+        "n_est": 2238
+      },
+      "note": {
+        "tp": 1729,
+        "n_ref": 2266,
+        "n_est": 2238
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_19_R1_2004_01-02_ORIG_MID--AUDIO_19_R1_2004_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 1544,
+        "n_ref": 1601,
+        "n_est": 1591
+      },
+      "onset30": {
+        "tp": 1536,
+        "n_ref": 1601,
+        "n_est": 1591
+      },
+      "onset20": {
+        "tp": 1504,
+        "n_ref": 1601,
+        "n_est": 1591
+      },
+      "onset10": {
+        "tp": 1176,
+        "n_ref": 1601,
+        "n_est": 1591
+      },
+      "note": {
+        "tp": 543,
+        "n_ref": 1601,
+        "n_est": 1591
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_04_R1_2015_wav--2.midi": {
+      "onset50": {
+        "tp": 2508,
+        "n_ref": 2625,
+        "n_est": 2578
+      },
+      "onset30": {
+        "tp": 2499,
+        "n_ref": 2625,
+        "n_est": 2578
+      },
+      "onset20": {
+        "tp": 2457,
+        "n_ref": 2625,
+        "n_est": 2578
+      },
+      "onset10": {
+        "tp": 2105,
+        "n_ref": 2625,
+        "n_est": 2578
+      },
+      "note": {
+        "tp": 1660,
+        "n_ref": 2625,
+        "n_est": 2578
+      }
+    },
+    "2011/MIDI-Unprocessed_05_R1_2011_MID--AUDIO_R1-D2_10_Track10_wav.midi": {
+      "onset50": {
+        "tp": 2006,
+        "n_ref": 2254,
+        "n_est": 2035
+      },
+      "onset30": {
+        "tp": 1988,
+        "n_ref": 2254,
+        "n_est": 2035
+      },
+      "onset20": {
+        "tp": 1935,
+        "n_ref": 2254,
+        "n_est": 2035
+      },
+      "onset10": {
+        "tp": 1593,
+        "n_ref": 2254,
+        "n_est": 2035
+      },
+      "note": {
+        "tp": 982,
+        "n_ref": 2254,
+        "n_est": 2035
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital13-15_MID--AUDIO_14_R1_2018_wav--3.midi": {
+      "onset50": {
+        "tp": 4803,
+        "n_ref": 5662,
+        "n_est": 5162
+      },
+      "onset30": {
+        "tp": 4746,
+        "n_ref": 5662,
+        "n_est": 5162
+      },
+      "onset20": {
+        "tp": 4580,
+        "n_ref": 5662,
+        "n_est": 5162
+      },
+      "onset10": {
+        "tp": 3589,
+        "n_ref": 5662,
+        "n_est": 5162
+      },
+      "note": {
+        "tp": 2227,
+        "n_ref": 5662,
+        "n_est": 5162
+      }
+    },
+    "2014/MIDI-UNPROCESSED_14-15_R1_2014_MID--AUDIO_15_R1_2014_wav--2.midi": {
+      "onset50": {
+        "tp": 4386,
+        "n_ref": 5636,
+        "n_est": 4958
+      },
+      "onset30": {
+        "tp": 4209,
+        "n_ref": 5636,
+        "n_est": 4958
+      },
+      "onset20": {
+        "tp": 3855,
+        "n_ref": 5636,
+        "n_est": 4958
+      },
+      "onset10": {
+        "tp": 2821,
+        "n_ref": 5636,
+        "n_est": 4958
+      },
+      "note": {
+        "tp": 1507,
+        "n_ref": 5636,
+        "n_est": 4958
+      }
+    },
+    "2011/MIDI-Unprocessed_09_R1_2011_MID--AUDIO_R1-D3_13_Track13_wav.midi": {
+      "onset50": {
+        "tp": 2369,
+        "n_ref": 2609,
+        "n_est": 2413
+      },
+      "onset30": {
+        "tp": 2356,
+        "n_ref": 2609,
+        "n_est": 2413
+      },
+      "onset20": {
+        "tp": 2314,
+        "n_ref": 2609,
+        "n_est": 2413
+      },
+      "onset10": {
+        "tp": 1897,
+        "n_ref": 2609,
+        "n_est": 2413
+      },
+      "note": {
+        "tp": 1419,
+        "n_ref": 2609,
+        "n_est": 2413
+      }
+    },
+    "2008/MIDI-Unprocessed_06_R1_2008_01-04_ORIG_MID--AUDIO_06_R1_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 2851,
+        "n_ref": 3194,
+        "n_est": 3157
+      },
+      "onset30": {
+        "tp": 2808,
+        "n_ref": 3194,
+        "n_est": 3157
+      },
+      "onset20": {
+        "tp": 2702,
+        "n_ref": 3194,
+        "n_est": 3157
+      },
+      "onset10": {
+        "tp": 2157,
+        "n_ref": 3194,
+        "n_est": 3157
+      },
+      "note": {
+        "tp": 1187,
+        "n_ref": 3194,
+        "n_est": 3157
+      }
+    },
+    "2017/MIDI-Unprocessed_044_PIANO044_MID--AUDIO-split_07-06-17_Piano-e_1-04_wav--2.midi": {
+      "onset50": {
+        "tp": 3570,
+        "n_ref": 3912,
+        "n_est": 3824
+      },
+      "onset30": {
+        "tp": 3513,
+        "n_ref": 3912,
+        "n_est": 3824
+      },
+      "onset20": {
+        "tp": 3388,
+        "n_ref": 3912,
+        "n_est": 3824
+      },
+      "onset10": {
+        "tp": 2760,
+        "n_ref": 3912,
+        "n_est": 3824
+      },
+      "note": {
+        "tp": 1902,
+        "n_ref": 3912,
+        "n_est": 3824
+      }
+    },
+    "2017/MIDI-Unprocessed_046_PIANO046_MID--AUDIO-split_07-06-17_Piano-e_2-02_wav--2.midi": {
+      "onset50": {
+        "tp": 2864,
+        "n_ref": 3264,
+        "n_est": 3015
+      },
+      "onset30": {
+        "tp": 2830,
+        "n_ref": 3264,
+        "n_est": 3015
+      },
+      "onset20": {
+        "tp": 2752,
+        "n_ref": 3264,
+        "n_est": 3015
+      },
+      "onset10": {
+        "tp": 2253,
+        "n_ref": 3264,
+        "n_est": 3015
+      },
+      "note": {
+        "tp": 1587,
+        "n_ref": 3264,
+        "n_est": 3015
+      }
+    },
+    "2017/MIDI-Unprocessed_049_PIANO049_MID--AUDIO-split_07-06-17_Piano-e_2-06_wav--2.midi": {
+      "onset50": {
+        "tp": 3063,
+        "n_ref": 3370,
+        "n_est": 3169
+      },
+      "onset30": {
+        "tp": 3037,
+        "n_ref": 3370,
+        "n_est": 3169
+      },
+      "onset20": {
+        "tp": 2955,
+        "n_ref": 3370,
+        "n_est": 3169
+      },
+      "onset10": {
+        "tp": 2401,
+        "n_ref": 3370,
+        "n_est": 3169
+      },
+      "note": {
+        "tp": 1958,
+        "n_ref": 3370,
+        "n_est": 3169
+      }
+    },
+    "2008/MIDI-Unprocessed_05_R1_2008_01-04_ORIG_MID--AUDIO_05_R1_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 2876,
+        "n_ref": 3332,
+        "n_est": 3121
+      },
+      "onset30": {
+        "tp": 2823,
+        "n_ref": 3332,
+        "n_est": 3121
+      },
+      "onset20": {
+        "tp": 2671,
+        "n_ref": 3332,
+        "n_est": 3121
+      },
+      "onset10": {
+        "tp": 2030,
+        "n_ref": 3332,
+        "n_est": 3121
+      },
+      "note": {
+        "tp": 1559,
+        "n_ref": 3332,
+        "n_est": 3121
+      }
+    },
+    "2008/MIDI-Unprocessed_17_R1_2008_01-04_ORIG_MID--AUDIO_17_R1_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 2816,
+        "n_ref": 3306,
+        "n_est": 2995
+      },
+      "onset30": {
+        "tp": 2765,
+        "n_ref": 3306,
+        "n_est": 2995
+      },
+      "onset20": {
+        "tp": 2637,
+        "n_ref": 3306,
+        "n_est": 2995
+      },
+      "onset10": {
+        "tp": 2058,
+        "n_ref": 3306,
+        "n_est": 2995
+      },
+      "note": {
+        "tp": 1479,
+        "n_ref": 3306,
+        "n_est": 2995
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_06_R1_2015_wav--2.midi": {
+      "onset50": {
+        "tp": 7293,
+        "n_ref": 7953,
+        "n_est": 7755
+      },
+      "onset30": {
+        "tp": 7238,
+        "n_ref": 7953,
+        "n_est": 7755
+      },
+      "onset20": {
+        "tp": 7050,
+        "n_ref": 7953,
+        "n_est": 7755
+      },
+      "onset10": {
+        "tp": 5795,
+        "n_ref": 7953,
+        "n_est": 7755
+      },
+      "note": {
+        "tp": 3799,
+        "n_ref": 7953,
+        "n_est": 7755
+      }
+    },
+    "2008/MIDI-Unprocessed_09_R1_2008_01-05_ORIG_MID--AUDIO_09_R1_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 2914,
+        "n_ref": 3239,
+        "n_est": 3082
+      },
+      "onset30": {
+        "tp": 2874,
+        "n_ref": 3239,
+        "n_est": 3082
+      },
+      "onset20": {
+        "tp": 2776,
+        "n_ref": 3239,
+        "n_est": 3082
+      },
+      "onset10": {
+        "tp": 2207,
+        "n_ref": 3239,
+        "n_est": 3082
+      },
+      "note": {
+        "tp": 1284,
+        "n_ref": 3239,
+        "n_est": 3082
+      }
+    },
+    "2008/MIDI-Unprocessed_18_R1_2008_01-04_ORIG_MID--AUDIO_18_R1_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 2909,
+        "n_ref": 3213,
+        "n_est": 3078
+      },
+      "onset30": {
+        "tp": 2867,
+        "n_ref": 3213,
+        "n_est": 3078
+      },
+      "onset20": {
+        "tp": 2749,
+        "n_ref": 3213,
+        "n_est": 3078
+      },
+      "onset10": {
+        "tp": 2216,
+        "n_ref": 3213,
+        "n_est": 3078
+      },
+      "note": {
+        "tp": 1361,
+        "n_ref": 3213,
+        "n_est": 3078
+      }
+    },
+    "2014/MIDI-UNPROCESSED_04-05_R1_2014_MID--AUDIO_04_R1_2014_wav--2.midi": {
+      "onset50": {
+        "tp": 9975,
+        "n_ref": 11207,
+        "n_est": 10558
+      },
+      "onset30": {
+        "tp": 9878,
+        "n_ref": 11207,
+        "n_est": 10558
+      },
+      "onset20": {
+        "tp": 9584,
+        "n_ref": 11207,
+        "n_est": 10558
+      },
+      "onset10": {
+        "tp": 7857,
+        "n_ref": 11207,
+        "n_est": 10558
+      },
+      "note": {
+        "tp": 5296,
+        "n_ref": 11207,
+        "n_est": 10558
+      }
+    },
+    "2017/MIDI-Unprocessed_066_PIANO066_MID--AUDIO-split_07-07-17_Piano-e_3-02_wav--2.midi": {
+      "onset50": {
+        "tp": 3031,
+        "n_ref": 3260,
+        "n_est": 3132
+      },
+      "onset30": {
+        "tp": 3010,
+        "n_ref": 3260,
+        "n_est": 3132
+      },
+      "onset20": {
+        "tp": 2923,
+        "n_ref": 3260,
+        "n_est": 3132
+      },
+      "onset10": {
+        "tp": 2434,
+        "n_ref": 3260,
+        "n_est": 3132
+      },
+      "note": {
+        "tp": 1901,
+        "n_ref": 3260,
+        "n_est": 3132
+      }
+    },
+    "2008/MIDI-Unprocessed_10_R1_2008_01-04_ORIG_MID--AUDIO_10_R1_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 3772,
+        "n_ref": 4368,
+        "n_est": 4079
+      },
+      "onset30": {
+        "tp": 3723,
+        "n_ref": 4368,
+        "n_est": 4079
+      },
+      "onset20": {
+        "tp": 3596,
+        "n_ref": 4368,
+        "n_est": 4079
+      },
+      "onset10": {
+        "tp": 2834,
+        "n_ref": 4368,
+        "n_est": 4079
+      },
+      "note": {
+        "tp": 1722,
+        "n_ref": 4368,
+        "n_est": 4079
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-1-8_mid--AUDIO-from_mp3_05_R1_2015_wav--3.midi": {
+      "onset50": {
+        "tp": 3939,
+        "n_ref": 4347,
+        "n_est": 4152
+      },
+      "onset30": {
+        "tp": 3924,
+        "n_ref": 4347,
+        "n_est": 4152
+      },
+      "onset20": {
+        "tp": 3844,
+        "n_ref": 4347,
+        "n_est": 4152
+      },
+      "onset10": {
+        "tp": 3233,
+        "n_ref": 4347,
+        "n_est": 4152
+      },
+      "note": {
+        "tp": 2267,
+        "n_ref": 4347,
+        "n_est": 4152
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_09_R1_2015_wav--2.midi": {
+      "onset50": {
+        "tp": 5413,
+        "n_ref": 5823,
+        "n_est": 5771
+      },
+      "onset30": {
+        "tp": 5382,
+        "n_ref": 5823,
+        "n_est": 5771
+      },
+      "onset20": {
+        "tp": 5274,
+        "n_ref": 5823,
+        "n_est": 5771
+      },
+      "onset10": {
+        "tp": 4522,
+        "n_ref": 5823,
+        "n_est": 5771
+      },
+      "note": {
+        "tp": 2518,
+        "n_ref": 5823,
+        "n_est": 5771
+      }
+    },
+    "2017/MIDI-Unprocessed_065_PIANO065_MID--AUDIO-split_07-07-17_Piano-e_3-01_wav--2.midi": {
+      "onset50": {
+        "tp": 3926,
+        "n_ref": 4279,
+        "n_est": 4069
+      },
+      "onset30": {
+        "tp": 3897,
+        "n_ref": 4279,
+        "n_est": 4069
+      },
+      "onset20": {
+        "tp": 3822,
+        "n_ref": 4279,
+        "n_est": 4069
+      },
+      "onset10": {
+        "tp": 3206,
+        "n_ref": 4279,
+        "n_est": 4069
+      },
+      "note": {
+        "tp": 2098,
+        "n_ref": 4279,
+        "n_est": 4069
+      }
+    },
+    "2011/MIDI-Unprocessed_23_R1_2011_MID--AUDIO_R1-D9_03_Track03_wav.midi": {
+      "onset50": {
+        "tp": 1959,
+        "n_ref": 2111,
+        "n_est": 2035
+      },
+      "onset30": {
+        "tp": 1946,
+        "n_ref": 2111,
+        "n_est": 2035
+      },
+      "onset20": {
+        "tp": 1909,
+        "n_ref": 2111,
+        "n_est": 2035
+      },
+      "onset10": {
+        "tp": 1603,
+        "n_ref": 2111,
+        "n_est": 2035
+      },
+      "note": {
+        "tp": 1058,
+        "n_ref": 2111,
+        "n_est": 2035
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D2-13-20_mid--AUDIO-from_mp3_16_R1_2015_wav--2.midi": {
+      "onset50": {
+        "tp": 1984,
+        "n_ref": 2113,
+        "n_est": 2061
+      },
+      "onset30": {
+        "tp": 1971,
+        "n_ref": 2113,
+        "n_est": 2061
+      },
+      "onset20": {
+        "tp": 1930,
+        "n_ref": 2113,
+        "n_est": 2061
+      },
+      "onset10": {
+        "tp": 1605,
+        "n_ref": 2113,
+        "n_est": 2061
+      },
+      "note": {
+        "tp": 1273,
+        "n_ref": 2113,
+        "n_est": 2061
+      }
+    },
+    "2009/MIDI-Unprocessed_09_R1_2009_01-04_ORIG_MID--AUDIO_09_R1_2009_09_R1_2009_03_WAV.midi": {
+      "onset50": {
+        "tp": 7170,
+        "n_ref": 8486,
+        "n_est": 7743
+      },
+      "onset30": {
+        "tp": 7032,
+        "n_ref": 8486,
+        "n_est": 7743
+      },
+      "onset20": {
+        "tp": 6677,
+        "n_ref": 8486,
+        "n_est": 7743
+      },
+      "onset10": {
+        "tp": 5115,
+        "n_ref": 8486,
+        "n_est": 7743
+      },
+      "note": {
+        "tp": 3378,
+        "n_ref": 8486,
+        "n_est": 7743
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_15_R1_2004_03_ORIG_MID--AUDIO_15_R1_2004_03_Track03_wav.midi": {
+      "onset50": {
+        "tp": 9170,
+        "n_ref": 10263,
+        "n_est": 9586
+      },
+      "onset30": {
+        "tp": 9055,
+        "n_ref": 10263,
+        "n_est": 9586
+      },
+      "onset20": {
+        "tp": 8716,
+        "n_ref": 10263,
+        "n_est": 9586
+      },
+      "onset10": {
+        "tp": 6639,
+        "n_ref": 10263,
+        "n_est": 9586
+      },
+      "note": {
+        "tp": 5138,
+        "n_ref": 10263,
+        "n_est": 9586
+      }
+    },
+    "2013/ORIG-MIDI_02_7_7_13_Group__MID--AUDIO_16_R1_2013_wav--2.midi": {
+      "onset50": {
+        "tp": 3852,
+        "n_ref": 4355,
+        "n_est": 4257
+      },
+      "onset30": {
+        "tp": 3816,
+        "n_ref": 4355,
+        "n_est": 4257
+      },
+      "onset20": {
+        "tp": 3700,
+        "n_ref": 4355,
+        "n_est": 4257
+      },
+      "onset10": {
+        "tp": 2915,
+        "n_ref": 4355,
+        "n_est": 4257
+      },
+      "note": {
+        "tp": 1934,
+        "n_ref": 4355,
+        "n_est": 4257
+      }
+    },
+    "2009/MIDI-Unprocessed_17_R1_2009_01-03_ORIG_MID--AUDIO_17_R1_2009_17_R1_2009_01_WAV.midi": {
+      "onset50": {
+        "tp": 5154,
+        "n_ref": 5752,
+        "n_est": 5580
+      },
+      "onset30": {
+        "tp": 5095,
+        "n_ref": 5752,
+        "n_est": 5580
+      },
+      "onset20": {
+        "tp": 4887,
+        "n_ref": 5752,
+        "n_est": 5580
+      },
+      "onset10": {
+        "tp": 3842,
+        "n_ref": 5752,
+        "n_est": 5580
+      },
+      "note": {
+        "tp": 2190,
+        "n_ref": 5752,
+        "n_est": 5580
+      }
+    },
+    "2006/MIDI-Unprocessed_16_R1_2006_01-04_ORIG_MID--AUDIO_16_R1_2006_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 3476,
+        "n_ref": 4610,
+        "n_est": 4076
+      },
+      "onset30": {
+        "tp": 3368,
+        "n_ref": 4610,
+        "n_est": 4076
+      },
+      "onset20": {
+        "tp": 3140,
+        "n_ref": 4610,
+        "n_est": 4076
+      },
+      "onset10": {
+        "tp": 2273,
+        "n_ref": 4610,
+        "n_est": 4076
+      },
+      "note": {
+        "tp": 899,
+        "n_ref": 4610,
+        "n_est": 4076
+      }
+    },
+    "2009/MIDI-Unprocessed_17_R1_2009_01-03_ORIG_MID--AUDIO_17_R1_2009_17_R1_2009_02_WAV.midi": {
+      "onset50": {
+        "tp": 3444,
+        "n_ref": 4403,
+        "n_est": 4010
+      },
+      "onset30": {
+        "tp": 3305,
+        "n_ref": 4403,
+        "n_est": 4010
+      },
+      "onset20": {
+        "tp": 3053,
+        "n_ref": 4403,
+        "n_est": 4010
+      },
+      "onset10": {
+        "tp": 2237,
+        "n_ref": 4403,
+        "n_est": 4010
+      },
+      "note": {
+        "tp": 998,
+        "n_ref": 4403,
+        "n_est": 4010
+      }
+    },
+    "2014/MIDI-UNPROCESSED_01-03_R1_2014_MID--AUDIO_02_R1_2014_wav--4.midi": {
+      "onset50": {
+        "tp": 4682,
+        "n_ref": 5736,
+        "n_est": 5293
+      },
+      "onset30": {
+        "tp": 4580,
+        "n_ref": 5736,
+        "n_est": 5293
+      },
+      "onset20": {
+        "tp": 4350,
+        "n_ref": 5736,
+        "n_est": 5293
+      },
+      "onset10": {
+        "tp": 3252,
+        "n_ref": 5736,
+        "n_est": 5293
+      },
+      "note": {
+        "tp": 1447,
+        "n_ref": 5736,
+        "n_est": 5293
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_11_R1_2004_01-02_ORIG_MID--AUDIO_11_R1_2004_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 9928,
+        "n_ref": 11310,
+        "n_est": 10899
+      },
+      "onset30": {
+        "tp": 9749,
+        "n_ref": 11310,
+        "n_est": 10899
+      },
+      "onset20": {
+        "tp": 9192,
+        "n_ref": 11310,
+        "n_est": 10899
+      },
+      "onset10": {
+        "tp": 6698,
+        "n_ref": 11310,
+        "n_est": 10899
+      },
+      "note": {
+        "tp": 3368,
+        "n_ref": 11310,
+        "n_est": 10899
+      }
+    },
+    "2011/MIDI-Unprocessed_23_R3_2011_MID--AUDIO_R3-D8_04_Track04_wav.midi": {
+      "onset50": {
+        "tp": 4027,
+        "n_ref": 4368,
+        "n_est": 4486
+      },
+      "onset30": {
+        "tp": 3979,
+        "n_ref": 4368,
+        "n_est": 4486
+      },
+      "onset20": {
+        "tp": 3806,
+        "n_ref": 4368,
+        "n_est": 4486
+      },
+      "onset10": {
+        "tp": 2950,
+        "n_ref": 4368,
+        "n_est": 4486
+      },
+      "note": {
+        "tp": 1602,
+        "n_ref": 4368,
+        "n_est": 4486
+      }
+    },
+    "2006/MIDI-Unprocessed_06_R1_2006_01-04_ORIG_MID--AUDIO_06_R1_2006_02_Track02_wav.midi": {
+      "onset50": {
+        "tp": 5050,
+        "n_ref": 6128,
+        "n_est": 5587
+      },
+      "onset30": {
+        "tp": 4951,
+        "n_ref": 6128,
+        "n_est": 5587
+      },
+      "onset20": {
+        "tp": 4701,
+        "n_ref": 6128,
+        "n_est": 5587
+      },
+      "onset10": {
+        "tp": 3573,
+        "n_ref": 6128,
+        "n_est": 5587
+      },
+      "note": {
+        "tp": 2636,
+        "n_ref": 6128,
+        "n_est": 5587
+      }
+    },
+    "2014/MIDI-UNPROCESSED_11-13_R1_2014_MID--AUDIO_13_R1_2014_wav--4.midi": {
+      "onset50": {
+        "tp": 6809,
+        "n_ref": 8266,
+        "n_est": 8335
+      },
+      "onset30": {
+        "tp": 6465,
+        "n_ref": 8266,
+        "n_est": 8335
+      },
+      "onset20": {
+        "tp": 5775,
+        "n_ref": 8266,
+        "n_est": 8335
+      },
+      "onset10": {
+        "tp": 3939,
+        "n_ref": 8266,
+        "n_est": 8335
+      },
+      "note": {
+        "tp": 2787,
+        "n_ref": 8266,
+        "n_est": 8335
+      }
+    },
+    "2014/MIDI-UNPROCESSED_19-20_R1_2014_MID--AUDIO_19_R1_2014_wav--8.midi": {
+      "onset50": {
+        "tp": 5092,
+        "n_ref": 6173,
+        "n_est": 5915
+      },
+      "onset30": {
+        "tp": 4944,
+        "n_ref": 6173,
+        "n_est": 5915
+      },
+      "onset20": {
+        "tp": 4621,
+        "n_ref": 6173,
+        "n_est": 5915
+      },
+      "onset10": {
+        "tp": 3276,
+        "n_ref": 6173,
+        "n_est": 5915
+      },
+      "note": {
+        "tp": 2070,
+        "n_ref": 6173,
+        "n_est": 5915
+      }
+    },
+    "2004/MIDI-Unprocessed_SMF_02_R1_2004_01-05_ORIG_MID--AUDIO_02_R1_2004_10_Track10_wav.midi": {
+      "onset50": {
+        "tp": 5132,
+        "n_ref": 6369,
+        "n_est": 5982
+      },
+      "onset30": {
+        "tp": 4999,
+        "n_ref": 6369,
+        "n_est": 5982
+      },
+      "onset20": {
+        "tp": 4642,
+        "n_ref": 6369,
+        "n_est": 5982
+      },
+      "onset10": {
+        "tp": 3288,
+        "n_ref": 6369,
+        "n_est": 5982
+      },
+      "note": {
+        "tp": 2009,
+        "n_ref": 6369,
+        "n_est": 5982
+      }
+    },
+    "2009/MIDI-Unprocessed_20_R1_2009_01-05_ORIG_MID--AUDIO_20_R1_2009_20_R1_2009_02_WAV.midi": {
+      "onset50": {
+        "tp": 6666,
+        "n_ref": 8043,
+        "n_est": 7460
+      },
+      "onset30": {
+        "tp": 6507,
+        "n_ref": 8043,
+        "n_est": 7460
+      },
+      "onset20": {
+        "tp": 6092,
+        "n_ref": 8043,
+        "n_est": 7460
+      },
+      "onset10": {
+        "tp": 4522,
+        "n_ref": 8043,
+        "n_est": 7460
+      },
+      "note": {
+        "tp": 2931,
+        "n_ref": 8043,
+        "n_est": 7460
+      }
+    },
+    "2018/MIDI-Unprocessed_Recital17-19_MID--AUDIO_17_R1_2018_wav--2.midi": {
+      "onset50": {
+        "tp": 3010,
+        "n_ref": 3821,
+        "n_est": 3718
+      },
+      "onset30": {
+        "tp": 2888,
+        "n_ref": 3821,
+        "n_est": 3718
+      },
+      "onset20": {
+        "tp": 2617,
+        "n_ref": 3821,
+        "n_est": 3718
+      },
+      "onset10": {
+        "tp": 1750,
+        "n_ref": 3821,
+        "n_est": 3718
+      },
+      "note": {
+        "tp": 1113,
+        "n_ref": 3821,
+        "n_est": 3718
+      }
+    },
+    "2008/MIDI-Unprocessed_08_R1_2008_01-05_ORIG_MID--AUDIO_08_R1_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 2438,
+        "n_ref": 3154,
+        "n_est": 3069
+      },
+      "onset30": {
+        "tp": 2366,
+        "n_ref": 3154,
+        "n_est": 3069
+      },
+      "onset20": {
+        "tp": 2194,
+        "n_ref": 3154,
+        "n_est": 3069
+      },
+      "onset10": {
+        "tp": 1538,
+        "n_ref": 3154,
+        "n_est": 3069
+      },
+      "note": {
+        "tp": 910,
+        "n_ref": 3154,
+        "n_est": 3069
+      }
+    },
+    "2014/MIDI-UNPROCESSED_04-05_R1_2014_MID--AUDIO_04_R1_2014_wav--5.midi": {
+      "onset50": {
+        "tp": 2559,
+        "n_ref": 3057,
+        "n_est": 3134
+      },
+      "onset30": {
+        "tp": 2482,
+        "n_ref": 3057,
+        "n_est": 3134
+      },
+      "onset20": {
+        "tp": 2317,
+        "n_ref": 3057,
+        "n_est": 3134
+      },
+      "onset10": {
+        "tp": 1691,
+        "n_ref": 3057,
+        "n_est": 3134
+      },
+      "note": {
+        "tp": 1120,
+        "n_ref": 3057,
+        "n_est": 3134
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D2-13-20_mid--AUDIO-from_mp3_17_R1_2015_wav--3.midi": {
+      "onset50": {
+        "tp": 3470,
+        "n_ref": 3994,
+        "n_est": 4358
+      },
+      "onset30": {
+        "tp": 3372,
+        "n_ref": 3994,
+        "n_est": 4358
+      },
+      "onset20": {
+        "tp": 3166,
+        "n_ref": 3994,
+        "n_est": 4358
+      },
+      "onset10": {
+        "tp": 2375,
+        "n_ref": 3994,
+        "n_est": 4358
+      },
+      "note": {
+        "tp": 1475,
+        "n_ref": 3994,
+        "n_est": 4358
+      }
+    },
+    "2013/ORIG-MIDI_01_7_6_13_Group__MID--AUDIO_04_R1_2013_wav--3.midi": {
+      "onset50": {
+        "tp": 3213,
+        "n_ref": 3947,
+        "n_est": 4764
+      },
+      "onset30": {
+        "tp": 3081,
+        "n_ref": 3947,
+        "n_est": 4764
+      },
+      "onset20": {
+        "tp": 2800,
+        "n_ref": 3947,
+        "n_est": 4764
+      },
+      "onset10": {
+        "tp": 1978,
+        "n_ref": 3947,
+        "n_est": 4764
+      },
+      "note": {
+        "tp": 1142,
+        "n_ref": 3947,
+        "n_est": 4764
+      }
+    },
+    "2008/MIDI-Unprocessed_05_R1_2008_01-04_ORIG_MID--AUDIO_05_R1_2008_wav--4.midi": {
+      "onset50": {
+        "tp": 3173,
+        "n_ref": 3944,
+        "n_est": 4219
+      },
+      "onset30": {
+        "tp": 3011,
+        "n_ref": 3944,
+        "n_est": 4219
+      },
+      "onset20": {
+        "tp": 2730,
+        "n_ref": 3944,
+        "n_est": 4219
+      },
+      "onset10": {
+        "tp": 1865,
+        "n_ref": 3944,
+        "n_est": 4219
+      },
+      "note": {
+        "tp": 1211,
+        "n_ref": 3944,
+        "n_est": 4219
+      }
+    },
+    "2004/MIDI-Unprocessed_SMF_02_R1_2004_01-05_ORIG_MID--AUDIO_02_R1_2004_08_Track08_wav.midi": {
+      "onset50": {
+        "tp": 2430,
+        "n_ref": 2850,
+        "n_est": 3061
+      },
+      "onset30": {
+        "tp": 2364,
+        "n_ref": 2850,
+        "n_est": 3061
+      },
+      "onset20": {
+        "tp": 2202,
+        "n_ref": 2850,
+        "n_est": 3061
+      },
+      "onset10": {
+        "tp": 1551,
+        "n_ref": 2850,
+        "n_est": 3061
+      },
+      "note": {
+        "tp": 721,
+        "n_ref": 2850,
+        "n_est": 3061
+      }
+    },
+    "2006/MIDI-Unprocessed_12_R1_2006_01-08_ORIG_MID--AUDIO_12_R1_2006_07_Track07_wav.midi": {
+      "onset50": {
+        "tp": 2972,
+        "n_ref": 3816,
+        "n_est": 3564
+      },
+      "onset30": {
+        "tp": 2886,
+        "n_ref": 3816,
+        "n_est": 3564
+      },
+      "onset20": {
+        "tp": 2666,
+        "n_ref": 3816,
+        "n_est": 3564
+      },
+      "onset10": {
+        "tp": 1891,
+        "n_ref": 3816,
+        "n_est": 3564
+      },
+      "note": {
+        "tp": 1115,
+        "n_ref": 3816,
+        "n_est": 3564
+      }
+    },
+    "2008/MIDI-Unprocessed_12_R3_2008_01-04_ORIG_MID--AUDIO_12_R3_2008_wav--3.midi": {
+      "onset50": {
+        "tp": 1159,
+        "n_ref": 1248,
+        "n_est": 1231
+      },
+      "onset30": {
+        "tp": 1147,
+        "n_ref": 1248,
+        "n_est": 1231
+      },
+      "onset20": {
+        "tp": 1106,
+        "n_ref": 1248,
+        "n_est": 1231
+      },
+      "onset10": {
+        "tp": 864,
+        "n_ref": 1248,
+        "n_est": 1231
+      },
+      "note": {
+        "tp": 473,
+        "n_ref": 1248,
+        "n_est": 1231
+      }
+    },
+    "2015/MIDI-Unprocessed_R1_D1-9-12_mid--AUDIO-from_mp3_11_R1_2015_wav--5.midi": {
+      "onset50": {
+        "tp": 1296,
+        "n_ref": 1400,
+        "n_est": 1415
+      },
+      "onset30": {
+        "tp": 1289,
+        "n_ref": 1400,
+        "n_est": 1415
+      },
+      "onset20": {
+        "tp": 1268,
+        "n_ref": 1400,
+        "n_est": 1415
+      },
+      "onset10": {
+        "tp": 1097,
+        "n_ref": 1400,
+        "n_est": 1415
+      },
+      "note": {
+        "tp": 733,
+        "n_ref": 1400,
+        "n_est": 1415
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_08_R1_2004_04-06_ORIG_MID--AUDIO_08_R1_2004_05_Track05_wav--1.midi": {
+      "onset50": {
+        "tp": 2330,
+        "n_ref": 2641,
+        "n_est": 2731
+      },
+      "onset30": {
+        "tp": 2215,
+        "n_ref": 2641,
+        "n_est": 2731
+      },
+      "onset20": {
+        "tp": 1985,
+        "n_ref": 2641,
+        "n_est": 2731
+      },
+      "onset10": {
+        "tp": 1298,
+        "n_ref": 2641,
+        "n_est": 2731
+      },
+      "note": {
+        "tp": 907,
+        "n_ref": 2641,
+        "n_est": 2731
+      }
+    },
+    "2011/MIDI-Unprocessed_03_R2_2011_MID--AUDIO_R2-D1_06_Track06_wav.midi": {
+      "onset50": {
+        "tp": 1422,
+        "n_ref": 1628,
+        "n_est": 1559
+      },
+      "onset30": {
+        "tp": 1407,
+        "n_ref": 1628,
+        "n_est": 1559
+      },
+      "onset20": {
+        "tp": 1365,
+        "n_ref": 1628,
+        "n_est": 1559
+      },
+      "onset10": {
+        "tp": 1104,
+        "n_ref": 1628,
+        "n_est": 1559
+      },
+      "note": {
+        "tp": 614,
+        "n_ref": 1628,
+        "n_est": 1559
+      }
+    },
+    "2011/MIDI-Unprocessed_05_R1_2011_MID--AUDIO_R1-D2_12_Track12_wav.midi": {
+      "onset50": {
+        "tp": 3570,
+        "n_ref": 3751,
+        "n_est": 3666
+      },
+      "onset30": {
+        "tp": 3552,
+        "n_ref": 3751,
+        "n_est": 3666
+      },
+      "onset20": {
+        "tp": 3503,
+        "n_ref": 3751,
+        "n_est": 3666
+      },
+      "onset10": {
+        "tp": 2977,
+        "n_ref": 3751,
+        "n_est": 3666
+      },
+      "note": {
+        "tp": 2043,
+        "n_ref": 3751,
+        "n_est": 3666
+      }
+    },
+    "2008/MIDI-Unprocessed_08_R1_2008_01-05_ORIG_MID--AUDIO_08_R1_2008_wav--2.midi": {
+      "onset50": {
+        "tp": 2726,
+        "n_ref": 2850,
+        "n_est": 2787
+      },
+      "onset30": {
+        "tp": 2713,
+        "n_ref": 2850,
+        "n_est": 2787
+      },
+      "onset20": {
+        "tp": 2668,
+        "n_ref": 2850,
+        "n_est": 2787
+      },
+      "onset10": {
+        "tp": 2206,
+        "n_ref": 2850,
+        "n_est": 2787
+      },
+      "note": {
+        "tp": 1591,
+        "n_ref": 2850,
+        "n_est": 2787
+      }
+    },
+    "2013/ORIG-MIDI_03_7_10_13_Group_MID--AUDIO_17_R3_2013_wav--1.midi": {
+      "onset50": {
+        "tp": 2740,
+        "n_ref": 2873,
+        "n_est": 2850
+      },
+      "onset30": {
+        "tp": 2729,
+        "n_ref": 2873,
+        "n_est": 2850
+      },
+      "onset20": {
+        "tp": 2694,
+        "n_ref": 2873,
+        "n_est": 2850
+      },
+      "onset10": {
+        "tp": 2345,
+        "n_ref": 2873,
+        "n_est": 2850
+      },
+      "note": {
+        "tp": 1726,
+        "n_ref": 2873,
+        "n_est": 2850
+      }
+    },
+    "2017/MIDI-Unprocessed_052_PIANO052_MID--AUDIO-split_07-06-17_Piano-e_3-03_wav--3.midi": {
+      "onset50": {
+        "tp": 2717,
+        "n_ref": 2828,
+        "n_est": 2740
+      },
+      "onset30": {
+        "tp": 2713,
+        "n_ref": 2828,
+        "n_est": 2740
+      },
+      "onset20": {
+        "tp": 2697,
+        "n_ref": 2828,
+        "n_est": 2740
+      },
+      "onset10": {
+        "tp": 2411,
+        "n_ref": 2828,
+        "n_est": 2740
+      },
+      "note": {
+        "tp": 2093,
+        "n_ref": 2828,
+        "n_est": 2740
+      }
+    },
+    "2013/ORIG-MIDI_03_7_6_13_Group__MID--AUDIO_09_R1_2013_wav--3.midi": {
+      "onset50": {
+        "tp": 1735,
+        "n_ref": 1832,
+        "n_est": 1828
+      },
+      "onset30": {
+        "tp": 1728,
+        "n_ref": 1832,
+        "n_est": 1828
+      },
+      "onset20": {
+        "tp": 1703,
+        "n_ref": 1832,
+        "n_est": 1828
+      },
+      "onset10": {
+        "tp": 1427,
+        "n_ref": 1832,
+        "n_est": 1828
+      },
+      "note": {
+        "tp": 1127,
+        "n_ref": 1832,
+        "n_est": 1828
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_14_R1_2004_04_ORIG_MID--AUDIO_14_R1_2004_04_Track04_wav.midi": {
+      "onset50": {
+        "tp": 2405,
+        "n_ref": 2571,
+        "n_est": 2455
+      },
+      "onset30": {
+        "tp": 2387,
+        "n_ref": 2571,
+        "n_est": 2455
+      },
+      "onset20": {
+        "tp": 2323,
+        "n_ref": 2571,
+        "n_est": 2455
+      },
+      "onset10": {
+        "tp": 1823,
+        "n_ref": 2571,
+        "n_est": 2455
+      },
+      "note": {
+        "tp": 1460,
+        "n_ref": 2571,
+        "n_est": 2455
+      }
+    },
+    "2004/MIDI-Unprocessed_XP_14_R1_2004_04_ORIG_MID--AUDIO_14_R1_2004_05_Track05_wav.midi": {
+      "onset50": {
+        "tp": 823,
+        "n_ref": 875,
+        "n_est": 836
+      },
+      "onset30": {
+        "tp": 814,
+        "n_ref": 875,
+        "n_est": 836
+      },
+      "onset20": {
+        "tp": 786,
+        "n_ref": 875,
+        "n_est": 836
+      },
+      "onset10": {
+        "tp": 608,
+        "n_ref": 875,
+        "n_est": 836
+      },
+      "note": {
+        "tp": 405,
+        "n_ref": 875,
+        "n_est": 836
+      }
+    }
+  }
+}
