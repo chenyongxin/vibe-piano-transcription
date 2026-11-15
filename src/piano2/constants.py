@@ -44,6 +44,10 @@ DECODE_DEFAULTS = {
     "peak_distance": 5,
     "frame_off_threshold": 0.18,
     "release_frames": 3,
+    # offset 结束时间：只在起点后 20 帧内找第一个高置信度 offset 峰。
+    # 旧的 160 帧窗口会把后面的释放峰误配给当前音，note F1 明显偏低。
+    "offset_threshold": 0.7,
+    "offset_max_frames": 20,
 }
 
 # ── 固定评测集（MAESTRO test；与 M0/M0.5 报告一致） ──

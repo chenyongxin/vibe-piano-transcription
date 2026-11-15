@@ -70,9 +70,9 @@ class DecodeConfig:
     harmonic_frame_max: float = 1.0
     frame_gate: float = 0.0
     use_offset_end: bool = False
-    offset_threshold: float = 0.5
+    offset_threshold: float = 0.7
     offset_min_frames: int = 2
-    offset_max_frames: int = 160
+    offset_max_frames: int = 20
 
     def with_(self, **kwargs):
         """返回替换了若干字段的新配置（dataclass 不可变，避免调参时相互污染）。"""

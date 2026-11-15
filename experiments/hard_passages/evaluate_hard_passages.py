@@ -26,11 +26,15 @@ import pretty_midi
 import soundfile as sf
 import mir_eval.transcription as mtran
 from lxml import etree
+from scipy.signal import find_peaks
 
 from piano2.constants import (
     BINS_PER_OCTAVE, DECODE_DEFAULTS, FMIN, HOP, MAESTRO_ROOT, N_BINS, SR,
 )
-from piano2.decode import DecodeConfig, decode, refine_onsets
+from piano2.core import NoteEvent
+from piano2.decode import (
+    DecodeConfig, _refine_peak, apply_offset_ends, decode, refine_onsets,
+)
 from piano2.inference import load_model
 from piano2.notation import (
     GRID, _clean_events, estimate_tempo_and_beats, time_to_quarter, write_musicxml,
@@ -52,8 +56,18 @@ def load_clip_audio(audio_path, start, duration):
     return y, cqt
 
 
-def infer_segment(model, cqt, device):
-    """对片段推理并解码，返回事件列表。"""
+def infer_segment(model, cqt, device, offset_mode="first"):
+    """对片段推理并按指定 offset 策略解码。
+
+    参数:
+        model (torch.nn.Module): hybrid 模型。
+        cqt (np.ndarray): (T, 264) 输入特征。
+        device (str): 推理设备。
+        offset_mode (str): first / frame / near_frame / strongest / near_reg。
+
+    返回:
+        list[NoteEvent]: 解码后的音符事件。
+    """
     from piano2.inference import infer_sliding_window
 
     probs = infer_sliding_window(
@@ -61,10 +75,66 @@ def infer_segment(model, cqt, device):
         with_pedal=True,
     )
     onset, frame, vel, offset, onset_reg, offset_reg, pedal, pedal_on = probs
+    base_cfg = DecodeConfig(**DECODE_DEFAULTS, use_offset_end=False)
+    base = decode(onset, frame, vel, base_cfg)
+    base = refine_onsets(base, onset_reg)
     cfg = DecodeConfig(**DECODE_DEFAULTS, use_offset_end=True)
-    events = decode(onset, frame, vel, cfg, offset_probs=offset)
-    events = refine_onsets(events, onset_reg)
-    return events, pedal, pedal_on
+    if offset_mode == "frame":
+        return base
+    if offset_mode == "first":
+        return apply_offset_ends(base, offset, cfg)
+    return apply_offset_variant(base, offset, cfg, offset_mode, offset_reg)
+
+
+def apply_offset_variant(events, offset_probs, cfg, mode, offset_reg=None):
+    """用不同 offset 峰值选择策略修正结束时间。
+
+    参数:
+        events (list[NoteEvent]): 分类解码出的音符。
+        offset_probs (np.ndarray): (T, 88) offset 概率。
+        cfg (DecodeConfig): 解码配置。
+        mode (str): near_frame / strongest / near_reg。
+        offset_reg (np.ndarray | None): (T, 88) offset_reg 输出；near_reg 使用。
+
+    返回:
+        list[NoteEvent]: 修正后的音符。
+    """
+    fps = SR / HOP
+    total = offset_probs.shape[0]
+    fixed = []
+    for event in events:
+        key = event.pitch - 21
+        start = int(round(event.start * fps))
+        lo = start + cfg.offset_min_frames
+        hi = min(total, start + cfg.offset_max_frames)
+        end = event.end
+        if 0 <= key < 88 and hi - lo >= 2:
+            peaks, props = find_peaks(
+                offset_probs[lo:hi, key], height=cfg.offset_threshold
+            )
+            if len(peaks):
+                if mode == "strongest":
+                    peak = int(peaks[np.argmax(props["peak_heights"])])
+                else:
+                    candidates = (peaks + lo) / fps
+                    peak = int(peaks[np.argmin(np.abs(candidates - end))])
+                end = (lo + peak) / fps
+                end = max(end, event.start + cfg.offset_min_frames / fps)
+        if offset_reg is not None and mode == "near_reg":
+            frame = int(round(end * fps))
+            frame = min(max(1, frame), total - 2)
+            curve = offset_reg[:, key]
+            best = None
+            for f in range(max(1, frame - 1), min(total - 2, frame + 1) + 1):
+                if curve[f] >= curve[f - 1] and curve[f] >= curve[f + 1]:
+                    if best is None or curve[f] > curve[best]:
+                        best = f
+            if best is not None:
+                end = _refine_peak(curve, best) / fps
+        fixed.append(NoteEvent(event.pitch, event.start,
+                               float(max(end, event.start + 0.02)),
+                               event.velocity))
+    return fixed
 
 
 def gt_events(midi_path, start, duration):
@@ -157,6 +227,8 @@ def main():
     ap.add_argument("--model", default="models/best.pt")
     ap.add_argument("--out", default=str(OUT / "results.json"))
     ap.add_argument("--device", default="auto")
+    ap.add_argument("--offset-mode", default="first",
+                    choices=["first", "frame", "near_frame", "strongest", "near_reg"])
     args = ap.parse_args()
 
     with open(args.manifest, encoding="utf-8") as fh:
@@ -171,7 +243,7 @@ def main():
         midi_path = str(MAESTRO_ROOT / clip["track"])
         gt = gt_events(midi_path, start, duration)
         y, cqt = load_clip_audio(audio_path, start, duration)
-        events, pedal, pedal_on = infer_segment(model, cqt, args.device)
+        events = infer_segment(model, cqt, args.device, args.offset_mode)
         clip_events = [e for e in events if 0 <= e.start <= duration]
 
         ref_iv = np.array([[s, e] for _p, s, e, _v in gt], dtype=float)
