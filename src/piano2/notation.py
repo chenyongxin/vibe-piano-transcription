@@ -203,6 +203,19 @@ def build_score(events, audio_path, title="M0 v1", hand_split=60):
         hand = "RH" if pitch >= hand_split else "LH"
         groups[hand].setdefault(round(float(q), 6), []).append((pitch, vel))
 
+    # 原始音频起点 -> 量化后的谱面位置（四分音符数）。
+    # 前端/渲染层用这组锚点把「音频时间」局部映射到「谱面时间」，
+    # 比整首按比例缩放更能吸收演奏中的局部速度变化。
+    anchors = []
+    seen_q = set()
+    for (_pitch, start, _end, _vel), q in zip(events, start_q):
+        q_key = round(float(q), 6)
+        if q_key in seen_q:
+            continue
+        seen_q.add(q_key)
+        anchors.append((float(start), q_key))
+    anchors.sort(key=lambda item: item[1])
+
     # 谱面总长取「最后一个音」与「音频总时长」的较大者：
     # 如果解码漏掉了结尾的音，仅按最后一个音算会让整份谱被截短（M0.5 步骤 1 实测 -18.8%）。
     audio_duration = float(librosa.get_duration(path=audio_path))
@@ -253,6 +266,7 @@ def build_score(events, audio_path, title="M0 v1", hand_split=60):
         "n_events": len(events),
         "n_chords": sum(len(v) for v in groups.values()),
         "total_quarter": total_q,
+        "anchors": anchors,
     }
     return score, stats
 

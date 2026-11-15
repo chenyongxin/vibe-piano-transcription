@@ -252,8 +252,7 @@ button, input { font: inherit; }
   background: linear-gradient(90deg, #b45309, #d97706);
   transition: width 0.35s ease;
 }
-.track-actions { display: flex; gap: 8px; flex-shrink: 0; }
-.hint { margin: 12px 0 0; line-height: 1.65; }
+.track-actions { display: flex; gap: 8px; flex-shrink: 0; }.hint { margin: 12px 0 0; line-height: 1.65; }
 
 /* ---------- 谱面查看器 ---------- */
 
@@ -379,3 +378,19 @@ audio {
   .track-actions { flex-direction: column; }
   .site-footer { font-size: 11px; padding: 16px; }
 }
+
+#sync-debug-btn {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 60;
+  border: 1px solid #e7d6c2;
+  border-radius: 999px;
+  background: #fffaf2;
+  color: #8a4b0f;
+  font: 12px/1.2 "Noto Sans SC", sans-serif;
+  padding: 9px 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(80, 50, 20, 0.12);
+}
+#sync-debug-btn:hover { background: #fff; }

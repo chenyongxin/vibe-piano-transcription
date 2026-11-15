@@ -35,6 +35,11 @@ const view = {
   currentSample: -1,
   rafId: null,
   loadToken: 0,
+  sync: {
+    events: [],
+    startedAt: 0,
+    resetAt: 0,
+  },
 };
 
 let pollTimer = null;
@@ -401,6 +406,9 @@ async function loadScore(track) {
   view.ignoreScroll = false;
   view.playing = false;
   view.currentSample = -1;
+  view.sync.events = [];
+  view.sync.startedAt = 0;
+  view.sync.resetAt = 0;
   if (view.rafId) { cancelAnimationFrame(view.rafId); view.rafId = null; }
   el("follow-btn").hidden = true;
 
@@ -628,11 +636,105 @@ function updateHighlight() {
   }
   if (Number(s.page) - 1 !== view.pageIndex) return;
   if (idx !== view.currentSample) {
+    recordSyncEvent(idx, s, "highlight");
     clearActive();
     paintSample(idx);
     view.currentSample = idx;
   }
 }
+
+function recordSyncEvent(idx, sample, source) {
+  if (!view.playing || !view.audio) return;
+  const audioT = Number(view.audio.currentTime);
+  const scoreT = Number(sample.t);
+  if (!Number.isFinite(audioT) || !Number.isFinite(scoreT)) return;
+  // 拖动进度条、首次进入页面时可能出现远大于正常采样间隔的差值；
+  // 这类事件不是播放中的高亮延迟，不混入统计。
+  if (Math.abs(audioT - scoreT) > 0.25) return;
+  const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+  view.sync.events.push({
+    audio_t: Math.round(audioT * 1000) / 1000,
+    score_t: Math.round(scoreT * 1000) / 1000,
+    lag_ms: Math.round((audioT - scoreT) * 1000 * 10) / 10,
+    page: Number(sample.page) || 1,
+    measure: sample.measures && sample.measures.length ? sample.measures[0] : null,
+    sample: idx,
+    source,
+    at_ms: Math.round(now * 10) / 10,
+  });
+  // 只保留最近若干条，避免长曲目把浏览器内存撑大。
+  if (view.sync.events.length > 1200) view.sync.events.shift();
+}
+
+function percentile(sorted, p) {
+  if (!sorted.length) return null;
+  const pos = (sorted.length - 1) * p;
+  const lo = Math.floor(pos);
+  const hi = Math.ceil(pos);
+  if (lo === hi) return sorted[lo];
+  return sorted[lo] * (hi - pos) + sorted[hi] * (pos - lo);
+}
+
+function syncStats() {
+  const events = view.sync.events.slice();
+  const lags = events.map((e) => e.lag_ms).sort((a, b) => a - b);
+  const pages = {};
+  events.forEach((e) => {
+    const k = String(e.page);
+    if (!pages[k]) pages[k] = { n: 0, lags: [] };
+    pages[k].n += 1;
+    pages[k].lags.push(e.lag_ms);
+  });
+  Object.values(pages).forEach((p) => {
+    p.lags.sort((a, b) => a - b);
+    p.p50 = percentile(p.lags, 0.5);
+    p.p95 = percentile(p.lags, 0.95);
+    delete p.lags;
+  });
+  return {
+    n: events.length,
+    started_at: view.sync.startedAt || null,
+    p50: percentile(lags, 0.5),
+    p90: percentile(lags, 0.9),
+    p95: percentile(lags, 0.95),
+    max: lags.length ? lags[lags.length - 1] : null,
+    min: lags.length ? lags[0] : null,
+    pages,
+    events,
+  };
+}
+
+function resetSyncStats() {
+  view.sync.events = [];
+  view.sync.resetAt = typeof performance !== "undefined" ? performance.now() : Date.now();
+}
+
+function downloadSyncStats() {
+  const data = syncStats();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "piano2_sync_report.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function setupSyncDebug() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("sync") !== "1") return;
+  const btn = document.createElement("button");
+  btn.id = "sync-debug-btn";
+  btn.textContent = "导出同步报告";
+  btn.title = "仅在 ?sync=1 时显示；不会上传任何数据";
+  btn.addEventListener("click", downloadSyncStats);
+  document.body.appendChild(btn);
+}
+
+// 自动化探针和开发者可以在浏览器控制台直接读取，不需要额外 UI。
+window.piano2SyncStats = syncStats;
+window.piano2SyncReset = resetSyncStats;
+window.piano2SyncDownload = downloadSyncStats;
 
 function seekFromClick(wrap, evt) {
   if (!view.samples.length) return;
@@ -705,6 +807,8 @@ function bindPlayer() {
   audio.addEventListener("play", () => {
     view.playing = true;
     view.manualScroll = false;
+    view.sync.events = [];
+    view.sync.startedAt = typeof performance !== "undefined" ? performance.now() : Date.now();
     if (!view.follow) {
       view.follow = (playbackPageIndex() === view.pageIndex);
     }
@@ -805,6 +909,7 @@ async function loadExisting(jobId) {
 window.addEventListener("DOMContentLoaded", () => {
   bindEvents();
   bindPlayer();
+  setupSyncDebug();
   checkHealth();
   const job = new URL(window.location.href).searchParams.get("job");
   if (job) loadExisting(job);

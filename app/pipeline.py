@@ -335,8 +335,9 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
     pedal_events = smooth_pedal_events(pedal_events)
     stage("生成乐谱")
     xml_path = os.path.join(out_dir, "score.musicxml")
-    write_musicxml([(e.pitch, e.start, e.end, e.velocity) for e in events],
-                   audio_path, xml_path, title=title, pedal_events=pedal_events)
+    xml_stats = write_musicxml([(e.pitch, e.start, e.end, e.velocity) for e in events],
+                               audio_path, xml_path, title=title, pedal_events=pedal_events)
+    anchors = xml_stats.get("anchors") if isinstance(xml_stats, dict) else None
     stage("导出 MIDI（与谱面同一时间轴）")
     midi_path = os.path.join(out_dir, "score.mid")
     score_midi_fallback = False
@@ -367,7 +368,7 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
             times_s.append(round(float(event.start), 3))
     times_s = sorted(set(times_s))
     svg_texts, samples, score_duration = render_service.render_svg_with_timing(
-        xml_path, n_pages, times_s, audio_duration
+        xml_path, n_pages, times_s, audio_duration, anchors=anchors
     )
 
     svg_names = []
@@ -376,7 +377,8 @@ def transcribe(audio_path, out_dir, holder, title="钢琴转录", progress=None,
         with open(os.path.join(out_dir, svg_name), "w", encoding="utf-8") as fh:
             fh.write(svg)
         svg_names.append(svg_name)
-    timing = {"step": step, "duration": round(audio_duration, 2), "samples": samples}
+    timing = {"step": step, "duration": round(audio_duration, 2),
+              "mapping": "anchors" if anchors else "linear", "samples": samples}
     with open(os.path.join(out_dir, "timing.json"), "w", encoding="utf-8") as fh:
         json.dump(timing, fh, ensure_ascii=False)
 

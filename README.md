@@ -116,7 +116,7 @@ For a true zero-mount deployment, attach `best.pt` to a GitHub Release and build
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.5/best.pt \
+  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.6/best.pt \
   -t ghcr.io/<owner>/<repo>/piano-transcription:gpu .
 ```
 

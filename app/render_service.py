@@ -110,8 +110,128 @@ def _png_size(png_path):
     return width, height
 
 
+def _q_to_timemap(timemap):
+    """把 verovio timemap 转成按 qstamp 排序的 (q, ms) 数组。
+
+    参数:
+        timemap (list[dict]): `renderToTimemap()` 返回的事件列表。
+
+    返回:
+        tuple[list[float], list[float]]: (q 列表, 毫秒列表)，均按 q 升序。
+    """
+    pairs = {}
+    for item in timemap:
+        if not isinstance(item, dict):
+            continue
+        if "qstamp" not in item or "tstamp" not in item:
+            continue
+        q = float(item["qstamp"])
+        ms = float(item["tstamp"])
+        if q not in pairs or ms < pairs[q]:
+            pairs[q] = ms
+    ordered = sorted(pairs.items())
+    return [q for q, _ms in ordered], [ms for _q, ms in ordered]
+
+
+def _clean_anchors(anchors):
+    """过滤并排序音频→谱面锚点。
+
+    参数:
+        anchors (list[tuple[float, float]] | None): (音频起点秒, 四分音符位置)。
+
+    返回:
+        list[tuple[float, float]]: 时间与四分音符位置都单调递增的锚点。
+    """
+    if not anchors:
+        return []
+    cleaned = []
+    last_q = -1.0
+    for raw_t, raw_q in anchors:
+        t = float(raw_t)
+        q = float(raw_q)
+        if t < 0 or q < 0 or q < last_q:
+            continue
+        cleaned.append((t, q))
+        last_q = q
+    cleaned.sort(key=lambda item: item[0])
+    return cleaned
+
+
+def audio_to_quarter(t_audio, anchors):
+    """用局部锚点把音频时间换算成四分音符位置。
+
+    为什么需要这个函数：整首按比例缩放只能吸收全局时长差，不能吸收演奏中的
+    rubato（自由速度）和局部加速；锚点来自每个量化起音，能在音符级别重新对齐。
+
+    参数:
+        t_audio (float): 音频时间（秒）。
+        anchors (list[tuple[float, float]]): 已排序的 (音频秒, 四分音符位置)。
+
+    返回:
+        float | None: 四分音符位置；没有锚点时返回 None。
+    """
+    if not anchors:
+        return None
+    if len(anchors) == 1:
+        t0, q0 = anchors[0]
+        return q0 + (t_audio - t0) if t_audio > t0 else max(0.0, q0 * t_audio / max(t0, 1e-9))
+    if t_audio <= anchors[0][0]:
+        t0, q0 = anchors[0]
+        return max(0.0, q0 * t_audio / max(t0, 1e-9))
+    if t_audio >= anchors[-1][0]:
+        t0, q0 = anchors[-2]
+        t1, q1 = anchors[-1]
+        rate = (q1 - q0) / max(t1 - t0, 1e-9)
+        return q1 + (t_audio - t1) * rate
+    lo, hi = 0, len(anchors) - 1
+    while lo + 1 < hi:
+        mid = (lo + hi) // 2
+        if anchors[mid][0] <= t_audio:
+            lo = mid
+        else:
+            hi = mid
+    t0, q0 = anchors[lo]
+    t1, q1 = anchors[hi]
+    if t1 <= t0:
+        return q1
+    ratio = (t_audio - t0) / (t1 - t0)
+    return q0 + (q1 - q0) * ratio
+
+
+def quarter_to_ms(q, q_values, ms_values):
+    """把四分音符位置换算成 verovio 的毫秒时间轴。
+
+    参数:
+        q (float): 四分音符位置。
+        q_values (list[float]): timemap 的 q 序列（升序）。
+        ms_values (list[float]): 对应毫秒时间。
+
+    返回:
+        int: 毫秒时间，超出范围时夹到边界。
+    """
+    if not q_values or not ms_values:
+        return 0
+    if q <= q_values[0]:
+        return int(round(ms_values[0]))
+    if q >= q_values[-1]:
+        return int(round(ms_values[-1]))
+    lo, hi = 0, len(q_values) - 1
+    while lo + 1 < hi:
+        mid = (lo + hi) // 2
+        if q_values[mid] <= q:
+            lo = mid
+        else:
+            hi = mid
+    q0, q1 = q_values[lo], q_values[hi]
+    m0, m1 = ms_values[lo], ms_values[hi]
+    if q1 <= q0:
+        return int(round(m1))
+    ratio = (q - q0) / (q1 - q0)
+    return int(round(m0 + (m1 - m0) * ratio))
+
+
 def render_svg_with_timing(xml_path, n_pages, times_s, audio_duration_s,
-                           page_width=2200, scale=48):
+                           page_width=2200, scale=48, anchors=None):
     """一次加载内渲染全部 SVG 页，并把「音频时间」映射到乐谱元素。
 
     关键点：verovio 每次 loadFile 会重新生成元素 id，所以「渲染 SVG」和
@@ -128,6 +248,8 @@ def render_svg_with_timing(xml_path, n_pages, times_s, audio_duration_s,
         audio_duration_s (float): 原始音频时长（秒）。
         page_width (int): 页面宽度。
         scale (int): 缩放。
+        anchors (list[tuple[float, float]] | None): 可选的局部映射锚点
+            (音频起点秒, 四分音符位置)；提供时用局部插值代替整首比例缩放。
 
     返回:
         tuple[list[str], list[dict], float]:
@@ -138,10 +260,12 @@ def render_svg_with_timing(xml_path, n_pages, times_s, audio_duration_s,
     tk = _get_toolkit()
     svgs = []
     samples = []
+    clean_anchors = _clean_anchors(anchors)
     with _lock:
         _apply_options(tk, page_width=page_width, scale=scale)
         if not tk.loadFile(str(xml_path)):
             raise RuntimeError(f"verovio 无法加载: {xml_path}")
+        timemap = []
         score_duration_s = 0.0
         try:
             timemap = tk.renderToTimemap()
@@ -154,6 +278,7 @@ def render_svg_with_timing(xml_path, n_pages, times_s, audio_duration_s,
             score_duration_s = 0.0
         score_duration_s = max(score_duration_s, 0.001)
         audio_duration_s = max(float(audio_duration_s), 0.001)
+        q_values, ms_values = _q_to_timemap(timemap)
 
         for pg in range(1, n_pages + 1):
             svgs.append(tk.renderToSVG(pg))
@@ -163,7 +288,11 @@ def render_svg_with_timing(xml_path, n_pages, times_s, audio_duration_s,
                 id_page.setdefault(match.group(1), page)
         for t_audio in times_s:
             t_audio = min(max(float(t_audio), 0.0), audio_duration_s)
-            score_ms = int(round(t_audio / audio_duration_s * score_duration_s * 1000.0))
+            q = audio_to_quarter(t_audio, clean_anchors)
+            if q is not None and q_values:
+                score_ms = quarter_to_ms(q, q_values, ms_values)
+            else:
+                score_ms = int(round(t_audio / audio_duration_s * score_duration_s * 1000.0))
             data = tk.getElementsAtTime(score_ms)
             ids = [i for i in data.get("notes", []) if i in id_page]
             if not ids:
