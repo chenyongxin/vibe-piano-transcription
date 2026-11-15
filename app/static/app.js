@@ -6,7 +6,6 @@ const STAGES = ["排队中", "提取特征（CQT）", "模型推理", "解码成
 
 const MAX_TRACKS = 5;
 const MAX_FILE_BYTES = 500 * 1024 * 1024;
-const MAX_TOTAL_BYTES = 5 * 500 * 1024 * 1024;
 const ALLOWED = /\.(wav|mp3|m4a|flac|ogg|aac|webm)$/i;
 
 const state = {
@@ -58,6 +57,12 @@ function stagePercent(stage) {
 
 function formatSize(bytes) {
   return `${(bytes / 1e6).toFixed(1)} MB`;
+}
+
+function downloadStem(name) {
+  const base = String(name || "transcription").replace(/\.[^.]+$/, "");
+  const safe = base.replace(/[\\/:*?"<>|\u0000-\u001f]/g, "_").trim();
+  return safe || "transcription";
 }
 
 function showError(msg) {
@@ -120,16 +125,16 @@ function addFiles(fileList) {
       errors.push(`${f.name}：空文件`);
       continue;
     }
+    if (f.size > MAX_FILE_BYTES) {
+      errors.push(`${f.name}：单首不能超过 500 MB`);
+      continue;
+    }
     if (state.tracks.some((t) => t.name === f.name && t.size === f.size)) {
       errors.push(`${f.name}：已在列表中`);
       continue;
     }
     if (state.tracks.length >= MAX_TRACKS) {
       errors.push(`最多 ${MAX_TRACKS} 首，已忽略 ${f.name}`);
-      continue;
-    }
-    if (totalBytes() + f.size > MAX_TOTAL_BYTES) {
-      errors.push(`总大小不能超过 2.5 GB，已忽略 ${f.name}`);
       continue;
     }
     state.tracks.push({
@@ -198,7 +203,7 @@ function renderTracks() {
     const nDone = state.tracks.filter((t) => t.status === "done").length;
     el("tracks-title").textContent = state.processing ? "正在转录…" : "曲目列表";
     el("tracks-summary").textContent =
-      `${state.tracks.length} / ${MAX_TRACKS} 首 · ${formatSize(totalBytes())} / 2.5 GB` +
+      `${state.tracks.length} 首 · ${formatSize(totalBytes())}` +
       ` · 已完成 ${nDone} 首`;
     el("add-btn").disabled = state.processing || state.tracks.length >= MAX_TRACKS;
     el("start-btn").disabled = state.processing ||
@@ -220,6 +225,14 @@ function renderTracks() {
       meta.textContent = `${formatSize(t.size)} · ${trackStatusText(t)}`;
       main.appendChild(name);
       main.appendChild(meta);
+      if (t.status === "processing" || t.status === "uploading") {
+        const progress = document.createElement("div");
+        progress.className = "track-progress";
+        const fill = document.createElement("span");
+        fill.style.width = `${stagePercent(t.stage)}%`;
+        progress.appendChild(fill);
+        main.appendChild(progress);
+      }
       row.appendChild(main);
 
       const actions = document.createElement("div");
@@ -358,6 +371,10 @@ function openScore(track) {
   el("dl-xml").href = r.files ? r.files.musicxml : "#";
   el("dl-pdf").href = r.files ? r.files.pdf : "#";
   el("dl-mid").href = r.files ? r.files.midi : "#";
+  const stem = downloadStem(track.name);
+  el("dl-xml").download = `${stem}_score.musicxml`;
+  el("dl-pdf").download = `${stem}_score.pdf`;
+  el("dl-mid").download = `${stem}_score.mid`;
   const audio = el("player");
   audio.pause();
   audio.src = r.files ? r.files.wav : "";

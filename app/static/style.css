@@ -237,6 +237,21 @@ button, input { font: inherit; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.track-progress {
+  width: 100%;
+  height: 4px;
+  margin-top: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eee7dc;
+}
+.track-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #b45309, #d97706);
+  transition: width 0.35s ease;
+}
 .track-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .hint { margin: 12px 0 0; line-height: 1.65; }
 
