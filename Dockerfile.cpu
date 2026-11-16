@@ -1,8 +1,8 @@
 # CPU 运行镜像：适合没有 NVIDIA GPU 的机器，开箱启动 Web 应用。
 #
 # 用法：
-#   docker build -f Dockerfile.cpu -t piano-transcription:cpu .
-#   docker run --rm -p 8000:8000 -v "$PWD/models:/workspace/models" piano-transcription:cpu
+#   docker build -f Dockerfile.cpu -t vibe-piano-transcription:cpu .
+#   docker run --rm -p 8000:8000 -v "$PWD/models:/workspace/models" vibe-piano-transcription:cpu
 #
 # 模型权重不进入 git；可用 -v 挂载，或在构建时用 MODEL_URL 下载 release 权重。
 FROM python:3.11-slim

@@ -1,7 +1,28 @@
 # App changelog
 
-当前版本：**0.2.6**。本文只记录 Web app 的版本变化；模型训练实验见
+当前版本：**0.3.0**。本文只记录 Web app 的版本变化；模型训练实验见
 `../training/`。
+
+## 0.3.0 — 2026-11-16
+
+### Release
+
+- 首个公开 GitHub Release：`v0.3.0`；
+- 源码使用 MIT License；模型权重单独采用非商业/研究用途条款，并保留 MAESTRO 数据归属；
+- 提供 CPU / GPU GHCR 镜像，镜像内可包含 Release 权重；
+- 增加 CI 测试和基于 GitHub Release 的镜像发布流程。
+
+### 包含的 app 改进
+
+- offset 结束时间窗口修复：test split note F1 0.3314 → 0.3788；
+- 局部音符锚点时间映射和浏览器端音画延迟埋点；
+- 转录进度条、单首 500 MB 文案、`<上传名>_score.*` 下载命名。
+
+### 已知限制
+
+- 快速段落、装饰音、三连音、琶音、密集踏板仍不完美；
+- 模型 note F1 与 SOTA 仍有差距，详见 `10_limitations.md`；
+- 首个 release 的 CPU/GPU 镜像以 amd64 为主，其它架构后续补充。
 
 ## 0.2.6 — 2026-11-15
 

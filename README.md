@@ -81,19 +81,19 @@ Two Dockerfiles are included:
 
 | File | Target | Start |
 |---|---|---|
-| `Dockerfile.cpu` | CPU-only laptops / servers | `docker build -f Dockerfile.cpu -t piano-transcription:cpu .` |
-| `Dockerfile.gpu` | NVIDIA CUDA (RTX 4060+) | `docker build -f Dockerfile.gpu -t piano-transcription:gpu .` |
+| `Dockerfile.cpu` | CPU-only laptops / servers | `docker build -f Dockerfile.cpu -t vibe-piano-transcription:cpu .` |
+| `Dockerfile.gpu` | NVIDIA CUDA (RTX 4060+) | `docker build -f Dockerfile.gpu -t vibe-piano-transcription:gpu .` |
 
 ```bash
 # CPU
 docker run --rm -p 8000:8000 \
   -v "$PWD/models:/workspace/models" \
-  piano-transcription:cpu
+  vibe-piano-transcription:cpu
 
 # GPU
 docker run --rm --gpus all -p 8000:8000 \
   -v "$PWD/models:/workspace/models" \
-  piano-transcription:gpu
+  vibe-piano-transcription:gpu
 ```
 
 > **Platform note:** the GPU image requires the NVIDIA container runtime and an
@@ -110,24 +110,32 @@ docker compose --profile cpu up --build
 # or: docker compose --profile gpu up --build
 ```
 
-The images start the web app automatically. Model weights are deliberately **not**
-stored in git; mount a checkpoint at `models/best.pt` (or set `PIANO2_CKPT`).
-For a true zero-mount deployment, attach `best.pt` to a GitHub Release and build with:
+The source-built images need a checkpoint mounted at `models/best.pt` (or set
+`PIANO2_CKPT`). The published GitHub Release images are built from the release
+tag and already contain the checkpoint, so no mount is needed.
+
+For a source build with the release checkpoint baked in:
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.6/best.pt \
-  -t ghcr.io/<owner>/<repo>/piano-transcription:gpu .
+  --build-arg MODEL_URL=https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.0/best.pt \
+  -t vibe-piano-transcription:gpu .
 ```
 
-GitHub Actions workflow [`.github/workflows/docker.yml`](.github/workflows/docker.yml)
-builds both CPU and GPU images and pushes them to GHCR on `main`/tags. A server can then use
+Release images are published to GitHub Container Registry (GHCR) by
+[`.github/workflows/release.yml`](.github/workflows/release.yml):
 
 ```bash
-docker run -d --gpus all -p 8000:8000 \
-  -v "$PWD/models:/workspace/models" \
-  ghcr.io/<owner>/<repo>/piano-transcription:gpu
+# CPU, no model mount
+docker run --rm -p 8000:8000 \
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-cpu
+
+# GPU, no model mount
+docker run --rm --gpus all -p 8000:8000 \
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-gpu
 ```
+
+The moving aliases `:cpu` and `:gpu` point to the latest published release.
 
 ## Reproduce the model
 
@@ -210,8 +218,13 @@ and audio-visual alignment limitations.
 ## Data and license notes
 
 Training data comes from MAESTRO v3.0.0, which is distributed under
-CC BY-NC-SA 4.0. This project is intended for research and non-commercial use.
-Third-party model names and results are referenced for comparison only.
+CC BY-NC-SA 4.0. The checkpoint is distributed for non-commercial research and
+evaluation; see [MODEL_LICENSE.md](MODEL_LICENSE.md). The source code is MIT
+licensed; see [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md) for third-party
+notices.
+
+The project is intended for research and non-commercial use. Third-party model
+names and results are referenced for comparison only.
 
 > Documentation uses `$REPO_ROOT`, `$DATA_ROOT`, and `$PROJECT_HOME` placeholders
 > instead of machine-specific paths; see [INSTALL.md](INSTALL.md) for the convention.

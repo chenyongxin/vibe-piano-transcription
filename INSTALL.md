@@ -106,19 +106,19 @@ The repository contains two Dockerfiles, both starting the web app automatically
 CPU:
 
 ```bash
-docker build -f Dockerfile.cpu -t piano-transcription:cpu .
+docker build -f Dockerfile.cpu -t vibe-piano-transcription:cpu .
 docker run --rm -p 8000:8000 \
   -v "$REPO_ROOT/models:/workspace/models" \
-  piano-transcription:cpu
+  vibe-piano-transcription:cpu
 ```
 
 GPU:
 
 ```bash
-docker build -f Dockerfile.gpu -t piano-transcription:gpu .
+docker build -f Dockerfile.gpu -t vibe-piano-transcription:gpu .
 docker run --rm --gpus all -p 8000:8000 \
   -v "$REPO_ROOT/models:/workspace/models" \
-  piano-transcription:gpu
+  vibe-piano-transcription:gpu
 ```
 
 Compose:
@@ -128,19 +128,32 @@ docker compose --profile cpu up --build
 # or: docker compose --profile gpu up --build
 ```
 
-For a zero-mount build, attach the checkpoint to a GitHub Release and pass `MODEL_URL`:
+For a zero-mount source build, attach the checkpoint to a GitHub Release and pass
+`MODEL_URL`:
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL="https://github.com/<owner>/<repo>/releases/download/v0.2.6/best.pt" \
-  -t piano-transcription:gpu .
+  --build-arg MODEL_URL="https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.0/best.pt" \
+  -t vibe-piano-transcription:gpu .
+```
+
+Published release images already contain the checkpoint:
+
+```bash
+docker run --rm -p 8000:8000 \
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-cpu
+
+docker run --rm --gpus all -p 8000:8000 \
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-gpu
 ```
 
 **macOS:** Docker cannot expose Apple Metal or NVIDIA GPUs to Linux containers.
 Use the CPU image on both Intel and Apple Silicon Macs; `--gpus all` fails on macOS.
 
-GitHub Actions [`.github/workflows/docker.yml`](.github/workflows/docker.yml) can build
-and push the CPU/GPU images to GHCR.
+Release images are built by
+[`.github/workflows/release.yml`](.github/workflows/release.yml) after a GitHub
+Release is published. The moving aliases `:cpu` and `:gpu` point to the latest
+release.
 
 ## 6. Verify the installation
 
@@ -156,7 +169,7 @@ Expected result: all tests pass. Then upload a short solo-piano WAV/MP3 and chec
 - the audio player works;
 - MusicXML/PDF/MIDI download buttons produce files.
 
-The app is currently at version 0.2.6; see the
+The app is currently at version 0.3.0; see the
 [app changelog](docs/09_app_changelog.md) and
 [model/transcription limitations](docs/10_limitations.md).
 
@@ -207,5 +220,6 @@ Copy it to `"$REPO_ROOT/models/best.pt"` for the app.
 - The server binds to `127.0.0.1` by default; do not expose it publicly without adding
   authentication and TLS.
 - Transcription runs locally; the app does not upload audio to a third-party service.
-- MAESTRO training data is CC BY-NC-SA 4.0; this project is for research and
-  non-commercial use.
+- MAESTRO training data is CC BY-NC-SA 4.0; the checkpoint is distributed for
+  non-commercial research use. See [MODEL_LICENSE.md](MODEL_LICENSE.md) and
+  [NOTICE.md](NOTICE.md). The source code is MIT licensed; see [LICENSE](LICENSE).

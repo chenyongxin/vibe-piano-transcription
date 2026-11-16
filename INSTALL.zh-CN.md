@@ -101,19 +101,19 @@ curl http://localhost:8000/api/health
 CPU：
 
 ```bash
-docker build -f Dockerfile.cpu -t piano-transcription:cpu .
+docker build -f Dockerfile.cpu -t vibe-piano-transcription:cpu .
 docker run --rm -p 8000:8000 \
   -v "$REPO_ROOT/models:/workspace/models" \
-  piano-transcription:cpu
+  vibe-piano-transcription:cpu
 ```
 
 GPU：
 
 ```bash
-docker build -f Dockerfile.gpu -t piano-transcription:gpu .
+docker build -f Dockerfile.gpu -t vibe-piano-transcription:gpu .
 docker run --rm --gpus all -p 8000:8000 \
   -v "$REPO_ROOT/models:/workspace/models" \
-  piano-transcription:gpu
+  vibe-piano-transcription:gpu
 ```
 
 Compose：
@@ -123,19 +123,29 @@ docker compose --profile cpu up --build
 # 或：docker compose --profile gpu up --build
 ```
 
-如果希望零挂载启动，把 checkpoint 放到 GitHub Release，构建时传 `MODEL_URL`：
+如果希望零挂载的源码构建，把 checkpoint 放到 GitHub Release，构建时传 `MODEL_URL`：
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL="https://github.com/<owner>/<repo>/releases/download/v0.2.6/best.pt" \
-  -t piano-transcription:gpu .
+  --build-arg MODEL_URL="https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.0/best.pt" \
+  -t vibe-piano-transcription:gpu .
+```
+
+已经发布的 Release 镜像包含权重，可直接运行：
+
+```bash
+docker run --rm -p 8000:8000 \
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-cpu
+
+docker run --rm --gpus all -p 8000:8000 \
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-gpu
 ```
 
 **macOS**：Docker 不能把 Apple Metal 或 NVIDIA GPU 透传给 Linux 容器；
 Intel 和 Apple Silicon Mac 都请使用 CPU 镜像，`--gpus all` 在 macOS 会失败。
 
-GitHub Actions 工作流 [`.github/workflows/docker.yml`](.github/workflows/docker.yml)
-可构建并推送 CPU/GPU 镜像到 GHCR。
+Release 镜像由 [`.github/workflows/release.yml`](.github/workflows/release.yml)
+在 GitHub Release 发布后构建；`:cpu` 和 `:gpu` 是最近一次发布的可移动别名。
 
 ## 6. 验证安装
 
@@ -151,7 +161,7 @@ python -m pytest -q
 - 播放器可用；
 - MusicXML / PDF / MIDI 下载按钮产生文件。
 
-当前 app 版本为 0.2.6；见 [app changelog](docs/09_app_changelog.md) 和 [模型与转录局限](docs/10_limitations.md)。
+当前 app 版本为 0.3.0；见 [app changelog](docs/09_app_changelog.md) 和 [模型与转录局限](docs/10_limitations.md)。
 
 ## 7. 复现 checkpoint
 
@@ -198,4 +208,6 @@ checkpoint 输出在 `$REPO_ROOT/outputs/M1/hybrid_reg2/checkpoints/best.pt`。
 
 - 服务默认绑定 `127.0.0.1`；不要在没有认证/TLS 的情况下直接暴露到公网；
 - 转录音频只在本地处理，不会上传到第三方服务；
-- MAESTRO 训练数据采用 CC BY-NC-SA 4.0，仅用于研究与非商业用途。
+- MAESTRO 训练数据采用 CC BY-NC-SA 4.0；模型权重按非商业/研究用途分发，
+  详见 [MODEL_LICENSE.md](MODEL_LICENSE.md) 和 [NOTICE.md](NOTICE.md)；
+  源码使用 MIT License，详见 [LICENSE](LICENSE)。

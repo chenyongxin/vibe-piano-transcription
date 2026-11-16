@@ -77,19 +77,19 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 | 文件 | 适用 | 启动 |
 |---|---|---|
-| `Dockerfile.cpu` | 无 NVIDIA GPU 的笔记本/服务器 | `docker build -f Dockerfile.cpu -t piano-transcription:cpu .` |
-| `Dockerfile.gpu` | NVIDIA CUDA（RTX 4060 等） | `docker build -f Dockerfile.gpu -t piano-transcription:gpu .` |
+| `Dockerfile.cpu` | 无 NVIDIA GPU 的笔记本/服务器 | `docker build -f Dockerfile.cpu -t vibe-piano-transcription:cpu .` |
+| `Dockerfile.gpu` | NVIDIA CUDA（RTX 4060 等） | `docker build -f Dockerfile.gpu -t vibe-piano-transcription:gpu .` |
 
 ```bash
 # CPU
 docker run --rm -p 8000:8000 \
   -v "$PWD/models:/workspace/models" \
-  piano-transcription:cpu
+  vibe-piano-transcription:cpu
 
 # GPU
 docker run --rm --gpus all -p 8000:8000 \
   -v "$PWD/models:/workspace/models" \
-  piano-transcription:gpu
+  vibe-piano-transcription:gpu
 ```
 
 > **平台说明**：GPU 镜像需要 NVIDIA container runtime 和 NVIDIA GPU。
@@ -105,24 +105,31 @@ docker compose --profile cpu up --build
 # 或：docker compose --profile gpu up --build
 ```
 
-镜像启动后会自动运行 Web 应用。模型权重**不随仓库分发**，请把 checkpoint 放到
-`models/best.pt`，或设置 `PIANO2_CKPT`。如果希望真正零挂载启动，可以把
-`best.pt` 放到 GitHub Release，然后用 `MODEL_URL` 构建：
+源码构建的镜像需要把 checkpoint 挂载到 `models/best.pt`，或设置 `PIANO2_CKPT`。
+GitHub Release 发布的镜像已经包含权重，不需要挂载。
+
+如果要在源码构建时把 Release 权重一起打进去：
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL=https://github.com/<owner>/<repo>/releases/download/v0.2.6/best.pt \
-  -t ghcr.io/<owner>/<repo>/piano-transcription:gpu .
+  --build-arg MODEL_URL=https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.0/best.pt \
+  -t vibe-piano-transcription:gpu .
 ```
 
-GitHub Actions 工作流 [`.github/workflows/docker.yml`](.github/workflows/docker.yml)
-会在 `main`/tag 上构建 CPU 和 GPU 镜像并推到 GHCR。服务器部署：
+Release 镜像由 [`.github/workflows/release.yml`](.github/workflows/release.yml)
+发布到 GitHub Container Registry（GHCR，GitHub 容器镜像库）：
 
 ```bash
-docker run -d --gpus all -p 8000:8000 \
-  -v "$PWD/models:/workspace/models" \
-  ghcr.io/<owner>/<repo>/piano-transcription:gpu
+# CPU，无需挂载模型
+docker run --rm -p 8000:8000 \
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-cpu
+
+# GPU，无需挂载模型
+docker run --rm --gpus all -p 8000:8000 \
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-gpu
 ```
+
+`:cpu` 和 `:gpu` 是最近一次发布的可移动别名。
 
 ## 复现模型参数
 
@@ -201,7 +208,10 @@ python scripts/evaluate_hybrid_test.py \
 
 ## 数据与许可说明
 
-训练数据来自 MAESTRO v3.0.0，采用 CC BY-NC-SA 4.0 许可。
+训练数据来自 MAESTRO v3.0.0，采用 CC BY-NC-SA 4.0 许可。模型权重按
+**非商业/研究用途**分发，详见 [MODEL_LICENSE.md](MODEL_LICENSE.md)；源码使用
+MIT License，详见 [LICENSE](LICENSE) 和第三方说明 [NOTICE.md](NOTICE.md)。
+
 本项目仅用于研究与非商业用途；第三方模型名称和结果仅用于对比。
 
 > 文档使用 `$REPO_ROOT`、`$DATA_ROOT`、`$PROJECT_HOME` 占位符，

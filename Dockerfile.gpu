@@ -1,9 +1,9 @@
 # GPU 运行镜像：NVIDIA CUDA，适合本地/服务器 GPU 部署。
 #
 # 用法：
-#   docker build -f Dockerfile.gpu -t piano-transcription:gpu .
+#   docker build -f Dockerfile.gpu -t vibe-piano-transcription:gpu .
 #   docker run --rm --gpus all -p 8000:8000 \
-#     -v "$PWD/models:/workspace/models" piano-transcription:gpu
+#     -v "$PWD/models:/workspace/models" vibe-piano-transcription:gpu
 #
 # 模型权重不进入 git；可挂载，也可在构建时用 MODEL_URL 下载 release 权重。
 # macOS 不支持 NVIDIA GPU 透传，Mac 用户请改用 Dockerfile.cpu。
