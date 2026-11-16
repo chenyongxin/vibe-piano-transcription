@@ -143,9 +143,13 @@ piano2SyncStats()
 | onset F1 @10 ms | 0.513 | 0.901 |
 | note-with-offset F1 | 0.362 | 0.444 |
 
-当前 hybrid_reg2 在 test split 上把 10 ms onset 提到 0.626，但仍明显低于 SOTA 的
-0.90。差距主要来自输入时间分辨率、直接高分辨率回归头和训练规模，而不是单纯
-“再调一下解码阈值”。
+当前 hybrid_reg2 在 test split 上把 10 ms onset 提到 0.626、note-with-offset 提到 0.379，
+但仍明显低于 SOTA 的 0.90/0.444。差距主要来自输入时间分辨率、直接高分辨率回归头和
+训练规模，而不是单纯“再调一下解码阈值”。
+
+> 表中 validation head-to-head 是 offset 窗口修复前的对比记录；修复后的完整
+> test split 指标见 [`09_app_changelog.md`](09_app_changelog.md) 和 README。SOTA
+> 三方对照尚未在修复后重跑，因此不要把这张表当成最新排名。
 
 ## 7. 可以怎么缓解
 

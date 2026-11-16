@@ -1,5 +1,10 @@
 # 03 模型与训练
 
+> 范围说明：本文主要记录 M0.5/M1 的五头基础模型结构与训练实验，作为可追溯的训练记录。
+> 生产 app 当前使用 `hybrid_reg2`，在五个分类头之外增加了 `offset` / `onset_reg` /
+> `offset_reg` 三个头；完整的生产解码与评测见 [`04_decoding.md`](04_decoding.md)、
+> [`09_app_changelog.md`](09_app_changelog.md) 和 [`10_limitations.md`](10_limitations.md)。
+
 ## 1. 模型结构（`src/piano2/model.py`）
 
 ```text
@@ -173,7 +178,7 @@ G7 实测（合成数据）为 0.082 秒/步、1.63 GB，与 pilot 实测一致�
 | 模型选择只看 F1 会忽略时值 | M3 同时记录 note-with-offset F1，选模型以 onset F1 为主、报告两者 |
 | 训练中断 | 检查点含 optimizer，`--resume` 继续 |
 
-## 7. 全量训练与断点续训（M3 第二版，进行中）
+## 7. 全量训练与断点续训（M3 第二版，已完成，历史记录）
 
 启动脚本：`scripts/full_train.sh`（容器内），详细操作见 `scripts/full_training.md`。
 

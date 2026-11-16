@@ -72,7 +72,7 @@
 |---|---|---|
 | `build_data_v2.py` | `scripts/build_data.py` | 构建数据 v2（memmap CQT + 标签通道 + 段索引 + manifest） |
 | `dataset_v2.py` | `src/piano2/dataset.py` | 段数据集（memmap 随机切片，固定验证段） |
-| `model_v2.py` | `src/piano2/model.py` | 五头模型（MaxPool 1×3、输入归一化、踏板头） |
+| `model_v2.py` | `src/piano2/model.py` | 五头基础模型（后续生产 hybrid 扩展为八头；MaxPool 1×3、输入归一化、踏板头） |
 | `train_v2.py` | `src/piano2/train.py` | 训练循环（按 F1 选模型、可续训、`--dry-run`） |
 | `check_labels.py` | `scripts/check_labels.py` | 标签宽度自检（onset2 = 2 帧） |
 | `eval_old_model.py` | —（一次性对照） | 旧模型在新验证段上的基线（F1 0.738） |

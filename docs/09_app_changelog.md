@@ -5,9 +5,9 @@
 
 ## 0.3.0 — 2026-11-16
 
-### Release
+### Release（准备中，tag/Release 待发布）
 
-- 首个公开 GitHub Release：`v0.3.0`；
+- 计划发布首个公开 GitHub Release：`v0.3.0`；
 - 源码使用 MIT License；模型权重单独采用非商业/研究用途条款，并保留 MAESTRO 数据归属；
 - 提供 CPU / GPU GHCR 镜像，镜像内可包含 Release 权重；
 - 增加 CI 测试和基于 GitHub Release 的镜像发布流程。
