@@ -36,10 +36,10 @@
 
 | 指标 | 数值 |
 |---|---|
-| onset F1 @50 ms | 0.8709（P 0.8909 / R 0.8517） |
-| onset F1 @30 ms | 0.8606 |
-| onset F1 @20 ms | 0.8039 |
-| onset F1 @10 ms | 0.5067 |
+| onset F1 (50 ms) | 0.8709（P 0.8909 / R 0.8517） |
+| onset F1 (30 ms) | 0.8606 |
+| onset F1 (20 ms) | 0.8039 |
+| onset F1 (10 ms) | 0.5067 |
 | note-with-offset F1 | 0.3272（P 0.3347 / R 0.3200） |
 
 参考论文（ByteDance，[arXiv:2010.01815](https://arxiv.org/abs/2010.01815)）在 MAESTRO 上的 onset F1 为 **96.72%**，pedal onset F1 91.86%。我们与它的 onset 差距约 **9.6 个点**。

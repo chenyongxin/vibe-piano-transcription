@@ -40,9 +40,9 @@ Results on the MAESTRO v3.0.0 test split (177 tracks, raw note events):
 | Metric | Hybrid model |
 |---|---:|
 | note-with-offset F1 (key-off ground truth) | **0.379** |
-| onset F1 @ 50 ms | 0.870 |
-| onset F1 @ 20 ms | 0.812 |
-| **onset F1 @ 10 ms** | **0.626** |
+| onset F1 (50 ms) | 0.870 |
+| onset F1 (20 ms) | 0.812 |
+| **onset F1 (10 ms)** | **0.626** |
 
 The 10 ms onset F1 is **0.626**, compared with **0.507** for the classification-only
 baseline. The offset-end window fix (0.7 threshold, 20-frame search) raised test-split
@@ -50,7 +50,7 @@ note-with-offset F1 from **0.331** to **0.379**; onset metrics were unchanged.
 A holdout track reaches **0.660** at 10 ms and **0.453** note F1.
 
 For reference, a ByteDance piano-transcription model measured on three validation
-excerpts reached **0.901** onset F1 @10 ms and **0.444** note F1. Its note-off targets
+excerpts reached **0.901** onset F1 (10 ms) and **0.444** note F1. Its note-off targets
 are closer to acoustic sustain/pedal release, so the note-F1 comparison is not
 apples-to-apples with key-off ground truth.
 

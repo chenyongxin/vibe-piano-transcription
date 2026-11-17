@@ -139,8 +139,8 @@ piano2SyncStats()
 
 | 指标 | 当前路线 | ByteDance SOTA |
 |---|---:|---:|
-| onset F1 @50 ms | 0.929 | 0.983 |
-| onset F1 @10 ms | 0.513 | 0.901 |
+| onset F1 (50 ms) | 0.929 | 0.983 |
+| onset F1 (10 ms) | 0.513 | 0.901 |
 | note-with-offset F1 | 0.362 | 0.444 |
 
 当前 hybrid_reg2 在 test split 上把 10 ms onset 提到 0.626、note-with-offset 提到 0.379，

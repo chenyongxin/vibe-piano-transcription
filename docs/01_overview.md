@@ -15,7 +15,7 @@
 
 ## 2. 当前状态
 
-截至 **v0.3.0 release candidate**，模型训练、解码、记谱、浏览器应用和 Docker 交付链路都已跑通；
+截至 **v0.3.0**，模型训练、解码、记谱、浏览器应用和 Docker 交付链路均已发布；
 
 | 阶段 | 内容 | 状态 |
 |---|---|---|
@@ -25,9 +25,9 @@
 | M1 | 数据 v2（标签修正、踏板头、memmap、段索引）+ 训练脚本 + 本地 pilot | 完成（见 `history/09_m1_data_v2_and_pilot.md`） |
 | M2 | **建新仓**（本仓库）：最终版骨架、代码迁移、测试、文档 | 完成 |
 | M3 | 全量训练、时值/offset 实验、hybrid_reg2 评测 | 完成（见 `training/`） |
-| M4 | 浏览器应用、评分页、Docker 交付、v0.3.0 release 准备 | 完成（tag/Release 待发布） |
+| M4 | 浏览器应用、评分页、Docker 交付、v0.3.0 Release | 完成并发布 |
 
-当前生产模型是 `hybrid_reg2`：MAESTRO test split 的 note-with-offset F1 为 **0.379**，onset F1 @10 ms 为 **0.626**。完整指标和已知限制见 [`10_limitations.md`](10_limitations.md)。
+当前生产模型是 `hybrid_reg2`：MAESTRO test split 的 note-with-offset F1 为 **0.379**，onset F1 (10 ms) 为 **0.626**。完整指标和已知限制见 [`10_limitations.md`](10_limitations.md)。
 
 ## 3. 仓库结构
 

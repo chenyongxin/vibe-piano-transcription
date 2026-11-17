@@ -38,15 +38,15 @@ MAESTRO v3.0.0 test split（177 首，原始音符事件）：
 | 指标 | 混合模型 |
 |---|---:|
 | note-with-offset F1（key-off 口径） | **0.379** |
-| onset F1 @ 50 ms | 0.870 |
-| onset F1 @ 20 ms | 0.812 |
-| **onset F1 @ 10 ms** | **0.626** |
+| onset F1 (50 ms) | 0.870 |
+| onset F1 (20 ms) | 0.812 |
+| **onset F1 (10 ms)** | **0.626** |
 
 10 ms onset F1 为 **0.626**，分类基线为 **0.507**。offset 结束窗口修复（阈值 0.7、搜索 20 帧）
 把 test split 的 note-with-offset F1 从 **0.331** 提升到 **0.379**，onset 指标不变；
 holdout 单曲达到 10 ms **0.660**、note F1 **0.453**。
 
-作为参考，ByteDance 的钢琴转录模型在三段 validation 上达到 onset F1 @10 ms **0.901**、
+作为参考，ByteDance 的钢琴转录模型在三段 validation 上达到 onset F1 (10 ms) **0.901**、
 note F1 **0.444**。它的 note-off 更接近声学延音/踏板释放，因此 note F1 与我们的
 key-off 口径不能直接对比。
 
