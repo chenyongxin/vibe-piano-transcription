@@ -1,7 +1,21 @@
 # App changelog
 
-当前版本：**0.3.0**。本文只记录 Web app 的版本变化；模型训练实验见
+当前版本：**0.3.1**。本文只记录 Web app 的版本变化；模型训练实验见
 `../training/`。
+
+## 0.3.1 — 2026-11-22
+
+### Release（准备中）
+
+- 计划发布 CPU 多架构 OCI manifest：`linux/amd64` + `linux/arm64`；Apple Silicon 可直接拉取原生 arm64，不需要 `--platform linux/amd64`；
+- GPU 镜像继续保持 `linux/amd64`；
+- Docker 会按宿主机平台自动选择 manifest，README/INSTALL 增加架构选择说明；
+- 模型权重、应用代码和 API 与 v0.3.0 相同。
+
+### 验证
+
+- 新增 `docker-smoke.yml`：在 main 上构建 CPU 多架构镜像但不推送，提前验证 arm64 依赖；
+- GPU 继续由 release workflow 构建，要求 NVIDIA driver + NVIDIA Container Toolkit。
 
 ## 0.3.0 — 2026-11-16
 

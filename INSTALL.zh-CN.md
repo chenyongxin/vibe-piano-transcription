@@ -127,7 +127,7 @@ docker compose --profile cpu up --build
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL="https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.0/best.pt" \
+  --build-arg MODEL_URL="https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.1/best.pt" \
   -t vibe-piano-transcription:gpu .
 ```
 
@@ -135,11 +135,16 @@ docker build -f Dockerfile.gpu \
 
 ```bash
 docker run --rm -p 8000:8000 \
-  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-cpu
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.1-cpu
 
 docker run --rm --gpus all -p 8000:8000 \
-  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-gpu
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.1-gpu
 ```
+
+**架构选择**：发布版 CPU 镜像是多架构 OCI 镜像（`linux/amd64` 和 `linux/arm64`）。
+Docker 会根据宿主机平台自动选择；Apple Silicon 上直接 pull/run，不要加
+`--platform`。`--platform linux/amd64` 会强制 Rosetta/QEMU 模拟，只用于排错。
+GPU 镜像只有 `linux/amd64`。
 
 **macOS**：Docker 不能把 Apple Metal 或 NVIDIA GPU 透传给 Linux 容器；
 Intel 和 Apple Silicon Mac 都请使用 CPU 镜像，`--gpus all` 在 macOS 会失败。
@@ -161,7 +166,7 @@ python -m pytest -q
 - 播放器可用；
 - MusicXML / PDF / MIDI 下载按钮产生文件。
 
-当前 app 版本为 0.3.0；见 [app changelog](docs/09_app_changelog.md) 和 [模型与转录局限](docs/10_limitations.md)。
+当前 app 版本为 0.3.1；见 [app changelog](docs/09_app_changelog.md) 和 [模型与转录局限](docs/10_limitations.md)。
 
 ## 7. 复现 checkpoint
 

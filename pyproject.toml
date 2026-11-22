@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "piano2"
-version = "0.3.0"
+version = "0.3.1"
 description = "钢琴转录：音频 → 音符事件 → 可读乐谱"
 requires-python = ">=3.10"
 dependencies = [

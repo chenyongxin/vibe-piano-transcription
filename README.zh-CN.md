@@ -92,11 +92,12 @@ docker run --rm --gpus all -p 8000:8000 \
   vibe-piano-transcription:gpu
 ```
 
-> **平台说明**：GPU 镜像需要 NVIDIA container runtime 和 NVIDIA GPU。
-> macOS 的 Docker 不能把 Apple GPU（Metal）或 NVIDIA GPU 透传给 Linux 容器；
-> Intel Mac 和 Apple Silicon Mac 都应使用 `Dockerfile.cpu`。
-> 在 macOS 上执行 `docker run --gpus all` 会直接失败。如果 Apple Silicon 上某个依赖
-> 没有 arm64 wheel，可用 `--platform linux/amd64` 构建（会走模拟、较慢），不要改用 GPU 镜像。
+> **平台说明**：发布版 CPU 镜像是多架构 OCI 镜像：
+> `linux/amd64` 给 Intel/AMD，`linux/arm64` 给 Apple Silicon 和 ARM Linux。
+> Docker 会自动选择匹配的平台，Apple Silicon 上不需要加 `--platform linux/amd64`，
+> 除非是在做排错。GPU 镜像只有 `linux/amd64`，需要 NVIDIA container runtime
+> 和 NVIDIA GPU。macOS 的 Docker 不能把 Apple GPU（Metal）或 NVIDIA GPU
+> 透传给 Linux 容器，所以在 macOS 上执行 `docker run --gpus all` 会失败。
 
 也可以用 compose 的 profile：
 
@@ -112,7 +113,7 @@ GitHub Release 发布的镜像已经包含权重，不需要挂载。
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL=https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.0/best.pt \
+  --build-arg MODEL_URL=https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.1/best.pt \
   -t vibe-piano-transcription:gpu .
 ```
 
@@ -122,11 +123,11 @@ Release 镜像由 [`.github/workflows/release.yml`](.github/workflows/release.ym
 ```bash
 # CPU，无需挂载模型
 docker run --rm -p 8000:8000 \
-  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-cpu
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.1-cpu
 
 # GPU，无需挂载模型
 docker run --rm --gpus all -p 8000:8000 \
-  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-gpu
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.1-gpu
 ```
 
 `:cpu` 和 `:gpu` 是最近一次发布的可移动别名。

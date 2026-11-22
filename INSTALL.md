@@ -133,7 +133,7 @@ For a zero-mount source build, attach the checkpoint to a GitHub Release and pas
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL="https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.0/best.pt" \
+  --build-arg MODEL_URL="https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.1/best.pt" \
   -t vibe-piano-transcription:gpu .
 ```
 
@@ -141,14 +141,21 @@ Published release images already contain the checkpoint:
 
 ```bash
 docker run --rm -p 8000:8000 \
-  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-cpu
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.1-cpu
 
 docker run --rm --gpus all -p 8000:8000 \
-  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-gpu
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.1-gpu
 ```
 
+**Architecture selection:** the CPU release image is a multi-architecture OCI
+image (`linux/amd64` and `linux/arm64`). Docker chooses the matching platform
+from the host automatically. On Apple Silicon, pull and run without
+`--platform`; `--platform linux/amd64` forces Rosetta/QEMU emulation and is only
+for debugging. The GPU image is `linux/amd64` only.
+
 **macOS:** Docker cannot expose Apple Metal or NVIDIA GPUs to Linux containers.
-Use the CPU image on both Intel and Apple Silicon Macs; `--gpus all` fails on macOS.
+Use the CPU image on both Intel and Apple Silicon Macs; `--gpus all` fails on
+macOS.
 
 Release images are built by
 [`.github/workflows/release.yml`](.github/workflows/release.yml) after a GitHub
@@ -169,7 +176,7 @@ Expected result: all tests pass. Then upload a short solo-piano WAV/MP3 and chec
 - the audio player works;
 - MusicXML/PDF/MIDI download buttons produce files.
 
-The app is currently at version 0.3.0; see the
+The app is currently at version 0.3.1; see the
 [app changelog](docs/09_app_changelog.md) and
 [model/transcription limitations](docs/10_limitations.md).
 

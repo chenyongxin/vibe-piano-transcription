@@ -96,12 +96,13 @@ docker run --rm --gpus all -p 8000:8000 \
   vibe-piano-transcription:gpu
 ```
 
-> **Platform note:** the GPU image requires the NVIDIA container runtime and an
-> NVIDIA GPU. macOS cannot expose Apple GPU (Metal) or NVIDIA GPUs to Linux
-> containers; use `Dockerfile.cpu` on both Intel and Apple Silicon Macs.
-> `docker run --gpus all` will fail on macOS. If an Apple Silicon build cannot
-> find an arm64 wheel for a dependency, build with `--platform linux/amd64`
-> (emulated and slower) instead of switching to the GPU image.
+> **Platform note:** the released CPU image is a multi-architecture OCI image:
+> `linux/amd64` for Intel/AMD and `linux/arm64` for Apple Silicon and ARM Linux.
+> Docker selects the matching platform automatically; do not add
+> `--platform linux/amd64` on an Apple Silicon Mac unless debugging.
+> The GPU image is `linux/amd64` only and requires the NVIDIA container runtime
+> and an NVIDIA GPU. macOS cannot expose Apple GPU (Metal) or NVIDIA GPUs to
+> Linux containers, so `docker run --gpus all` fails on macOS.
 
 Or use the compose profiles:
 
@@ -118,7 +119,7 @@ For a source build with the release checkpoint baked in:
 
 ```bash
 docker build -f Dockerfile.gpu \
-  --build-arg MODEL_URL=https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.0/best.pt \
+  --build-arg MODEL_URL=https://github.com/chenyongxin/vibe-piano-transcription/releases/download/v0.3.1/best.pt \
   -t vibe-piano-transcription:gpu .
 ```
 
@@ -128,11 +129,11 @@ Release images are published to GitHub Container Registry (GHCR) by
 ```bash
 # CPU, no model mount
 docker run --rm -p 8000:8000 \
-  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-cpu
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.1-cpu
 
 # GPU, no model mount
 docker run --rm --gpus all -p 8000:8000 \
-  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.0-gpu
+  ghcr.io/chenyongxin/vibe-piano-transcription:v0.3.1-gpu
 ```
 
 The moving aliases `:cpu` and `:gpu` point to the latest published release.
